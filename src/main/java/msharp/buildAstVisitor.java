@@ -3,10 +3,32 @@ import msharp.Nodes.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class buildAstVisitor extends cfgBaseVisitor<node> {
+class buildAstVisitor extends cfgBaseVisitor<node> {
+    private List<String> vars;
+    private List<String> semanticErrors;
 
+    @Override
+    public stmtNode visitPbodyTone(cfgParser.PbodyToneContext ctx) {
+        noteNode node = new noteNode(ctx.Tone().getText().charAt(0),-1);
+
+        if(ctx.Digs() != null){
+            node.octave = Integer.parseInt(ctx.Digs().getText());
+        }
+
+        return node;
+    }
+
+    @Override
+    public node visitPbodyPause(cfgParser.PbodyPauseContext ctx) {
+        return new noteNode('-',-1);
+    }
+
+
+
+    /*
     // Part table
     Map<String, partDclNode> data = new HashMap<String, partDclNode>();
 
@@ -81,6 +103,7 @@ public class buildAstVisitor extends cfgBaseVisitor<node> {
 
         return node;
     }
+    */
 }
 
 

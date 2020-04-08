@@ -56,8 +56,7 @@ partBody
     | Lparen stmt+ Rparen               # PbodyParen
     | partBody TransposeUp Digs?        # PbodyTransUp
     | partBody TransposeDown Digs?      # PbodyTransDown
-    | partBody SingleAnd partBody       # PbodySingleAnd
-    | partBody DoubleAnd partBody       # PbodyDoubleAnd
+    | partBody And partBody             # PbodyAnd
     | partBody Repeat Digs              # PbodySingleLRepeat
     ;
 
@@ -80,8 +79,7 @@ OctaveUp: '/';
 OctaveDown: '\\';
 TransposeUp: '^';
 TransposeDown: '_';
-SingleAnd: '&';
-DoubleAnd: '&&';
+And: '&';
 Repeat: '*';
 Pause: '-';
 Id: [A-Z][a-zA-Z0-9]*;

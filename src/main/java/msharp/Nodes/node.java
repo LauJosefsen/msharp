@@ -1,5 +1,6 @@
 package msharp.Nodes;
 
-public class node {
+public abstract class node{
+    public abstract String toString();
 }
 
