@@ -1,4 +1,5 @@
-package msharp;// Generated from C:/Users/Alexi/Desktop/P4-Msharp/src/main/java\cfg.g4 by ANTLR 4.8
+// Generated from C:/Users/Alexi/floobits/share/fresser/msharp/src/main/java/msharp\cfg.g4 by ANTLR 4.8
+package msharp;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -279,13 +280,13 @@ public class cfgBaseListener implements cfgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPbodySingleAnd(cfgParser.PbodySingleAndContext ctx) { }
+	@Override public void enterPbodyAnd(cfgParser.PbodyAndContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPbodySingleAnd(cfgParser.PbodySingleAndContext ctx) { }
+	@Override public void exitPbodyAnd(cfgParser.PbodyAndContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -298,18 +299,6 @@ public class cfgBaseListener implements cfgListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPbodyTone(cfgParser.PbodyToneContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPbodyDoubleAnd(cfgParser.PbodyDoubleAndContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPbodyDoubleAnd(cfgParser.PbodyDoubleAndContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

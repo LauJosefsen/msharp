@@ -1,6 +1,5 @@
-// Generated from C:/Users/Alexi/Desktop/P4-Msharp/src/main/java\cfg.g4 by ANTLR 4.8
+// Generated from C:/Users/Alexi/floobits/share/fresser/msharp/src/main/java/msharp\cfg.g4 by ANTLR 4.8
 package msharp;
-
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -172,7 +171,7 @@ public class cfgBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements cf
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPbodySingleAnd(cfgParser.PbodySingleAndContext ctx) { return visitChildren(ctx); }
+	@Override public T visitPbodyAnd(cfgParser.PbodyAndContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -180,13 +179,6 @@ public class cfgBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements cf
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitPbodyTone(cfgParser.PbodyToneContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitPbodyDoubleAnd(cfgParser.PbodyDoubleAndContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

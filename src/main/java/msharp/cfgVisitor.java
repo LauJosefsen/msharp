@@ -1,6 +1,5 @@
-// Generated from C:/Users/Alexi/Desktop/P4-Msharp/src/main/java\cfg.g4 by ANTLR 4.8
+// Generated from C:/Users/Alexi/floobits/share/fresser/msharp/src/main/java/msharp\cfg.g4 by ANTLR 4.8
 package msharp;
-
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -158,12 +157,12 @@ public interface cfgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPbodyId(cfgParser.PbodyIdContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PbodySingleAnd}
+	 * Visit a parse tree produced by the {@code PbodyAnd}
 	 * labeled alternative in {@link cfgParser#partBody}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPbodySingleAnd(cfgParser.PbodySingleAndContext ctx);
+	T visitPbodyAnd(cfgParser.PbodyAndContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code PbodyTone}
 	 * labeled alternative in {@link cfgParser#partBody}.
@@ -171,13 +170,6 @@ public interface cfgVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPbodyTone(cfgParser.PbodyToneContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PbodyDoubleAnd}
-	 * labeled alternative in {@link cfgParser#partBody}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPbodyDoubleAnd(cfgParser.PbodyDoubleAndContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code PbodySingleLRepeat}
 	 * labeled alternative in {@link cfgParser#partBody}.

@@ -1,5 +1,6 @@
 package msharp;
 import msharp.Nodes.*;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 class buildAstVisitor extends cfgBaseVisitor<node> {
+    // Can be used for errorhandling
     private List<String> vars;
     private List<String> semanticErrors;
 
@@ -17,93 +19,75 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
         if(ctx.Digs() != null){
             node.octave = Integer.parseInt(ctx.Digs().getText());
         }
-
         return node;
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // PartBody ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
-    public node visitPbodyPause(cfgParser.PbodyPauseContext ctx) {
+    public stmtNode visitPbodyId(cfgParser.PbodyIdContext ctx) {
+        return new idNode(ctx.Id().getText());
+    }
+
+    @Override
+    public stmtNode visitPbodyPause(cfgParser.PbodyPauseContext ctx) {
         return new noteNode('-',-1);
     }
 
-
-
-    /*
-    // Part table
-    Map<String, partDclNode> data = new HashMap<String, partDclNode>();
-
     @Override
-    public node visitProg(cfgParser.ProgContext ctx) {
-        return super.visitProg(ctx);
-    }
+    public stmtNode visitPbodyParen(cfgParser.PbodyParenContext ctx) {
+        parenNode node = new parenNode();
 
-    @Override
-    public node visitPartDcl(cfgParser.PartDclContext ctx) {
-        partDclNode node = new partDclNode();
-        node.toneNodeList = new ArrayList<noteNode>();
-
-        node.id = ctx.Id().getText();
-        for (int i=0; i < 3; i++)
-        {
-            node.toneNodeList.add((noteNode) visit(ctx.partBody(i)));
+        node.stmts = new ArrayList<>();
+        for(msharp.cfgParser.StmtContext stmt : ctx.stmt()){
+            node.stmts.add((stmtNode) visit(stmt));
         }
-
-        data.put(node.id, node);
-
         return node;
     }
 
     @Override
-    public node visitPBodyTone(cfgParser.PBodyToneContext ctx) {
-        // Returns the tone node
-        return visit(ctx.tone());
+    public stmtNode visitPbodyTransUp(cfgParser.PbodyTransUpContext ctx) {
+        return new transposeNode(Integer.parseInt(ctx.Digs().getText()), (stmtNode) visit(ctx.partBody()));
     }
 
     @Override
-    public node visitPBodyId(cfgParser.PBodyIdContext ctx) {
-        // Not implemented
-
-        // Idk det gør ingen forskel
-        noteNode node = new noteNode();
-        node.letter = "b";
-        node.octave = 1;
-        return node;
-        //return super.visitPBodyId(ctx)
+    public stmtNode visitPbodyTransDown(cfgParser.PbodyTransDownContext ctx) {
+        return new transposeNode(
+                - Integer.parseInt(ctx.Digs().getText()),
+                (stmtNode) visit(ctx.partBody())
+        );
     }
 
     @Override
-    public node visitTone(cfgParser.ToneContext ctx) {
-        // Returns a tone with octave
-        noteNode node = new noteNode();
-
-        node.letter = ctx.Tone().getText();
-        try {
-            node.octave = Integer.parseInt(ctx.Dig().getText());
-        }
-        catch (Exception e) {
-            node.octave = -1;
-        }
-
-        // Debug
-        System.out.println("[" + node.letter + node.octave + "]");
-
-        return node;
+    public stmtNode visitPbodyAnd(cfgParser.PbodyAndContext ctx) {
+        return new andNode((stmtNode) visit(ctx.partBody(0)), (stmtNode) visit(ctx.partBody(1)));
     }
 
     @Override
-    public node visitPlayDcl(cfgParser.PlayDclContext ctx) {
-        playNode node = new playNode();
-        node.partList = new ArrayList<partDclNode>();
-
-        for (int i=0; i<2; i++){
-            String id = ctx.Id(i).getText();
-
-            node.partList.add(data.get(id));
-        }
-
-        return node;
+    public node visitPbodySingleLRepeat(cfgParser.PbodySingleLRepeatContext ctx) {
+        return new repeatNode(Integer.parseInt(
+                ctx.Digs().getText())
+                , (stmtNode) visit(ctx.partBody()));
     }
-    */
+
+
+
+
+
+
+    // SKAL UDFYLDES
+    @Override
+    public stmtNode visitStmtPBody(cfgParser.StmtPBodyContext ctx) {
+
+        return null;
+    }
+
+    @Override
+    public stmtNode visitStmtOps(cfgParser.StmtOpsContext ctx) {
+        return null;
+    }
 }
 
 

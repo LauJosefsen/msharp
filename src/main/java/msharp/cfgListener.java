@@ -1,5 +1,5 @@
-package msharp;// Generated from C:/Users/Alexi/Desktop/P4-Msharp/src/main/java\cfg.g4 by ANTLR 4.8
-import msharp.cfgParser;
+// Generated from C:/Users/Alexi/floobits/share/fresser/msharp/src/main/java/msharp\cfg.g4 by ANTLR 4.8
+package msharp;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -256,17 +256,17 @@ public interface cfgListener extends ParseTreeListener {
 	 */
 	void exitPbodyId(cfgParser.PbodyIdContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code PbodySingleAnd}
+	 * Enter a parse tree produced by the {@code PbodyAnd}
 	 * labeled alternative in {@link cfgParser#partBody}.
 	 * @param ctx the parse tree
 	 */
-	void enterPbodySingleAnd(cfgParser.PbodySingleAndContext ctx);
+	void enterPbodyAnd(cfgParser.PbodyAndContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code PbodySingleAnd}
+	 * Exit a parse tree produced by the {@code PbodyAnd}
 	 * labeled alternative in {@link cfgParser#partBody}.
 	 * @param ctx the parse tree
 	 */
-	void exitPbodySingleAnd(cfgParser.PbodySingleAndContext ctx);
+	void exitPbodyAnd(cfgParser.PbodyAndContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code PbodyTone}
 	 * labeled alternative in {@link cfgParser#partBody}.
@@ -279,18 +279,6 @@ public interface cfgListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPbodyTone(cfgParser.PbodyToneContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code PbodyDoubleAnd}
-	 * labeled alternative in {@link cfgParser#partBody}.
-	 * @param ctx the parse tree
-	 */
-	void enterPbodyDoubleAnd(cfgParser.PbodyDoubleAndContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code PbodyDoubleAnd}
-	 * labeled alternative in {@link cfgParser#partBody}.
-	 * @param ctx the parse tree
-	 */
-	void exitPbodyDoubleAnd(cfgParser.PbodyDoubleAndContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code PbodySingleLRepeat}
 	 * labeled alternative in {@link cfgParser#partBody}.

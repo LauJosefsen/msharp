@@ -3,8 +3,7 @@ package msharp.Nodes;
 import java.util.List;
 
 public class parenNode extends stmtNode {
-    stmtNode stmts;
-
+    public List<stmtNode> stmts;
 
     @Override
     public String toString() {
