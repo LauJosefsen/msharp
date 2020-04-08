@@ -1,5 +1,4 @@
 package msharp.Nodes;
 
-public class node {
+public class andNode {
 }
-

@@ -1,13 +1,14 @@
-/*
-import Nodes.*;
+package msharp;
+import msharp.Nodes.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class buildAstVisitor extends cfgBaseVisitor<node> {
+
     // Part table
-    Map<String, part> data = new HashMap<String, part>();
+    Map<String, partDclNode> data = new HashMap<String, partDclNode>();
 
     @Override
     public node visitProg(cfgParser.ProgContext ctx) {
@@ -16,13 +17,13 @@ public class buildAstVisitor extends cfgBaseVisitor<node> {
 
     @Override
     public node visitPartDcl(cfgParser.PartDclContext ctx) {
-        part node = new part();
-        node.toneList = new ArrayList<tone>();
+        partDclNode node = new partDclNode();
+        node.toneNodeList = new ArrayList<noteNode>();
 
         node.id = ctx.Id().getText();
         for (int i=0; i < 3; i++)
         {
-            node.toneList.add((tone) visit(ctx.partBody(i)));
+            node.toneNodeList.add((noteNode) visit(ctx.partBody(i)));
         }
 
         data.put(node.id, node);
@@ -41,7 +42,7 @@ public class buildAstVisitor extends cfgBaseVisitor<node> {
         // Not implemented
 
         // Idk det gør ingen forskel
-        tone node = new tone();
+        noteNode node = new noteNode();
         node.letter = "b";
         node.octave = 1;
         return node;
@@ -51,7 +52,7 @@ public class buildAstVisitor extends cfgBaseVisitor<node> {
     @Override
     public node visitTone(cfgParser.ToneContext ctx) {
         // Returns a tone with octave
-        tone node = new tone();
+        noteNode node = new noteNode();
 
         node.letter = ctx.Tone().getText();
         try {
@@ -69,8 +70,8 @@ public class buildAstVisitor extends cfgBaseVisitor<node> {
 
     @Override
     public node visitPlayDcl(cfgParser.PlayDclContext ctx) {
-        play node = new play();
-        node.partList = new ArrayList<part>();
+        playNode node = new playNode();
+        node.partList = new ArrayList<partDclNode>();
 
         for (int i=0; i<2; i++){
             String id = ctx.Id(i).getText();
@@ -81,12 +82,6 @@ public class buildAstVisitor extends cfgBaseVisitor<node> {
         return node;
     }
 }
-
-
-
-
-*/
-
 
 
 
