@@ -1,4 +1,5 @@
-// Generated from C:/Users/Alexi/Desktop/P4-Msharp/src/main/java\cfg.g4 by ANTLR 4.8
+package msharp;// Generated from C:/Users/Alexi/Desktop/P4-Msharp/src/main/java\cfg.g4 by ANTLR 4.8
+import msharp.cfgParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
