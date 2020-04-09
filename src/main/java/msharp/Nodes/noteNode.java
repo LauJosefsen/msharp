@@ -1,7 +1,7 @@
 package msharp.Nodes;
 
 public class noteNode extends stmtNode {
-    public char letter;
+    private char letter;
     public int octave;
 
     public noteNode(char letter, int octave) {

@@ -17,11 +17,19 @@ public interface cfgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProg(cfgParser.ProgContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link cfgParser#partDcl}.
+	 * Visit a parse tree produced by the {@code PartDclSingleLine}
+	 * labeled alternative in {@link cfgParser#partDcl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPartDcl(cfgParser.PartDclContext ctx);
+	T visitPartDclSingleLine(cfgParser.PartDclSingleLineContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code PartDclMultiLine}
+	 * labeled alternative in {@link cfgParser#partDcl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPartDclMultiLine(cfgParser.PartDclMultiLineContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link cfgParser#playDcl}.
 	 * @param ctx the parse tree
@@ -78,12 +86,6 @@ public interface cfgVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitOpsBpmDcl(cfgParser.OpsBpmDclContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link cfgParser#bpmDcl}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitBpmDcl(cfgParser.BpmDclContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link cfgParser#tempoOp}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -116,6 +118,20 @@ public interface cfgVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMultilineRepeat(cfgParser.MultilineRepeatContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MultStmtOrEveryStmtMultStmt}
+	 * labeled alternative in {@link cfgParser#multStmtOrEveryStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultStmtOrEveryStmtMultStmt(cfgParser.MultStmtOrEveryStmtMultStmtContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MultStmtOrEveryStmtEveryStmt}
+	 * labeled alternative in {@link cfgParser#multStmtOrEveryStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultStmtOrEveryStmtEveryStmt(cfgParser.MultStmtOrEveryStmtEveryStmtContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link cfgParser#everyStmt}.
 	 * @param ctx the parse tree

@@ -13,7 +13,7 @@ public class msharp {
     public static void main(String[] args) throws IOException {
         // temporary input string to test with
         //String str = "a = 10 10 + a - 32";
-        String str = new String(Files.readAllBytes(Paths.get("input.txt")));
+        String str = new String(Files.readAllBytes(Paths.get("examples/hallelujah.txt")));
 
         // create a CharStream that reads from standard input
         ANTLRInputStream input = new ANTLRInputStream(str);
@@ -37,6 +37,14 @@ public class msharp {
 
         buildAstVisitor visitor = new buildAstVisitor();
         visitor.visit(tree);
+
+        if(visitor.getSemanticErrors().size() > 0){
+            for(String error : visitor.getSemanticErrors()){
+                System.out.println(error);
+            }
+            return;
+        }
+
         String result = visitor.visit(tree).toString();
 
         System.out.println(tree.toStringTree(parser)); // print LISP-style tree

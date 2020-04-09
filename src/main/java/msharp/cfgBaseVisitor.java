@@ -24,7 +24,14 @@ public class cfgBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements cf
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPartDcl(cfgParser.PartDclContext ctx) { return visitChildren(ctx); }
+	@Override public T visitPartDclSingleLine(cfgParser.PartDclSingleLineContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitPartDclMultiLine(cfgParser.PartDclMultiLineContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -87,13 +94,6 @@ public class cfgBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements cf
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBpmDcl(cfgParser.BpmDclContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
 	@Override public T visitTempoOp(cfgParser.TempoOpContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -123,6 +123,20 @@ public class cfgBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements cf
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitMultilineRepeat(cfgParser.MultilineRepeatContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitMultStmtOrEveryStmtMultStmt(cfgParser.MultStmtOrEveryStmtMultStmtContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitMultStmtOrEveryStmtEveryStmt(cfgParser.MultStmtOrEveryStmtEveryStmtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

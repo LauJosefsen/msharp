@@ -1,10 +1,17 @@
 package msharp.Nodes;
 
-import java.util.List;
 
 public class partDclNode extends node {
+    public partDclNode(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
     public String id;
-    public stmtNode stmtList;
+    public stmtList stmts = new stmtList();
 
     @Override
     public String toString() {

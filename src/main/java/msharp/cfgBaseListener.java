@@ -28,13 +28,25 @@ public class cfgBaseListener implements cfgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPartDcl(cfgParser.PartDclContext ctx) { }
+	@Override public void enterPartDclSingleLine(cfgParser.PartDclSingleLineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPartDcl(cfgParser.PartDclContext ctx) { }
+	@Override public void exitPartDclSingleLine(cfgParser.PartDclSingleLineContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPartDclMultiLine(cfgParser.PartDclMultiLineContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPartDclMultiLine(cfgParser.PartDclMultiLineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -136,18 +148,6 @@ public class cfgBaseListener implements cfgListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBpmDcl(cfgParser.BpmDclContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBpmDcl(cfgParser.BpmDclContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterTempoOp(cfgParser.TempoOpContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -203,6 +203,30 @@ public class cfgBaseListener implements cfgListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMultilineRepeat(cfgParser.MultilineRepeatContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMultStmtOrEveryStmtMultStmt(cfgParser.MultStmtOrEveryStmtMultStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMultStmtOrEveryStmtMultStmt(cfgParser.MultStmtOrEveryStmtMultStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMultStmtOrEveryStmtEveryStmt(cfgParser.MultStmtOrEveryStmtEveryStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMultStmtOrEveryStmtEveryStmt(cfgParser.MultStmtOrEveryStmtEveryStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

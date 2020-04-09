@@ -1,7 +1,7 @@
 package msharp.Nodes;
 
 public class idNode extends stmtNode{
-    String id;
+    private String id;
 
     public idNode(String id) {
         this.id = id;

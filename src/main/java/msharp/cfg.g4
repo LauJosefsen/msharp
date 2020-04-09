@@ -5,8 +5,8 @@ prog
     ;
 
 partDcl
-    : Id Assign stmt+ Nl                            // Single Line
-    | 'part' Id Nl multStmt+ Nl 'end part' Nl      // Multi Line
+    : Id Assign stmt+                           # PartDclSingleLine
+    | 'part' Id Nl multStmt+ Nl 'end part' Nl   # PartDclMultiLine
     ;
 playDcl
     : 'play' Nl multStmt+  Nl 'end play'
@@ -18,15 +18,11 @@ stmt
     ;
 
 ops
-    : Instrument            # OpsIntru
-    | OctaveDown            # OpsOctDown
-    | OctaveUp              # OpsOctUp
-    | tempoOp               # OpsTempOp
-    | bpmDcl                # OpsBpmDcl
-    ;
-
-bpmDcl
-    : Bpm Lparen Digs Comma tempoOp Rparen
+    : Instrument                                # OpsIntru
+    | OctaveDown                                # OpsOctDown
+    | OctaveUp                                  # OpsOctUp
+    | tempoOp                                   # OpsTempOp
+    | Bpm Lparen Digs Comma tempoOp Rparen      # OpsBpmDcl
     ;
 
 tempoOp
@@ -40,13 +36,19 @@ multStmt    // Todo
     ;
 
 multilineRepeat
-    : 'repeat' Digs 'times' Nl (multStmt | everyStmt)+ 'end repeat'
+    : 'repeat' Digs 'times' Nl multStmtOrEveryStmt+ 'end repeat'
     ;
+
+multStmtOrEveryStmt
+    : multStmt              # MultStmtOrEveryStmtMultStmt
+    | everyStmt             # MultStmtOrEveryStmtEveryStmt
+    ;
+
 everyStmt
-    : 'every' Digs 'times' Nl (multStmt | everyStmt)+ 'end every' Nl+? elseStmt?
+    : 'every' Digs 'times' Nl multStmtOrEveryStmt+ 'end every' Nl+? elseStmt?
     ;
 elseStmt
-    : 'else' Nl (multStmt | everyStmt)+ 'end else'
+    : 'else' Nl multStmtOrEveryStmt+ 'end else'
     ;
 
 partBody

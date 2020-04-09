@@ -18,15 +18,29 @@ public interface cfgListener extends ParseTreeListener {
 	 */
 	void exitProg(cfgParser.ProgContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link cfgParser#partDcl}.
+	 * Enter a parse tree produced by the {@code PartDclSingleLine}
+	 * labeled alternative in {@link cfgParser#partDcl}.
 	 * @param ctx the parse tree
 	 */
-	void enterPartDcl(cfgParser.PartDclContext ctx);
+	void enterPartDclSingleLine(cfgParser.PartDclSingleLineContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link cfgParser#partDcl}.
+	 * Exit a parse tree produced by the {@code PartDclSingleLine}
+	 * labeled alternative in {@link cfgParser#partDcl}.
 	 * @param ctx the parse tree
 	 */
-	void exitPartDcl(cfgParser.PartDclContext ctx);
+	void exitPartDclSingleLine(cfgParser.PartDclSingleLineContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code PartDclMultiLine}
+	 * labeled alternative in {@link cfgParser#partDcl}.
+	 * @param ctx the parse tree
+	 */
+	void enterPartDclMultiLine(cfgParser.PartDclMultiLineContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code PartDclMultiLine}
+	 * labeled alternative in {@link cfgParser#partDcl}.
+	 * @param ctx the parse tree
+	 */
+	void exitPartDclMultiLine(cfgParser.PartDclMultiLineContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link cfgParser#playDcl}.
 	 * @param ctx the parse tree
@@ -122,16 +136,6 @@ public interface cfgListener extends ParseTreeListener {
 	 */
 	void exitOpsBpmDcl(cfgParser.OpsBpmDclContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link cfgParser#bpmDcl}.
-	 * @param ctx the parse tree
-	 */
-	void enterBpmDcl(cfgParser.BpmDclContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link cfgParser#bpmDcl}.
-	 * @param ctx the parse tree
-	 */
-	void exitBpmDcl(cfgParser.BpmDclContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link cfgParser#tempoOp}.
 	 * @param ctx the parse tree
 	 */
@@ -187,6 +191,30 @@ public interface cfgListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMultilineRepeat(cfgParser.MultilineRepeatContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code MultStmtOrEveryStmtMultStmt}
+	 * labeled alternative in {@link cfgParser#multStmtOrEveryStmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultStmtOrEveryStmtMultStmt(cfgParser.MultStmtOrEveryStmtMultStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code MultStmtOrEveryStmtMultStmt}
+	 * labeled alternative in {@link cfgParser#multStmtOrEveryStmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultStmtOrEveryStmtMultStmt(cfgParser.MultStmtOrEveryStmtMultStmtContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code MultStmtOrEveryStmtEveryStmt}
+	 * labeled alternative in {@link cfgParser#multStmtOrEveryStmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultStmtOrEveryStmtEveryStmt(cfgParser.MultStmtOrEveryStmtEveryStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code MultStmtOrEveryStmtEveryStmt}
+	 * labeled alternative in {@link cfgParser#multStmtOrEveryStmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultStmtOrEveryStmtEveryStmt(cfgParser.MultStmtOrEveryStmtEveryStmtContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link cfgParser#everyStmt}.
 	 * @param ctx the parse tree

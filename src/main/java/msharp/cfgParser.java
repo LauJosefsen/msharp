@@ -24,12 +24,12 @@ public class cfgParser extends Parser {
 		Peroids=30, S=31, MultilineComment=32, SingleLineComment=33;
 	public static final int
 		RULE_prog = 0, RULE_partDcl = 1, RULE_playDcl = 2, RULE_stmt = 3, RULE_ops = 4, 
-		RULE_bpmDcl = 5, RULE_tempoOp = 6, RULE_multStmt = 7, RULE_multilineRepeat = 8, 
+		RULE_tempoOp = 5, RULE_multStmt = 6, RULE_multilineRepeat = 7, RULE_multStmtOrEveryStmt = 8, 
 		RULE_everyStmt = 9, RULE_elseStmt = 10, RULE_partBody = 11;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"prog", "partDcl", "playDcl", "stmt", "ops", "bpmDcl", "tempoOp", "multStmt", 
-			"multilineRepeat", "everyStmt", "elseStmt", "partBody"
+			"prog", "partDcl", "playDcl", "stmt", "ops", "tempoOp", "multStmt", "multilineRepeat", 
+			"multStmtOrEveryStmt", "everyStmt", "elseStmt", "partBody"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -187,17 +187,21 @@ public class cfgParser extends Parser {
 	}
 
 	public static class PartDclContext extends ParserRuleContext {
+		public PartDclContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_partDcl; }
+	 
+		public PartDclContext() { }
+		public void copyFrom(PartDclContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class PartDclMultiLineContext extends PartDclContext {
 		public TerminalNode Id() { return getToken(cfgParser.Id, 0); }
-		public TerminalNode Assign() { return getToken(cfgParser.Assign, 0); }
 		public List<TerminalNode> Nl() { return getTokens(cfgParser.Nl); }
 		public TerminalNode Nl(int i) {
 			return getToken(cfgParser.Nl, i);
-		}
-		public List<StmtContext> stmt() {
-			return getRuleContexts(StmtContext.class);
-		}
-		public StmtContext stmt(int i) {
-			return getRuleContext(StmtContext.class,i);
 		}
 		public List<MultStmtContext> multStmt() {
 			return getRuleContexts(MultStmtContext.class);
@@ -205,21 +209,42 @@ public class cfgParser extends Parser {
 		public MultStmtContext multStmt(int i) {
 			return getRuleContext(MultStmtContext.class,i);
 		}
-		public PartDclContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_partDcl; }
+		public PartDclMultiLineContext(PartDclContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof cfgListener ) ((cfgListener)listener).enterPartDcl(this);
+			if ( listener instanceof cfgListener ) ((cfgListener)listener).enterPartDclMultiLine(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof cfgListener ) ((cfgListener)listener).exitPartDcl(this);
+			if ( listener instanceof cfgListener ) ((cfgListener)listener).exitPartDclMultiLine(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof cfgVisitor ) return ((cfgVisitor<? extends T>)visitor).visitPartDcl(this);
+			if ( visitor instanceof cfgVisitor ) return ((cfgVisitor<? extends T>)visitor).visitPartDclMultiLine(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class PartDclSingleLineContext extends PartDclContext {
+		public TerminalNode Id() { return getToken(cfgParser.Id, 0); }
+		public TerminalNode Assign() { return getToken(cfgParser.Assign, 0); }
+		public List<StmtContext> stmt() {
+			return getRuleContexts(StmtContext.class);
+		}
+		public StmtContext stmt(int i) {
+			return getRuleContext(StmtContext.class,i);
+		}
+		public PartDclSingleLineContext(PartDclContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof cfgListener ) ((cfgListener)listener).enterPartDclSingleLine(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof cfgListener ) ((cfgListener)listener).exitPartDclSingleLine(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof cfgVisitor ) return ((cfgVisitor<? extends T>)visitor).visitPartDclSingleLine(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -227,13 +252,13 @@ public class cfgParser extends Parser {
 	public final PartDclContext partDcl() throws RecognitionException {
 		PartDclContext _localctx = new PartDclContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_partDcl);
-		int _la;
 		try {
 			int _alt;
-			setState(54);
+			setState(52);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case Id:
+				_localctx = new PartDclSingleLineContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(33);
@@ -242,32 +267,37 @@ public class cfgParser extends Parser {
 				match(Assign);
 				setState(36); 
 				_errHandler.sync(this);
-				_la = _input.LA(1);
+				_alt = 1;
 				do {
-					{
-					{
-					setState(35);
-					stmt();
-					}
+					switch (_alt) {
+					case 1:
+						{
+						{
+						setState(35);
+						stmt();
+						}
+						}
+						break;
+					default:
+						throw new NoViableAltException(this);
 					}
 					setState(38); 
 					_errHandler.sync(this);
-					_la = _input.LA(1);
-				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Bpm) | (1L << Tone) | (1L << Lparen) | (1L << Digs) | (1L << Instrument) | (1L << OctaveUp) | (1L << OctaveDown) | (1L << Pause) | (1L << Id))) != 0) );
-				setState(40);
-				match(Nl);
+					_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+				} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
 				}
 				break;
 			case T__0:
+				_localctx = new PartDclMultiLineContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(42);
+				setState(40);
 				match(T__0);
-				setState(43);
+				setState(41);
 				match(Id);
-				setState(44);
+				setState(42);
 				match(Nl);
-				setState(46); 
+				setState(44); 
 				_errHandler.sync(this);
 				_alt = 1;
 				do {
@@ -275,7 +305,7 @@ public class cfgParser extends Parser {
 					case 1:
 						{
 						{
-						setState(45);
+						setState(43);
 						multStmt();
 						}
 						}
@@ -283,15 +313,15 @@ public class cfgParser extends Parser {
 					default:
 						throw new NoViableAltException(this);
 					}
-					setState(48); 
+					setState(46); 
 					_errHandler.sync(this);
 					_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 				} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
-				setState(50);
+				setState(48);
 				match(Nl);
-				setState(51);
+				setState(49);
 				match(T__1);
-				setState(52);
+				setState(50);
 				match(Nl);
 				}
 				break;
@@ -347,11 +377,11 @@ public class cfgParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(56);
+			setState(54);
 			match(T__2);
-			setState(57);
+			setState(55);
 			match(Nl);
-			setState(59); 
+			setState(57); 
 			_errHandler.sync(this);
 			_alt = 1;
 			do {
@@ -359,7 +389,7 @@ public class cfgParser extends Parser {
 				case 1:
 					{
 					{
-					setState(58);
+					setState(56);
 					multStmt();
 					}
 					}
@@ -367,13 +397,13 @@ public class cfgParser extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(61); 
+				setState(59); 
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
 			} while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
-			setState(63);
+			setState(61);
 			match(Nl);
-			setState(64);
+			setState(62);
 			match(T__3);
 			}
 		}
@@ -442,7 +472,7 @@ public class cfgParser extends Parser {
 		StmtContext _localctx = new StmtContext(_ctx, getState());
 		enterRule(_localctx, 6, RULE_stmt);
 		try {
-			setState(68);
+			setState(66);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case Tone:
@@ -452,7 +482,7 @@ public class cfgParser extends Parser {
 				_localctx = new StmtPBodyContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(66);
+				setState(64);
 				partBody(0);
 				}
 				break;
@@ -464,7 +494,7 @@ public class cfgParser extends Parser {
 				_localctx = new StmtOpsContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(67);
+				setState(65);
 				ops();
 				}
 				break;
@@ -529,9 +559,14 @@ public class cfgParser extends Parser {
 		}
 	}
 	public static class OpsBpmDclContext extends OpsContext {
-		public BpmDclContext bpmDcl() {
-			return getRuleContext(BpmDclContext.class,0);
+		public TerminalNode Bpm() { return getToken(cfgParser.Bpm, 0); }
+		public TerminalNode Lparen() { return getToken(cfgParser.Lparen, 0); }
+		public TerminalNode Digs() { return getToken(cfgParser.Digs, 0); }
+		public TerminalNode Comma() { return getToken(cfgParser.Comma, 0); }
+		public TempoOpContext tempoOp() {
+			return getRuleContext(TempoOpContext.class,0);
 		}
+		public TerminalNode Rparen() { return getToken(cfgParser.Rparen, 0); }
 		public OpsBpmDclContext(OpsContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -588,14 +623,14 @@ public class cfgParser extends Parser {
 		OpsContext _localctx = new OpsContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_ops);
 		try {
-			setState(75);
+			setState(79);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case Instrument:
 				_localctx = new OpsIntruContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(70);
+				setState(68);
 				match(Instrument);
 				}
 				break;
@@ -603,7 +638,7 @@ public class cfgParser extends Parser {
 				_localctx = new OpsOctDownContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(71);
+				setState(69);
 				match(OctaveDown);
 				}
 				break;
@@ -611,7 +646,7 @@ public class cfgParser extends Parser {
 				_localctx = new OpsOctUpContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(72);
+				setState(70);
 				match(OctaveUp);
 				}
 				break;
@@ -619,7 +654,7 @@ public class cfgParser extends Parser {
 				_localctx = new OpsTempOpContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(73);
+				setState(71);
 				tempoOp();
 				}
 				break;
@@ -627,71 +662,22 @@ public class cfgParser extends Parser {
 				_localctx = new OpsBpmDclContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
+				setState(72);
+				match(Bpm);
+				setState(73);
+				match(Lparen);
 				setState(74);
-				bpmDcl();
+				match(Digs);
+				setState(75);
+				match(Comma);
+				setState(76);
+				tempoOp();
+				setState(77);
+				match(Rparen);
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class BpmDclContext extends ParserRuleContext {
-		public TerminalNode Bpm() { return getToken(cfgParser.Bpm, 0); }
-		public TerminalNode Lparen() { return getToken(cfgParser.Lparen, 0); }
-		public TerminalNode Digs() { return getToken(cfgParser.Digs, 0); }
-		public TerminalNode Comma() { return getToken(cfgParser.Comma, 0); }
-		public TempoOpContext tempoOp() {
-			return getRuleContext(TempoOpContext.class,0);
-		}
-		public TerminalNode Rparen() { return getToken(cfgParser.Rparen, 0); }
-		public BpmDclContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_bpmDcl; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof cfgListener ) ((cfgListener)listener).enterBpmDcl(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof cfgListener ) ((cfgListener)listener).exitBpmDcl(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof cfgVisitor ) return ((cfgVisitor<? extends T>)visitor).visitBpmDcl(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final BpmDclContext bpmDcl() throws RecognitionException {
-		BpmDclContext _localctx = new BpmDclContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_bpmDcl);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(77);
-			match(Bpm);
-			setState(78);
-			match(Lparen);
-			setState(79);
-			match(Digs);
-			setState(80);
-			match(Comma);
-			setState(81);
-			tempoOp();
-			setState(82);
-			match(Rparen);
 			}
 		}
 		catch (RecognitionException re) {
@@ -732,15 +718,15 @@ public class cfgParser extends Parser {
 
 	public final TempoOpContext tempoOp() throws RecognitionException {
 		TempoOpContext _localctx = new TempoOpContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_tempoOp);
+		enterRule(_localctx, 10, RULE_tempoOp);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(84);
+			setState(81);
 			match(Digs);
-			setState(85);
+			setState(82);
 			match(Percent);
-			setState(86);
+			setState(83);
 			match(Digs);
 			}
 		}
@@ -824,9 +810,9 @@ public class cfgParser extends Parser {
 
 	public final MultStmtContext multStmt() throws RecognitionException {
 		MultStmtContext _localctx = new MultStmtContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_multStmt);
+		enterRule(_localctx, 12, RULE_multStmt);
 		try {
-			setState(91);
+			setState(88);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case Bpm:
@@ -841,7 +827,7 @@ public class cfgParser extends Parser {
 				_localctx = new MultStmtStmtContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(88);
+				setState(85);
 				stmt();
 				}
 				break;
@@ -849,7 +835,7 @@ public class cfgParser extends Parser {
 				_localctx = new MultStmtNLContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(89);
+				setState(86);
 				match(Nl);
 				}
 				break;
@@ -857,7 +843,7 @@ public class cfgParser extends Parser {
 				_localctx = new MultStmtMultRepeatContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(90);
+				setState(87);
 				multilineRepeat();
 				}
 				break;
@@ -879,17 +865,11 @@ public class cfgParser extends Parser {
 	public static class MultilineRepeatContext extends ParserRuleContext {
 		public TerminalNode Digs() { return getToken(cfgParser.Digs, 0); }
 		public TerminalNode Nl() { return getToken(cfgParser.Nl, 0); }
-		public List<MultStmtContext> multStmt() {
-			return getRuleContexts(MultStmtContext.class);
+		public List<MultStmtOrEveryStmtContext> multStmtOrEveryStmt() {
+			return getRuleContexts(MultStmtOrEveryStmtContext.class);
 		}
-		public MultStmtContext multStmt(int i) {
-			return getRuleContext(MultStmtContext.class,i);
-		}
-		public List<EveryStmtContext> everyStmt() {
-			return getRuleContexts(EveryStmtContext.class);
-		}
-		public EveryStmtContext everyStmt(int i) {
-			return getRuleContext(EveryStmtContext.class,i);
+		public MultStmtOrEveryStmtContext multStmtOrEveryStmt(int i) {
+			return getRuleContext(MultStmtOrEveryStmtContext.class,i);
 		}
 		public MultilineRepeatContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -912,59 +892,133 @@ public class cfgParser extends Parser {
 
 	public final MultilineRepeatContext multilineRepeat() throws RecognitionException {
 		MultilineRepeatContext _localctx = new MultilineRepeatContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_multilineRepeat);
+		enterRule(_localctx, 14, RULE_multilineRepeat);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(93);
+			setState(90);
 			match(T__4);
-			setState(94);
+			setState(91);
 			match(Digs);
-			setState(95);
+			setState(92);
 			match(T__5);
-			setState(96);
+			setState(93);
 			match(Nl);
-			setState(99); 
+			setState(95); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
-				setState(99);
-				_errHandler.sync(this);
-				switch (_input.LA(1)) {
-				case T__4:
-				case Nl:
-				case Bpm:
-				case Tone:
-				case Lparen:
-				case Digs:
-				case Instrument:
-				case OctaveUp:
-				case OctaveDown:
-				case Pause:
-				case Id:
-					{
-					setState(97);
-					multStmt();
-					}
-					break;
-				case T__7:
-					{
-					setState(98);
-					everyStmt();
-					}
-					break;
-				default:
-					throw new NoViableAltException(this);
+				{
+				setState(94);
+				multStmtOrEveryStmt();
 				}
 				}
-				setState(101); 
+				setState(97); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__4) | (1L << T__7) | (1L << Nl) | (1L << Bpm) | (1L << Tone) | (1L << Lparen) | (1L << Digs) | (1L << Instrument) | (1L << OctaveUp) | (1L << OctaveDown) | (1L << Pause) | (1L << Id))) != 0) );
-			setState(103);
+			setState(99);
 			match(T__6);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class MultStmtOrEveryStmtContext extends ParserRuleContext {
+		public MultStmtOrEveryStmtContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_multStmtOrEveryStmt; }
+	 
+		public MultStmtOrEveryStmtContext() { }
+		public void copyFrom(MultStmtOrEveryStmtContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class MultStmtOrEveryStmtEveryStmtContext extends MultStmtOrEveryStmtContext {
+		public EveryStmtContext everyStmt() {
+			return getRuleContext(EveryStmtContext.class,0);
+		}
+		public MultStmtOrEveryStmtEveryStmtContext(MultStmtOrEveryStmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof cfgListener ) ((cfgListener)listener).enterMultStmtOrEveryStmtEveryStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof cfgListener ) ((cfgListener)listener).exitMultStmtOrEveryStmtEveryStmt(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof cfgVisitor ) return ((cfgVisitor<? extends T>)visitor).visitMultStmtOrEveryStmtEveryStmt(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class MultStmtOrEveryStmtMultStmtContext extends MultStmtOrEveryStmtContext {
+		public MultStmtContext multStmt() {
+			return getRuleContext(MultStmtContext.class,0);
+		}
+		public MultStmtOrEveryStmtMultStmtContext(MultStmtOrEveryStmtContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof cfgListener ) ((cfgListener)listener).enterMultStmtOrEveryStmtMultStmt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof cfgListener ) ((cfgListener)listener).exitMultStmtOrEveryStmtMultStmt(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof cfgVisitor ) return ((cfgVisitor<? extends T>)visitor).visitMultStmtOrEveryStmtMultStmt(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final MultStmtOrEveryStmtContext multStmtOrEveryStmt() throws RecognitionException {
+		MultStmtOrEveryStmtContext _localctx = new MultStmtOrEveryStmtContext(_ctx, getState());
+		enterRule(_localctx, 16, RULE_multStmtOrEveryStmt);
+		try {
+			setState(103);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case T__4:
+			case Nl:
+			case Bpm:
+			case Tone:
+			case Lparen:
+			case Digs:
+			case Instrument:
+			case OctaveUp:
+			case OctaveDown:
+			case Pause:
+			case Id:
+				_localctx = new MultStmtOrEveryStmtMultStmtContext(_localctx);
+				enterOuterAlt(_localctx, 1);
+				{
+				setState(101);
+				multStmt();
+				}
+				break;
+			case T__7:
+				_localctx = new MultStmtOrEveryStmtEveryStmtContext(_localctx);
+				enterOuterAlt(_localctx, 2);
+				{
+				setState(102);
+				everyStmt();
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -984,17 +1038,11 @@ public class cfgParser extends Parser {
 		public TerminalNode Nl(int i) {
 			return getToken(cfgParser.Nl, i);
 		}
-		public List<MultStmtContext> multStmt() {
-			return getRuleContexts(MultStmtContext.class);
+		public List<MultStmtOrEveryStmtContext> multStmtOrEveryStmt() {
+			return getRuleContexts(MultStmtOrEveryStmtContext.class);
 		}
-		public MultStmtContext multStmt(int i) {
-			return getRuleContext(MultStmtContext.class,i);
-		}
-		public List<EveryStmtContext> everyStmt() {
-			return getRuleContexts(EveryStmtContext.class);
-		}
-		public EveryStmtContext everyStmt(int i) {
-			return getRuleContext(EveryStmtContext.class,i);
+		public MultStmtOrEveryStmtContext multStmtOrEveryStmt(int i) {
+			return getRuleContext(MultStmtOrEveryStmtContext.class,i);
 		}
 		public ElseStmtContext elseStmt() {
 			return getRuleContext(ElseStmtContext.class,0);
@@ -1034,47 +1082,23 @@ public class cfgParser extends Parser {
 			match(T__5);
 			setState(108);
 			match(Nl);
-			setState(111); 
+			setState(110); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
-				setState(111);
-				_errHandler.sync(this);
-				switch (_input.LA(1)) {
-				case T__4:
-				case Nl:
-				case Bpm:
-				case Tone:
-				case Lparen:
-				case Digs:
-				case Instrument:
-				case OctaveUp:
-				case OctaveDown:
-				case Pause:
-				case Id:
-					{
-					setState(109);
-					multStmt();
-					}
-					break;
-				case T__7:
-					{
-					setState(110);
-					everyStmt();
-					}
-					break;
-				default:
-					throw new NoViableAltException(this);
+				{
+				setState(109);
+				multStmtOrEveryStmt();
 				}
 				}
-				setState(113); 
+				setState(112); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__4) | (1L << T__7) | (1L << Nl) | (1L << Bpm) | (1L << Tone) | (1L << Lparen) | (1L << Digs) | (1L << Instrument) | (1L << OctaveUp) | (1L << OctaveDown) | (1L << Pause) | (1L << Id))) != 0) );
-			setState(115);
+			setState(114);
 			match(T__8);
-			setState(117); 
+			setState(116); 
 			_errHandler.sync(this);
 			_alt = 1+1;
 			do {
@@ -1082,7 +1106,7 @@ public class cfgParser extends Parser {
 				case 1+1:
 					{
 					{
-					setState(116);
+					setState(115);
 					match(Nl);
 					}
 					}
@@ -1090,16 +1114,16 @@ public class cfgParser extends Parser {
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(119); 
+				setState(118); 
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,13,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,12,_ctx);
 			} while ( _alt!=1 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER );
-			setState(122);
+			setState(121);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__9) {
 				{
-				setState(121);
+				setState(120);
 				elseStmt();
 				}
 			}
@@ -1119,17 +1143,11 @@ public class cfgParser extends Parser {
 
 	public static class ElseStmtContext extends ParserRuleContext {
 		public TerminalNode Nl() { return getToken(cfgParser.Nl, 0); }
-		public List<MultStmtContext> multStmt() {
-			return getRuleContexts(MultStmtContext.class);
+		public List<MultStmtOrEveryStmtContext> multStmtOrEveryStmt() {
+			return getRuleContexts(MultStmtOrEveryStmtContext.class);
 		}
-		public MultStmtContext multStmt(int i) {
-			return getRuleContext(MultStmtContext.class,i);
-		}
-		public List<EveryStmtContext> everyStmt() {
-			return getRuleContexts(EveryStmtContext.class);
-		}
-		public EveryStmtContext everyStmt(int i) {
-			return getRuleContext(EveryStmtContext.class,i);
+		public MultStmtOrEveryStmtContext multStmtOrEveryStmt(int i) {
+			return getRuleContext(MultStmtOrEveryStmtContext.class,i);
 		}
 		public ElseStmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1157,49 +1175,25 @@ public class cfgParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(124);
+			setState(123);
 			match(T__9);
-			setState(125);
+			setState(124);
 			match(Nl);
-			setState(128); 
+			setState(126); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
-				setState(128);
-				_errHandler.sync(this);
-				switch (_input.LA(1)) {
-				case T__4:
-				case Nl:
-				case Bpm:
-				case Tone:
-				case Lparen:
-				case Digs:
-				case Instrument:
-				case OctaveUp:
-				case OctaveDown:
-				case Pause:
-				case Id:
-					{
-					setState(126);
-					multStmt();
-					}
-					break;
-				case T__7:
-					{
-					setState(127);
-					everyStmt();
-					}
-					break;
-				default:
-					throw new NoViableAltException(this);
+				{
+				setState(125);
+				multStmtOrEveryStmt();
 				}
 				}
-				setState(130); 
+				setState(128); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__4) | (1L << T__7) | (1L << Nl) | (1L << Bpm) | (1L << Tone) | (1L << Lparen) | (1L << Digs) | (1L << Instrument) | (1L << OctaveUp) | (1L << OctaveDown) | (1L << Pause) | (1L << Id))) != 0) );
-			setState(132);
+			setState(130);
 			match(T__10);
 			}
 		}
@@ -1404,7 +1398,7 @@ public class cfgParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(149);
+			setState(147);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case Tone:
@@ -1413,14 +1407,14 @@ public class cfgParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(135);
+				setState(133);
 				match(Tone);
-				setState(137);
+				setState(135);
 				_errHandler.sync(this);
-				switch ( getInterpreter().adaptivePredict(_input,17,_ctx) ) {
+				switch ( getInterpreter().adaptivePredict(_input,15,_ctx) ) {
 				case 1:
 					{
-					setState(136);
+					setState(134);
 					match(Digs);
 					}
 					break;
@@ -1432,7 +1426,7 @@ public class cfgParser extends Parser {
 				_localctx = new PbodyIdContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(139);
+				setState(137);
 				match(Id);
 				}
 				break;
@@ -1441,7 +1435,7 @@ public class cfgParser extends Parser {
 				_localctx = new PbodyPauseContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(140);
+				setState(138);
 				match(Pause);
 				}
 				break;
@@ -1450,23 +1444,23 @@ public class cfgParser extends Parser {
 				_localctx = new PbodyParenContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(141);
+				setState(139);
 				match(Lparen);
-				setState(143); 
+				setState(141); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(142);
+					setState(140);
 					stmt();
 					}
 					}
-					setState(145); 
+					setState(143); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << Bpm) | (1L << Tone) | (1L << Lparen) | (1L << Digs) | (1L << Instrument) | (1L << OctaveUp) | (1L << OctaveDown) | (1L << Pause) | (1L << Id))) != 0) );
-				setState(147);
+				setState(145);
 				match(Rparen);
 				}
 				break;
@@ -1474,26 +1468,26 @@ public class cfgParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(169);
+			setState(167);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,21,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(167);
+					setState(165);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,22,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,20,_ctx) ) {
 					case 1:
 						{
 						_localctx = new PbodyAndContext(new PartBodyContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_partBody);
-						setState(151);
+						setState(149);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(152);
+						setState(150);
 						match(And);
-						setState(153);
+						setState(151);
 						partBody(3);
 						}
 						break;
@@ -1501,16 +1495,16 @@ public class cfgParser extends Parser {
 						{
 						_localctx = new PbodyTransUpContext(new PartBodyContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_partBody);
-						setState(154);
+						setState(152);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(155);
+						setState(153);
 						match(TransposeUp);
-						setState(157);
+						setState(155);
 						_errHandler.sync(this);
-						switch ( getInterpreter().adaptivePredict(_input,20,_ctx) ) {
+						switch ( getInterpreter().adaptivePredict(_input,18,_ctx) ) {
 						case 1:
 							{
-							setState(156);
+							setState(154);
 							match(Digs);
 							}
 							break;
@@ -1521,16 +1515,16 @@ public class cfgParser extends Parser {
 						{
 						_localctx = new PbodyTransDownContext(new PartBodyContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_partBody);
-						setState(159);
+						setState(157);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(160);
+						setState(158);
 						match(TransposeDown);
-						setState(162);
+						setState(160);
 						_errHandler.sync(this);
-						switch ( getInterpreter().adaptivePredict(_input,21,_ctx) ) {
+						switch ( getInterpreter().adaptivePredict(_input,19,_ctx) ) {
 						case 1:
 							{
-							setState(161);
+							setState(159);
 							match(Digs);
 							}
 							break;
@@ -1541,20 +1535,20 @@ public class cfgParser extends Parser {
 						{
 						_localctx = new PbodySingleLRepeatContext(new PartBodyContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_partBody);
-						setState(164);
+						setState(162);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(165);
+						setState(163);
 						match(Repeat);
-						setState(166);
+						setState(164);
 						match(Digs);
 						}
 						break;
 					}
 					} 
 				}
-				setState(171);
+				setState(169);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,21,_ctx);
 			}
 			}
 		}
@@ -1591,59 +1585,58 @@ public class cfgParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3#\u00af\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3#\u00ad\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\3\2\3\2\7\2\35\n\2\f\2\16\2 \13\2\3\2\3\2\3\3\3\3"+
-		"\3\3\6\3\'\n\3\r\3\16\3(\3\3\3\3\3\3\3\3\3\3\3\3\6\3\61\n\3\r\3\16\3\62"+
-		"\3\3\3\3\3\3\3\3\5\39\n\3\3\4\3\4\3\4\6\4>\n\4\r\4\16\4?\3\4\3\4\3\4\3"+
-		"\5\3\5\5\5G\n\5\3\6\3\6\3\6\3\6\3\6\5\6N\n\6\3\7\3\7\3\7\3\7\3\7\3\7\3"+
-		"\7\3\b\3\b\3\b\3\b\3\t\3\t\3\t\5\t^\n\t\3\n\3\n\3\n\3\n\3\n\3\n\6\nf\n"+
-		"\n\r\n\16\ng\3\n\3\n\3\13\3\13\3\13\3\13\3\13\3\13\6\13r\n\13\r\13\16"+
-		"\13s\3\13\3\13\6\13x\n\13\r\13\16\13y\3\13\5\13}\n\13\3\f\3\f\3\f\3\f"+
-		"\6\f\u0083\n\f\r\f\16\f\u0084\3\f\3\f\3\r\3\r\3\r\5\r\u008c\n\r\3\r\3"+
-		"\r\3\r\3\r\6\r\u0092\n\r\r\r\16\r\u0093\3\r\3\r\5\r\u0098\n\r\3\r\3\r"+
-		"\3\r\3\r\3\r\3\r\5\r\u00a0\n\r\3\r\3\r\3\r\5\r\u00a5\n\r\3\r\3\r\3\r\7"+
-		"\r\u00aa\n\r\f\r\16\r\u00ad\13\r\3\r\3y\3\30\16\2\4\6\b\n\f\16\20\22\24"+
-		"\26\30\2\2\2\u00c2\2\36\3\2\2\2\48\3\2\2\2\6:\3\2\2\2\bF\3\2\2\2\nM\3"+
-		"\2\2\2\fO\3\2\2\2\16V\3\2\2\2\20]\3\2\2\2\22_\3\2\2\2\24k\3\2\2\2\26~"+
-		"\3\2\2\2\30\u0097\3\2\2\2\32\35\5\4\3\2\33\35\7\16\2\2\34\32\3\2\2\2\34"+
-		"\33\3\2\2\2\35 \3\2\2\2\36\34\3\2\2\2\36\37\3\2\2\2\37!\3\2\2\2 \36\3"+
-		"\2\2\2!\"\5\6\4\2\"\3\3\2\2\2#$\7\37\2\2$&\7\26\2\2%\'\5\b\5\2&%\3\2\2"+
-		"\2\'(\3\2\2\2(&\3\2\2\2()\3\2\2\2)*\3\2\2\2*+\7\16\2\2+9\3\2\2\2,-\7\3"+
-		"\2\2-.\7\37\2\2.\60\7\16\2\2/\61\5\20\t\2\60/\3\2\2\2\61\62\3\2\2\2\62"+
-		"\60\3\2\2\2\62\63\3\2\2\2\63\64\3\2\2\2\64\65\7\16\2\2\65\66\7\4\2\2\66"+
-		"\67\7\16\2\2\679\3\2\2\28#\3\2\2\28,\3\2\2\29\5\3\2\2\2:;\7\5\2\2;=\7"+
-		"\16\2\2<>\5\20\t\2=<\3\2\2\2>?\3\2\2\2?=\3\2\2\2?@\3\2\2\2@A\3\2\2\2A"+
-		"B\7\16\2\2BC\7\6\2\2C\7\3\2\2\2DG\5\30\r\2EG\5\n\6\2FD\3\2\2\2FE\3\2\2"+
-		"\2G\t\3\2\2\2HN\7\27\2\2IN\7\31\2\2JN\7\30\2\2KN\5\16\b\2LN\5\f\7\2MH"+
-		"\3\2\2\2MI\3\2\2\2MJ\3\2\2\2MK\3\2\2\2ML\3\2\2\2N\13\3\2\2\2OP\7\17\2"+
-		"\2PQ\7\22\2\2QR\7\25\2\2RS\7\24\2\2ST\5\16\b\2TU\7\23\2\2U\r\3\2\2\2V"+
-		"W\7\25\2\2WX\7\21\2\2XY\7\25\2\2Y\17\3\2\2\2Z^\5\b\5\2[^\7\16\2\2\\^\5"+
-		"\22\n\2]Z\3\2\2\2][\3\2\2\2]\\\3\2\2\2^\21\3\2\2\2_`\7\7\2\2`a\7\25\2"+
-		"\2ab\7\b\2\2be\7\16\2\2cf\5\20\t\2df\5\24\13\2ec\3\2\2\2ed\3\2\2\2fg\3"+
-		"\2\2\2ge\3\2\2\2gh\3\2\2\2hi\3\2\2\2ij\7\t\2\2j\23\3\2\2\2kl\7\n\2\2l"+
-		"m\7\25\2\2mn\7\b\2\2nq\7\16\2\2or\5\20\t\2pr\5\24\13\2qo\3\2\2\2qp\3\2"+
-		"\2\2rs\3\2\2\2sq\3\2\2\2st\3\2\2\2tu\3\2\2\2uw\7\13\2\2vx\7\16\2\2wv\3"+
-		"\2\2\2xy\3\2\2\2yz\3\2\2\2yw\3\2\2\2z|\3\2\2\2{}\5\26\f\2|{\3\2\2\2|}"+
-		"\3\2\2\2}\25\3\2\2\2~\177\7\f\2\2\177\u0082\7\16\2\2\u0080\u0083\5\20"+
-		"\t\2\u0081\u0083\5\24\13\2\u0082\u0080\3\2\2\2\u0082\u0081\3\2\2\2\u0083"+
-		"\u0084\3\2\2\2\u0084\u0082\3\2\2\2\u0084\u0085\3\2\2\2\u0085\u0086\3\2"+
-		"\2\2\u0086\u0087\7\r\2\2\u0087\27\3\2\2\2\u0088\u0089\b\r\1\2\u0089\u008b"+
-		"\7\20\2\2\u008a\u008c\7\25\2\2\u008b\u008a\3\2\2\2\u008b\u008c\3\2\2\2"+
-		"\u008c\u0098\3\2\2\2\u008d\u0098\7\37\2\2\u008e\u0098\7\36\2\2\u008f\u0091"+
-		"\7\22\2\2\u0090\u0092\5\b\5\2\u0091\u0090\3\2\2\2\u0092\u0093\3\2\2\2"+
-		"\u0093\u0091\3\2\2\2\u0093\u0094\3\2\2\2\u0094\u0095\3\2\2\2\u0095\u0096"+
-		"\7\23\2\2\u0096\u0098\3\2\2\2\u0097\u0088\3\2\2\2\u0097\u008d\3\2\2\2"+
-		"\u0097\u008e\3\2\2\2\u0097\u008f\3\2\2\2\u0098\u00ab\3\2\2\2\u0099\u009a"+
-		"\f\4\2\2\u009a\u009b\7\34\2\2\u009b\u00aa\5\30\r\5\u009c\u009d\f\6\2\2"+
-		"\u009d\u009f\7\32\2\2\u009e\u00a0\7\25\2\2\u009f\u009e\3\2\2\2\u009f\u00a0"+
-		"\3\2\2\2\u00a0\u00aa\3\2\2\2\u00a1\u00a2\f\5\2\2\u00a2\u00a4\7\33\2\2"+
-		"\u00a3\u00a5\7\25\2\2\u00a4\u00a3\3\2\2\2\u00a4\u00a5\3\2\2\2\u00a5\u00aa"+
-		"\3\2\2\2\u00a6\u00a7\f\3\2\2\u00a7\u00a8\7\35\2\2\u00a8\u00aa\7\25\2\2"+
-		"\u00a9\u0099\3\2\2\2\u00a9\u009c\3\2\2\2\u00a9\u00a1\3\2\2\2\u00a9\u00a6"+
-		"\3\2\2\2\u00aa\u00ad\3\2\2\2\u00ab\u00a9\3\2\2\2\u00ab\u00ac\3\2\2\2\u00ac"+
-		"\31\3\2\2\2\u00ad\u00ab\3\2\2\2\32\34\36(\628?FM]egqsy|\u0082\u0084\u008b"+
-		"\u0093\u0097\u009f\u00a4\u00a9\u00ab";
+		"\3\3\6\3\'\n\3\r\3\16\3(\3\3\3\3\3\3\3\3\6\3/\n\3\r\3\16\3\60\3\3\3\3"+
+		"\3\3\3\3\5\3\67\n\3\3\4\3\4\3\4\6\4<\n\4\r\4\16\4=\3\4\3\4\3\4\3\5\3\5"+
+		"\5\5E\n\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\5\6R\n\6\3\7\3\7"+
+		"\3\7\3\7\3\b\3\b\3\b\5\b[\n\b\3\t\3\t\3\t\3\t\3\t\6\tb\n\t\r\t\16\tc\3"+
+		"\t\3\t\3\n\3\n\5\nj\n\n\3\13\3\13\3\13\3\13\3\13\6\13q\n\13\r\13\16\13"+
+		"r\3\13\3\13\6\13w\n\13\r\13\16\13x\3\13\5\13|\n\13\3\f\3\f\3\f\6\f\u0081"+
+		"\n\f\r\f\16\f\u0082\3\f\3\f\3\r\3\r\3\r\5\r\u008a\n\r\3\r\3\r\3\r\3\r"+
+		"\6\r\u0090\n\r\r\r\16\r\u0091\3\r\3\r\5\r\u0096\n\r\3\r\3\r\3\r\3\r\3"+
+		"\r\3\r\5\r\u009e\n\r\3\r\3\r\3\r\5\r\u00a3\n\r\3\r\3\r\3\r\7\r\u00a8\n"+
+		"\r\f\r\16\r\u00ab\13\r\3\r\3x\3\30\16\2\4\6\b\n\f\16\20\22\24\26\30\2"+
+		"\2\2\u00be\2\36\3\2\2\2\4\66\3\2\2\2\68\3\2\2\2\bD\3\2\2\2\nQ\3\2\2\2"+
+		"\fS\3\2\2\2\16Z\3\2\2\2\20\\\3\2\2\2\22i\3\2\2\2\24k\3\2\2\2\26}\3\2\2"+
+		"\2\30\u0095\3\2\2\2\32\35\5\4\3\2\33\35\7\16\2\2\34\32\3\2\2\2\34\33\3"+
+		"\2\2\2\35 \3\2\2\2\36\34\3\2\2\2\36\37\3\2\2\2\37!\3\2\2\2 \36\3\2\2\2"+
+		"!\"\5\6\4\2\"\3\3\2\2\2#$\7\37\2\2$&\7\26\2\2%\'\5\b\5\2&%\3\2\2\2\'("+
+		"\3\2\2\2(&\3\2\2\2()\3\2\2\2)\67\3\2\2\2*+\7\3\2\2+,\7\37\2\2,.\7\16\2"+
+		"\2-/\5\16\b\2.-\3\2\2\2/\60\3\2\2\2\60.\3\2\2\2\60\61\3\2\2\2\61\62\3"+
+		"\2\2\2\62\63\7\16\2\2\63\64\7\4\2\2\64\65\7\16\2\2\65\67\3\2\2\2\66#\3"+
+		"\2\2\2\66*\3\2\2\2\67\5\3\2\2\289\7\5\2\29;\7\16\2\2:<\5\16\b\2;:\3\2"+
+		"\2\2<=\3\2\2\2=;\3\2\2\2=>\3\2\2\2>?\3\2\2\2?@\7\16\2\2@A\7\6\2\2A\7\3"+
+		"\2\2\2BE\5\30\r\2CE\5\n\6\2DB\3\2\2\2DC\3\2\2\2E\t\3\2\2\2FR\7\27\2\2"+
+		"GR\7\31\2\2HR\7\30\2\2IR\5\f\7\2JK\7\17\2\2KL\7\22\2\2LM\7\25\2\2MN\7"+
+		"\24\2\2NO\5\f\7\2OP\7\23\2\2PR\3\2\2\2QF\3\2\2\2QG\3\2\2\2QH\3\2\2\2Q"+
+		"I\3\2\2\2QJ\3\2\2\2R\13\3\2\2\2ST\7\25\2\2TU\7\21\2\2UV\7\25\2\2V\r\3"+
+		"\2\2\2W[\5\b\5\2X[\7\16\2\2Y[\5\20\t\2ZW\3\2\2\2ZX\3\2\2\2ZY\3\2\2\2["+
+		"\17\3\2\2\2\\]\7\7\2\2]^\7\25\2\2^_\7\b\2\2_a\7\16\2\2`b\5\22\n\2a`\3"+
+		"\2\2\2bc\3\2\2\2ca\3\2\2\2cd\3\2\2\2de\3\2\2\2ef\7\t\2\2f\21\3\2\2\2g"+
+		"j\5\16\b\2hj\5\24\13\2ig\3\2\2\2ih\3\2\2\2j\23\3\2\2\2kl\7\n\2\2lm\7\25"+
+		"\2\2mn\7\b\2\2np\7\16\2\2oq\5\22\n\2po\3\2\2\2qr\3\2\2\2rp\3\2\2\2rs\3"+
+		"\2\2\2st\3\2\2\2tv\7\13\2\2uw\7\16\2\2vu\3\2\2\2wx\3\2\2\2xy\3\2\2\2x"+
+		"v\3\2\2\2y{\3\2\2\2z|\5\26\f\2{z\3\2\2\2{|\3\2\2\2|\25\3\2\2\2}~\7\f\2"+
+		"\2~\u0080\7\16\2\2\177\u0081\5\22\n\2\u0080\177\3\2\2\2\u0081\u0082\3"+
+		"\2\2\2\u0082\u0080\3\2\2\2\u0082\u0083\3\2\2\2\u0083\u0084\3\2\2\2\u0084"+
+		"\u0085\7\r\2\2\u0085\27\3\2\2\2\u0086\u0087\b\r\1\2\u0087\u0089\7\20\2"+
+		"\2\u0088\u008a\7\25\2\2\u0089\u0088\3\2\2\2\u0089\u008a\3\2\2\2\u008a"+
+		"\u0096\3\2\2\2\u008b\u0096\7\37\2\2\u008c\u0096\7\36\2\2\u008d\u008f\7"+
+		"\22\2\2\u008e\u0090\5\b\5\2\u008f\u008e\3\2\2\2\u0090\u0091\3\2\2\2\u0091"+
+		"\u008f\3\2\2\2\u0091\u0092\3\2\2\2\u0092\u0093\3\2\2\2\u0093\u0094\7\23"+
+		"\2\2\u0094\u0096\3\2\2\2\u0095\u0086\3\2\2\2\u0095\u008b\3\2\2\2\u0095"+
+		"\u008c\3\2\2\2\u0095\u008d\3\2\2\2\u0096\u00a9\3\2\2\2\u0097\u0098\f\4"+
+		"\2\2\u0098\u0099\7\34\2\2\u0099\u00a8\5\30\r\5\u009a\u009b\f\6\2\2\u009b"+
+		"\u009d\7\32\2\2\u009c\u009e\7\25\2\2\u009d\u009c\3\2\2\2\u009d\u009e\3"+
+		"\2\2\2\u009e\u00a8\3\2\2\2\u009f\u00a0\f\5\2\2\u00a0\u00a2\7\33\2\2\u00a1"+
+		"\u00a3\7\25\2\2\u00a2\u00a1\3\2\2\2\u00a2\u00a3\3\2\2\2\u00a3\u00a8\3"+
+		"\2\2\2\u00a4\u00a5\f\3\2\2\u00a5\u00a6\7\35\2\2\u00a6\u00a8\7\25\2\2\u00a7"+
+		"\u0097\3\2\2\2\u00a7\u009a\3\2\2\2\u00a7\u009f\3\2\2\2\u00a7\u00a4\3\2"+
+		"\2\2\u00a8\u00ab\3\2\2\2\u00a9\u00a7\3\2\2\2\u00a9\u00aa\3\2\2\2\u00aa"+
+		"\31\3\2\2\2\u00ab\u00a9\3\2\2\2\30\34\36(\60\66=DQZcirx{\u0082\u0089\u0091"+
+		"\u0095\u009d\u00a2\u00a7\u00a9";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

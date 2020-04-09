@@ -1,12 +1,14 @@
 package msharp.Nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class playNode extends node {
-    public stmtNode stmts;
+    public stmtList stmts = new stmtList();
 
     @Override
     public String toString() {
-        return null;
+
+        return("main = " + stmts.toString() + "\n");
     }
 }
