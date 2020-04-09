@@ -1,6 +1,6 @@
 package msharp.Nodes;
 
-public class andNode extends stmtNode{
+public class andNode implements stmtNode{
     private stmtNode left;
     private stmtNode right;
 
@@ -11,6 +11,6 @@ public class andNode extends stmtNode{
 
     @Override
     public String toString() {
-        return left.toString() + " & " + right.toString();
+        return "(" + left.toString() + " & " + right.toString() + ")";
     }
 }

@@ -1,6 +1,6 @@
 package msharp.Nodes;
 
-public class everyNode extends stmtNode {
+public class everyNode implements stmtNode {
     //something to store condition
     private int amount;
     private stmtNode trueCase;
@@ -37,6 +37,9 @@ public class everyNode extends stmtNode {
     @Override
     public String toString() {
 
-    return null;
+
+        return "EVERY (" + amount + ") {" + trueCase.toString() + "} ELSE {" + elseCase.toString() + "}";
+
+
     }
 }

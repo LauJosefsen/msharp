@@ -1,6 +1,6 @@
 package msharp.Nodes;
 
-public class repeatNode extends stmtNode{
+public class repeatNode implements stmtNode{
     int amount;
 
     public stmtNode getStmts() {
@@ -24,6 +24,9 @@ public class repeatNode extends stmtNode{
 
     @Override
     public String toString() {
-        return null;
+
+
+
+        return "REPEAT (" + amount + ") {" + stmts.toString() + "}";
     }
 }

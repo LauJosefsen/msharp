@@ -1,6 +1,6 @@
 package msharp.Nodes;
 
-public class instruNode extends stmtNode{
+public class instruNode implements stmtNode{
     private String instrument;
 
     public instruNode(String instrument) {
@@ -9,6 +9,6 @@ public class instruNode extends stmtNode{
 
     @Override
     public String toString() {
-        return null;
+        return instrument + ":";
     }
 }

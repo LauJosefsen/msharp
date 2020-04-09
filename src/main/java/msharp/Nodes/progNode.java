@@ -3,7 +3,7 @@ package msharp.Nodes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class progNode extends node{
+public class progNode implements node{
     public List<partDclNode> parts = new ArrayList<>();
     public playNode main;
 

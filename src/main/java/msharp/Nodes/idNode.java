@@ -1,6 +1,6 @@
 package msharp.Nodes;
 
-public class idNode extends stmtNode{
+public class idNode implements stmtNode{
     private String id;
 
     public idNode(String id) {
@@ -9,6 +9,6 @@ public class idNode extends stmtNode{
 
     @Override
     public String toString() {
-        return null;
+        return id;
     }
 }

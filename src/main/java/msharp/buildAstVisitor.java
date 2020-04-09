@@ -95,7 +95,7 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
 
     @Override
     public node visitOpsIntru(cfgParser.OpsIntruContext ctx) {
-        return new instruNode(ctx.Instrument().getText());
+        return new instruNode(ctx.Instrument().getText().replace(":",""));
     }
     
     @Override
@@ -138,7 +138,7 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
 
     @Override
     public node visitMultStmtNL(cfgParser.MultStmtNLContext ctx){
-        return null; //todo
+        return null;
     }
 
     @Override
@@ -246,7 +246,20 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
 
     @Override
     public node visitPartDclMultiLine(cfgParser.PartDclMultiLineContext ctx) {
-        return super.visitPartDclMultiLine(ctx);
+        partDclNode part = new partDclNode(ctx.Id().getText());
+
+        for(ParseTree pt : ctx.multStmt()){
+            part.stmts.add((stmtNode) visit(pt));
+        }
+
+        if(symbolTable.containsKey(part.getId())) {
+            semanticErrors.add(part.getId() + " part name is already defined. (At line " + ctx.Id().getSymbol().getLine() + ")");
+        }
+        else{
+            symbolTable.putIfAbsent(part.id, part.stmts);
+        }
+
+        return part;
     }
 
     @Override
@@ -257,7 +270,7 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
             node.stmts.add((stmtNode) visit(pt));
         }
 
-        return new playNode();
+        return node;
     }
 
     @Override

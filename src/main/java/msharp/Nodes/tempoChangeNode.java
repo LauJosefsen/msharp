@@ -1,6 +1,6 @@
 package msharp.Nodes;
 
-public class tempoChangeNode extends stmtNode{
+public class tempoChangeNode implements stmtNode{
     private int numerator;
     private int denomniator;
 
@@ -11,6 +11,6 @@ public class tempoChangeNode extends stmtNode{
 
     @Override
     public String toString() {
-        return null;
+        return numerator + "%" + denomniator;
     }
 }

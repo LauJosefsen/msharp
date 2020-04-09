@@ -1,6 +1,6 @@
 package msharp.Nodes;
 
-public class transposeNode extends stmtNode{
+public class transposeNode implements stmtNode{
     private int deltaTonation;
     private stmtNode toBeTransposed;
 
@@ -12,6 +12,6 @@ public class transposeNode extends stmtNode{
 
     @Override
     public String toString() {
-        return null;
+        return this.toBeTransposed + "^" + this.deltaTonation;
     }
 }

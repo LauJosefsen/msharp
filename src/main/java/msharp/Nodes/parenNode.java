@@ -2,15 +2,16 @@ package msharp.Nodes;
 
 import java.util.List;
 
-public class parenNode extends stmtNode {
+public class parenNode implements stmtNode {
     public stmtList stmts = new stmtList();
 
     public void add(stmtNode stmt){
-        stmts.add(stmt);
+        if(stmt != null)
+            stmts.add(stmt);
     }
 
     @Override
     public String toString() {
-        return null;
+        return "(" + stmts.toString() + ")";
     }
 }

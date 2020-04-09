@@ -1,6 +1,6 @@
 package msharp.Nodes;
 
-public class bpmDclNode extends stmtNode{
+public class bpmDclNode implements stmtNode{
     private tempoChangeNode tempo;
     private int bpm;
 
@@ -11,6 +11,6 @@ public class bpmDclNode extends stmtNode{
 
     @Override
     public String toString() {
-        return null;
+        return "BPM(" + bpm + "," + tempo.toString() + ")";
     }
 }

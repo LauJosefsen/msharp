@@ -1,6 +1,6 @@
 package msharp.Nodes;
 
-public class octaveChangeNode extends stmtNode{
+public class octaveChangeNode implements stmtNode{
     private int deltaOctave;
 
     public octaveChangeNode(int deltaOctave) {
@@ -9,6 +9,13 @@ public class octaveChangeNode extends stmtNode{
 
     @Override
     public String toString() {
-        return null;
+        String str;
+
+        if (deltaOctave <= 0)
+            str = "/" + deltaOctave;
+        else
+            str = "\\" + deltaOctave;
+
+        return str;
     }
 }

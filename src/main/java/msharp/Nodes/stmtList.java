@@ -2,7 +2,14 @@ package msharp.Nodes;
 
 import java.util.ArrayList;
 
-public class stmtList extends ArrayList<stmtNode> {
+public class stmtList extends ArrayList<stmtNode> implements node {
+    @Override
+    public boolean add(stmtNode stmt) {
+        if(stmt != null)
+            return super.add(stmt);
+        return false;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

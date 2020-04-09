@@ -1,6 +1,6 @@
 package msharp.Nodes;
 
-public class noteNode extends stmtNode {
+public class noteNode implements stmtNode {
     private char letter;
     public int octave;
 
@@ -11,6 +11,12 @@ public class noteNode extends stmtNode {
 
     @Override
     public String toString() {
-        return null;
+        String o;
+
+        if (octave == -1)
+            o = "";
+        else
+            o = String.valueOf(octave);
+        return letter + o;
     }
 }

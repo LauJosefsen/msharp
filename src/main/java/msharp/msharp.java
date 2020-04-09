@@ -45,9 +45,12 @@ public class msharp {
             return;
         }
 
+
+
         String result = visitor.visit(tree).toString();
 
-        System.out.println(tree.toStringTree(parser)); // print LISP-style tree
-        System.out.println("Result: " + result);
+
+//        System.out.println(tree.toStringTree(parser)); // print LISP-style tree
+        System.out.println("Result: \n" + result);
     }
 }

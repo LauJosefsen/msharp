@@ -1,7 +1,7 @@
 package msharp.Nodes;
 
 
-public class partDclNode extends node {
+public class partDclNode implements node {
     public partDclNode(String id) {
         this.id = id;
     }
@@ -15,6 +15,6 @@ public class partDclNode extends node {
 
     @Override
     public String toString() {
-        return null;
+        return id + ": "+stmts.toString();
     }
 }
