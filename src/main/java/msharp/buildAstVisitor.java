@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 class buildAstVisitor extends cfgBaseVisitor<node> {
-    public List<String> getSemanticErrors() {
+    List<String> getSemanticErrors() {
         return semanticErrors;
     }
 
@@ -50,8 +50,8 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     }
 
     @Override
-    public stmtNode visitPbodyParen(cfgParser.PbodyParenContext ctx) {
-        parenNode node = new parenNode();
+    public node visitPbodyParen(cfgParser.PbodyParenContext ctx) {
+        stmtList node = new stmtList();
 
         for(cfgParser.StmtContext stmt : ctx.stmt()){
             node.add((stmtNode) visit(stmt));
@@ -154,7 +154,7 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
             node.setStmts((stmtNode) visit(ctx.multStmtOrEveryStmt(0)));
         }
         else{
-            parenNode stmts = new parenNode();
+            stmtList stmts = new stmtList();
             for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
                 stmts.add((stmtNode) visit(parseTree));
             }
@@ -172,7 +172,7 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
             node.setTrueCase((stmtNode) visit(ctx.multStmtOrEveryStmt(0)));
         }
         else{
-            parenNode stmts = new parenNode();
+            stmtList stmts = new stmtList();
             for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
                 stmts.add((stmtNode) visit(parseTree));
             }
@@ -191,7 +191,7 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
             return visit(ctx.multStmtOrEveryStmt(0));
         }
         else{
-            parenNode stmts = new parenNode();
+            stmtList stmts = new stmtList();
             for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
                 stmts.add((stmtNode) visit(parseTree));
             }
