@@ -1,7 +1,20 @@
 package msharp.Nodes;
 
+import guru.nidi.graphviz.attribute.Color;
+import guru.nidi.graphviz.attribute.Label;
+import guru.nidi.graphviz.attribute.Rank;
+import guru.nidi.graphviz.model.Graph;
+import guru.nidi.graphviz.model.Node;
+
+import java.util.UUID;
+
+import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
+import static guru.nidi.graphviz.model.Factory.graph;
+import static guru.nidi.graphviz.model.Factory.node;
+import static guru.nidi.graphviz.model.Link.to;
+
 public class repeatNode implements stmtNode{
-    int amount;
+    private int amount;
 
     public stmtNode getStmts() {
         return stmts;
@@ -15,7 +28,7 @@ public class repeatNode implements stmtNode{
         this.amount = amount;
     }
 
-    stmtNode stmts;
+    private stmtNode stmts;
 
     public repeatNode(int amount, stmtNode stmts) {
         this.amount = amount;
@@ -28,5 +41,15 @@ public class repeatNode implements stmtNode{
 
 
         return "REPEAT (" + amount + ") {" + stmts.toString() + "}";
+    }
+
+    @Override
+    public Graph toGraph() {
+        Node repeat = node("repeat"+ UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>REPEAT</b><br/>"+amount + "times"));
+
+        Graph g = graph("repeat").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
+        g = g.with(repeat.link(stmts.toGraph().toMutable().rootNodes().iterator().next()));
+
+        return g;
     }
 }

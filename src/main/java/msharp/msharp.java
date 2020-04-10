@@ -1,12 +1,26 @@
 package msharp;
 
+import guru.nidi.graphviz.attribute.Color;
+import guru.nidi.graphviz.attribute.Rank;
+import guru.nidi.graphviz.attribute.Style;
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.model.Graph;
+import msharp.Nodes.node;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import static guru.nidi.graphviz.attribute.Rank.RankDir.LEFT_TO_RIGHT;
+import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
+import static guru.nidi.graphviz.model.Factory.graph;
+import static guru.nidi.graphviz.model.Factory.node;
+import static guru.nidi.graphviz.model.Link.to;
 
 public class msharp {
 
@@ -36,7 +50,7 @@ public class msharp {
 
 
         buildAstVisitor visitor = new buildAstVisitor();
-        visitor.visit(tree);
+        node ast = visitor.visit(tree);
 
         if(visitor.getSemanticErrors().size() > 0){
             for(String error : visitor.getSemanticErrors()){
@@ -45,12 +59,11 @@ public class msharp {
             return;
         }
 
+        Graphviz.fromGraph(ast.toGraph()).render(Format.SVG).toFile(new File("example/ex1.svg"));
 
-
-        String result = visitor.visit(tree).toString();
 
 
 //        System.out.println(tree.toStringTree(parser)); // print LISP-style tree
-        System.out.println("Result: \n" + result);
+        System.out.println("Result: \n" + ast.toString());
     }
 }

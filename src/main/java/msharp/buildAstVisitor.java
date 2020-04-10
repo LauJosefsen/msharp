@@ -150,7 +150,7 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     public node visitMultilineRepeat(cfgParser.MultilineRepeatContext ctx) {
         repeatNode node = new repeatNode(Integer.parseInt(ctx.Digs().getText()));
 
-        if(ctx.multStmtOrEveryStmt().size() == 1){
+        if(ctx.multStmtOrEveryStmt().size() == 1){ //todo kan indeholde et null element, som får det til at ligne der er mere end 1 stmt. Vi bruger også denne teknik andre steder, skal nok rettes der også.
             node.setStmts((stmtNode) visit(ctx.multStmtOrEveryStmt(0)));
         }
         else{
