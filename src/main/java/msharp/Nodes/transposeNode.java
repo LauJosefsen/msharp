@@ -5,6 +5,9 @@ import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
+import msharp.NotePopulation.FinalNote;
+import msharp.NotePopulation.NotePopulation;
+import msharp.NotePopulation.nodeContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,15 @@ import static guru.nidi.graphviz.model.Factory.node;
 
 public class transposeNode implements stmtNode{
     private int deltaTonation;
+
+    public int getDeltaTonation() {
+        return deltaTonation;
+    }
+
+    public stmtNode getToBeTransposed() {
+        return toBeTransposed;
+    }
+
     private stmtNode toBeTransposed;
 
 
@@ -36,5 +48,9 @@ public class transposeNode implements stmtNode{
         g = g.with(transpose.link(toBeTransposed.toGraph().toMutable().rootNodes().iterator().next()));
 
         return g;
+    }
+    @Override
+    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+        return visitor.visit(this, ctx);
     }
 }

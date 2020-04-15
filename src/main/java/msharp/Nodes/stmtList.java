@@ -6,6 +6,9 @@ import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.MutableNode;
 import guru.nidi.graphviz.model.Node;
+import msharp.NotePopulation.FinalNote;
+import msharp.NotePopulation.NotePopulation;
+import msharp.NotePopulation.nodeContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,5 +55,10 @@ public class stmtList extends ArrayList<stmtNode> implements stmtNode {
         g = g.with(stmts.link(partGraphs));
 
         return g;
+    }
+
+    @Override
+    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+        return visitor.visit(this, ctx);
     }
 }

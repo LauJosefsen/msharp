@@ -47,7 +47,7 @@ public class cfgParser extends Parser {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			"Nl", "Bpm", "Tone", "Percent", "Lparen", "Rparen", "Comma", "Digs", 
-			"Assign", "Instrument", "OctaveUp", "OctaveDown", "TransposeUp", "TransposeDown", 
+			"Assign", "msharp.MinecraftClasses.Instrument", "OctaveUp", "OctaveDown", "TransposeUp", "TransposeDown",
 			"And", "Repeat", "Pause", "Id", "Peroids", "S", "MultilineComment", "SingleLineComment"
 		};
 	}

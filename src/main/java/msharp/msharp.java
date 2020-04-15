@@ -1,13 +1,11 @@
 package msharp;
 
-import guru.nidi.graphviz.attribute.Color;
-import guru.nidi.graphviz.attribute.Rank;
-import guru.nidi.graphviz.attribute.Style;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
-import guru.nidi.graphviz.model.Graph;
 import msharp.Nodes.node;
-import org.antlr.v4.runtime.ANTLRInputStream;
+import msharp.Nodes.progNode;
+import msharp.NotePopulation.FinalNote;
+import msharp.NotePopulation.NotePopulation;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -17,12 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import static guru.nidi.graphviz.attribute.Rank.RankDir.LEFT_TO_RIGHT;
-import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
-import static guru.nidi.graphviz.model.Factory.graph;
-import static guru.nidi.graphviz.model.Factory.node;
-import static guru.nidi.graphviz.model.Link.to;
+import java.util.Collections;
+import java.util.List;
 
 public class msharp {
 
@@ -51,9 +45,14 @@ public class msharp {
             return;
         }
 
-        Graphviz.fromGraph(ast.toGraph()).render(Format.SVG).toFile(new File("example/ex1.svg"));
+        Graphviz.fromGraph(ast.toGraph()).totalMemory(1073741824).render(Format.SVG).toFile(new File("example/ex1.svg"));
 
+        // Code-Generation
+        // Interprets the AST into a list of notes with timing
+        NotePopulation notePopulator = new NotePopulation(visitor.symbolTable);
+        List<FinalNote> notes = notePopulator.visit((progNode) ast);
 
+        Collections.sort(notes);
 
 //        System.out.println(tree.toStringTree(parser)); // print LISP-style tree
         System.out.println("Result: \n" + ast.toString());

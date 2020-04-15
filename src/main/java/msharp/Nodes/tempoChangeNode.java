@@ -4,9 +4,12 @@ import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
-import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.Node;
+import msharp.NotePopulation.FinalNote;
+import msharp.NotePopulation.NotePopulation;
+import msharp.NotePopulation.nodeContext;
 
+import java.util.List;
 import java.util.UUID;
 
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
@@ -14,16 +17,16 @@ import static guru.nidi.graphviz.model.Factory.*;
 
 public class tempoChangeNode implements stmtNode{
     private int numerator;
-    private int denomniator;
+    private int denominator;
 
     public tempoChangeNode(int numerator, int denomniator) {
         this.numerator = numerator;
-        this.denomniator = denomniator;
+        this.denominator = denomniator;
     }
 
     @Override
     public String toString() {
-        return numerator + "%" + denomniator;
+        return numerator + "%" + denominator;
     }
 
     @Override
@@ -34,5 +37,25 @@ public class tempoChangeNode implements stmtNode{
         g = g.with(tempoChange);
 
         return g;
+    }
+    @Override
+    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+        return visitor.visit(this, ctx);
+    }
+
+    public int getNumerator() {
+        return numerator;
+    }
+
+    public void setNumerator(int numerator) {
+        this.numerator = numerator;
+    }
+
+    public int getDenominator() {
+        return denominator;
+    }
+
+    public void setDenominator(int denominator) {
+        this.denominator = denominator;
     }
 }

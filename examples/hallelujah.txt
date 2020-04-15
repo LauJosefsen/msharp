@@ -8,10 +8,10 @@ part DrumsInterlude
     #Jeg ved ikke hvad vi gør med toner og oktaver ved trommer
     repeat 4 times
         every 4 times
-            (BASSDRUM: 1%8 c c c - - c) & (SNAREDRUM: 1%8 -*3 c c -)
+            (BASEDRUM: 1%8 c c c - - c) & (SNARE: 1%8 -*3 c c -)
         end every
         else
-            (BASSDRUM: 1%8 c -*4 c) & (SNAREDRUM: 1%8 -*3 c -*2)
+            (BASEDRUM: 1%8 c -*4 c) & (SNARE: 1%8 -*3 c -*2)
         end else
     end repeat
 end part
@@ -22,7 +22,7 @@ part DrumsVerse
 end part
 
 
-part DrumsChrous
+part DrumsChorus
     DrumsInterlude*2
 end part
 

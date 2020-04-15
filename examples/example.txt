@@ -1,0 +1,37 @@
+
+
+# DETTE ER EN KOMMENTAR
+
+#**
+bpm lort er en kommtnar
+**#
+
+part Mel1
+    PIANO: c4*8
+end part
+
+Mel2 = a8 \\\ 2%1 c 1%4 b - - 5%16 d // f^
+Mel3 = c2_ | c2 - - / a_ a^5%4
+Mel4 = Mel1 & Mel2
+
+part Chorus
+    repeat 10 times
+        GUITAR: Mel1 & Mel2 & (PIANO: Mel3)
+        every 4 times
+            PIANO: Mel2
+        end every
+        else
+            PIANO: Mel3
+        end else
+    end repeat
+end part
+
+part Verse
+    PIANO: Mel1 & Mel2 & (GUITAR: Mel4) & Mel2 & Mel3
+end part
+
+play
+    BPM(150, 1%4)
+    Chorus
+    Verse
+end play

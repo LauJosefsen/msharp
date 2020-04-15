@@ -1,0 +1,5 @@
+Xawd = c c c
+
+play
+    Xawd
+end play

@@ -34,7 +34,7 @@ public class cfgLexer extends Lexer {
 		return new String[] {
 			"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8", 
 			"T__9", "T__10", "Nl", "Bpm", "Tone", "Percent", "Lparen", "Rparen", 
-			"Comma", "Digs", "Assign", "Instrument", "OctaveUp", "OctaveDown", "TransposeUp", 
+			"Comma", "Digs", "Assign", "msharp.MinecraftClasses.Instrument", "OctaveUp", "OctaveDown", "TransposeUp",
 			"TransposeDown", "And", "Repeat", "Pause", "Id", "Peroids", "S", "MultilineComment", 
 			"SingleLineComment"
 		};
@@ -54,7 +54,7 @@ public class cfgLexer extends Lexer {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			"Nl", "Bpm", "Tone", "Percent", "Lparen", "Rparen", "Comma", "Digs", 
-			"Assign", "Instrument", "OctaveUp", "OctaveDown", "TransposeUp", "TransposeDown", 
+			"Assign", "msharp.MinecraftClasses.Instrument", "OctaveUp", "OctaveDown", "TransposeUp", "TransposeDown",
 			"And", "Repeat", "Pause", "Id", "Peroids", "S", "MultilineComment", "SingleLineComment"
 		};
 	}

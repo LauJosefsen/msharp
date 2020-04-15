@@ -37,12 +37,12 @@ public class partDclNode implements node {
     @Override
     public Graph toGraph() {
 
-        Node partDcl = node("partDcl"+ UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>partDcl</b><br/>"+this.id));
+        Node partDcl = node("partDcl" + UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>partDcl</b><br/>" + this.id));
 
-        Graph g = graph("partDcl").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
+        Graph g = graph("partDcl");
 
         List<MutableNode> partGraphs = new ArrayList<>();
-        for(stmtNode stmt : stmts){
+        for (stmtNode stmt : stmts) {
             partGraphs.add(stmt.toGraph().toMutable().rootNodes().iterator().next());
         }
 

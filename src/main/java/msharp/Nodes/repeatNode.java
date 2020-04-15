@@ -5,7 +5,11 @@ import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
+import msharp.NotePopulation.FinalNote;
+import msharp.NotePopulation.NotePopulation;
+import msharp.NotePopulation.nodeContext;
 
+import java.util.List;
 import java.util.UUID;
 
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
@@ -51,5 +55,14 @@ public class repeatNode implements stmtNode{
         g = g.with(repeat.link(stmts.toGraph().toMutable().rootNodes().iterator().next()));
 
         return g;
+    }
+
+    @Override
+    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+        return visitor.visit(this, ctx);
+    }
+
+    public int getAmount() {
+        return amount;
     }
 }

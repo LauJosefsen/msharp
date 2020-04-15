@@ -5,7 +5,11 @@ import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
+import msharp.NotePopulation.FinalNote;
+import msharp.NotePopulation.NotePopulation;
+import msharp.NotePopulation.nodeContext;
 
+import java.util.List;
 import java.util.UUID;
 
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
@@ -33,11 +37,24 @@ public class octaveChangeNode implements stmtNode{
 
     @Override
     public Graph toGraph() {
-        Node octaveChange = node("octaveChange"+ UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>OctChange</b><br>"+this.deltaOctave));
+        Node octaveChange = node("octaveChange"+ UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>OctChange</b><br/>"+this.deltaOctave));
 
         Graph g = graph("and").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
         g = g.with(octaveChange);
 
         return g;
+    }
+
+    @Override
+    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+        return visitor.visit(this, ctx);
+    }
+
+    public int getDeltaOctave() {
+        return deltaOctave;
+    }
+
+    public void setDeltaOctave(int deltaOctave) {
+        this.deltaOctave = deltaOctave;
     }
 }

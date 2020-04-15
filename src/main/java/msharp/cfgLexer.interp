@@ -56,7 +56,7 @@ Rparen
 Comma
 Digs
 Assign
-Instrument
+msharp.MinecraftClasses.Instrument
 OctaveUp
 OctaveDown
 TransposeUp
@@ -91,7 +91,7 @@ Rparen
 Comma
 Digs
 Assign
-Instrument
+msharp.MinecraftClasses.Instrument
 OctaveUp
 OctaveDown
 TransposeUp

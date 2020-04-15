@@ -1,6 +1,7 @@
 package msharp.Nodes;
 
 import guru.nidi.graphviz.attribute.Color;
+import guru.nidi.graphviz.attribute.GraphAttr;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.attribute.Style;
 import guru.nidi.graphviz.model.*;
@@ -33,7 +34,11 @@ public class progNode implements node{
     public Graph toGraph() {
 
         Node program = node("program");
-        Graph g = graph("program").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
+        Graph g = graph("program").directed()
+                .graphAttr().with(Rank.dir(TOP_TO_BOTTOM))
+                .graphAttr().with(GraphAttr.splines(GraphAttr.SplineMode.ORTHO))
+                .graphAttr().with("concentrate",false)
+                .graphAttr().with("compound",false);
 
         List<MutableNode> partGraphs = new ArrayList<>();
         for(partDclNode partDcl : parts){

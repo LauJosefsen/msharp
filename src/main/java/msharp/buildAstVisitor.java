@@ -16,7 +16,7 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     //private List<String> vars;
     private List<String> semanticErrors = new ArrayList<>();
 
-    private Map<String, Object> symbolTable = new HashMap<>();
+    public Map<String, Object> symbolTable = new HashMap<>();
     // Add to symboltable
     // Dawd35j
     // $instrument , GUITAR
@@ -136,10 +136,10 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
         return visit(ctx.stmt());
     }
 
-    @Override
-    public node visitMultStmtNL(cfgParser.MultStmtNLContext ctx){
-        return null;
-    }
+//    @Override
+//    public node visitMultStmtNL(cfgParser.MultStmtNLContext ctx){
+//        return null;
+//    }
 
     @Override
     public node visitMultStmtMultRepeat(cfgParser.MultStmtMultRepeatContext ctx) {
@@ -150,15 +150,15 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     public node visitMultilineRepeat(cfgParser.MultilineRepeatContext ctx) {
         repeatNode node = new repeatNode(Integer.parseInt(ctx.Digs().getText()));
 
-        if(ctx.multStmtOrEveryStmt().size() == 1){ //todo kan indeholde et null element, som får det til at ligne der er mere end 1 stmt. Vi bruger også denne teknik andre steder, skal nok rettes der også.
-            node.setStmts((stmtNode) visit(ctx.multStmtOrEveryStmt(0)));
+
+        stmtList stmts = new stmtList();
+        for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
+            stmts.add((stmtNode) visit(parseTree));
         }
-        else{
-            stmtList stmts = new stmtList();
-            for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
-                stmts.add((stmtNode) visit(parseTree));
-            }
-            node.setStmts(stmts);
+        node.setStmts(stmts);
+
+        if(stmts.size() == 1){
+            node.setStmts(stmts.get(0));
         }
 
         return node;
@@ -168,15 +168,15 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     public node visitEveryStmt(cfgParser.EveryStmtContext ctx) {
         everyNode node = new everyNode(Integer.parseInt((ctx.Digs().getText())));
 
-        if(ctx.multStmtOrEveryStmt().size() == 1){
-            node.setTrueCase((stmtNode) visit(ctx.multStmtOrEveryStmt(0)));
+
+        stmtList stmts = new stmtList();
+        for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
+            stmts.add((stmtNode) visit(parseTree));
         }
-        else{
-            stmtList stmts = new stmtList();
-            for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
-                stmts.add((stmtNode) visit(parseTree));
-            }
-            node.setTrueCase(stmts);
+        node.setTrueCase(stmts);
+
+        if(stmts.size() == 1){
+            node.setTrueCase(stmts.get(0));
         }
 
         if(ctx.elseStmt() != null){
@@ -187,16 +187,18 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
 
     @Override
     public node visitElseStmt(cfgParser.ElseStmtContext ctx) {
-        if(ctx.multStmtOrEveryStmt().size() == 1){
-            return visit(ctx.multStmtOrEveryStmt(0));
+
+        stmtList stmts = new stmtList();
+        for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
+            stmts.add((stmtNode) visit(parseTree));
         }
-        else{
-            stmtList stmts = new stmtList();
-            for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
-                stmts.add((stmtNode) visit(parseTree));
-            }
-            return stmts;
+
+        if(stmts.size() == 1){
+            return stmts.get(0);
         }
+
+        return stmts;
+
     }
 
     @Override
@@ -238,7 +240,7 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
             semanticErrors.add(part.getId() + " part name is already defined. (At line " + ctx.Id().getSymbol().getLine() + ")");
         }
         else{
-            symbolTable.putIfAbsent(part.id, part.stmts);
+            symbolTable.put(part.getId(), part.stmts);
         }
 
         return part;
