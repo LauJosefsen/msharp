@@ -116,7 +116,10 @@ public class NotePopulation {
         // secondPrBeat = 0.5s
         // beatsPrNode = (1/4) / (1/16) = 4
         // tid = 0.5s/4 = 1/8s
-        ctx.timing += secondPrBeat/beatsPrNode;
+
+        ctx.timing += ((float)Math.round((secondPrBeat/beatsPrNode)*1000))/1000;
+
+        //ctx.timing += secondPrBeat/beatsPrNode;
     }
 
     public List<FinalNote> visit(octaveChangeNode node, nodeContext ctx){
@@ -133,7 +136,7 @@ public class NotePopulation {
         // We add the iteration as a Integer class (reference type), so that the every-nodes can peek at the stack.
         ctx.repeatIterationStack.push(iteration);
         for(; iteration <= node.getAmount(); iteration++){   // todo tjek at integer er en poienter
-            node.getStmts().accept(this,ctx);
+            notes.addAll(node.getStmts().accept(this,ctx));
         }
         ctx.repeatIterationStack.pop();
 

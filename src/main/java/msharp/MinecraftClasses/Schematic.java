@@ -87,12 +87,11 @@ public class Schematic
     }
 
     public void saveToFile(String file_name) {
-        CompoundTag tag = new CompoundTag("msharp.MinecraftClasses.Schematic");
+        CompoundTag tag = new CompoundTag("Schematic");
         tag.setShort("Width",(short) _width);
         tag.setShort("Height",(short) _height);
         tag.setShort("Length",(short) _length);
 
-//        List<String> blockTypes = new ArrayList<>();
         Map<String, Integer> blockTypes = new HashMap<>();
 
         List<Byte> block_data = new ArrayList<>();
@@ -126,7 +125,7 @@ public class Schematic
         for (Map.Entry<String, Integer> stringIntegerEntry : blockTypes.entrySet()) {
             paletteTag.setInt(stringIntegerEntry.getKey(), stringIntegerEntry.getValue());
         }
-//        tag.setTag(paletteTag); todo causes compile error
+        tag.setTag(paletteTag); //todo causes compile error
 
         tag.setInt("PaletteMax",blockTypes.size());
 

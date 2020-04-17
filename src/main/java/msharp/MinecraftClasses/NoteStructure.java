@@ -2,7 +2,7 @@ package msharp.MinecraftClasses;
 
 import java.util.*;
 
-public class NoteStructure extends ArrayList<ArrayList<Note>> {
+public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
 
     private static int turnAroundLength = 20;
     private static int heightPrLane = 4;
@@ -21,11 +21,11 @@ public class NoteStructure extends ArrayList<ArrayList<Note>> {
         GenerateTrack(schem, emptyLocations);
 
         int currentTick = 0;
-        for (ArrayList<Note> notes : this) {
-            for (Note note : notes) {
+        for (ArrayList<MinecraftNote> minecraftNotes : this) {
+            for (MinecraftNote minecraftNote : minecraftNotes) {
                 BlockLocation location = emptyLocations.get(currentTick).remove(emptyLocations.get(currentTick).size()-1);
 
-                schem.setBlock(location.x, location.y, location.z, new Noteblock(note));
+                schem.setBlock(location.x, location.y, location.z, new Noteblock(minecraftNote));
             }
             currentTick++;
         }
@@ -214,8 +214,8 @@ public class NoteStructure extends ArrayList<ArrayList<Note>> {
 
 
     private void Analyze() {
-        for (ArrayList<Note> notes : this) {
-            if (notes.size() > _lanes * 2) _lanes = (int) Math.ceil(notes.size() / 2.0);
+        for (ArrayList<MinecraftNote> minecraftNotes : this) {
+            if (minecraftNotes.size() > _lanes * 2) _lanes = (int) Math.ceil(minecraftNotes.size() / 2.0);
         }
         _turns = (int) Math.ceil((this.size() * 1.0) / turnAroundLength);
     }

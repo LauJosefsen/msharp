@@ -2,6 +2,9 @@ package msharp;
 
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
+import msharp.MinecraftClasses.MinecraftFitment;
+import msharp.MinecraftClasses.MinecraftNote;
+import msharp.MinecraftClasses.NoteStructure;
 import msharp.Nodes.node;
 import msharp.Nodes.progNode;
 import msharp.NotePopulation.FinalNote;
@@ -53,6 +56,13 @@ public class msharp {
         List<FinalNote> notes = notePopulator.visit((progNode) ast);
 
         Collections.sort(notes);
+
+        // Lets fit the collection of notes to the Minecraft-limitations
+        NoteStructure minecraftNotes = MinecraftFitment.fitToMinecraft(notes);
+
+
+        minecraftNotes.GenerateSchematic().saveToFile("C:\\Users\\lau-j\\Desktop\\minecraft-test\\plugins\\WorldEdit\\schematics\\hallelujah.schem");
+
 
 //        System.out.println(tree.toStringTree(parser)); // print LISP-style tree
         System.out.println("Result: \n" + ast.toString());

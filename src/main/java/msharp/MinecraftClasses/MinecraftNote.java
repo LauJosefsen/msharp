@@ -1,10 +1,10 @@
 package msharp.MinecraftClasses;
 
-public class Note {
+public class MinecraftNote {
     private Instrument instrument;
     private int pitch;
 
-    public Note(Instrument instrument, int pitch) {
+    public MinecraftNote(Instrument instrument, int pitch) {
         this.instrument = instrument;
         this.pitch = pitch;
     }

@@ -8,10 +8,10 @@ part DrumsInterlude
     #Jeg ved ikke hvad vi gør med toner og oktaver ved trommer
     repeat 4 times
         every 4 times
-            (BASEDRUM: 1%8 c c c - - c) & (SNARE: 1%8 -*3 c c -)
+            (BASEDRUM: 1%8 c2 c c - - c) & (SNARE: 1%8 -*3 c2 c -)
         end every
         else
-            (BASEDRUM: 1%8 c -*4 c) & (SNARE: 1%8 -*3 c -*2)
+            (BASEDRUM: 1%8 c2 -*4 c) & (SNARE: 1%8 -*3 c2 -*2)
         end else
     end repeat
 end part
@@ -32,7 +32,7 @@ part GuitarInterlude
     1%8 
     repeat 2 times
 		c3 g c4 e c b2
-        a e3 a c4 a2
+        a e3 a c4 a3 a2
 	end repeat
 end part
 
@@ -53,6 +53,7 @@ part GuitarVerse
     # 3%8 burde skrives 1.5%4, hvis vi understøtter floats.
     #Denne næste takt ville normalt gå ud over range af instrumentet.
     e3 g^ a 3%8 e4
+    1%8
     a2 e3 a c4 a3 e
     a2 e3 a c4 a3 a2
 end part
@@ -121,7 +122,7 @@ end part
 part VocalChorus
     FLUTE:
     #Denne takt er lidt længere, på grund af en sammenbinding    
-    3%8 a 6%8 a
+    3%8 a5 6%8 a
     #Denne takt er lidt kortere, da den forrige var længere
     1%4 a 1%8 g
     #Denne takt er lidt længere, på grund af en sammenbinding    

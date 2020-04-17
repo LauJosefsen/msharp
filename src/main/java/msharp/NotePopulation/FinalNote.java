@@ -40,4 +40,20 @@ public class FinalNote implements Comparable<FinalNote>{
     public int compareTo(FinalNote finalNote) {
         return Float.compare(this.timing,finalNote.timing);
     }
+
+    public Instrument getInstrument() {
+        return instrument;
+    }
+
+    public int getOctave() {
+        return octave;
+    }
+
+    public ToneEnum getTone() {
+        return tone;
+    }
+
+    public float getTiming() {
+        return timing;
+    }
 }

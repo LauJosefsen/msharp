@@ -1,5 +1,7 @@
 package msharp.MinecraftClasses;
 
+import msharp.NotePopulation.ToneEnum;
+
 public enum Instrument {
     BASS(0),
     SNARE(1),
@@ -31,6 +33,35 @@ public enum Instrument {
             }
         }
         return null;
+    }
+
+    public int getPitch(ToneEnum tone, int octave) {
+        switch(this){
+            case BASS: case DIDGERIDOO:
+                //1-3
+                return mapToPitch(1,octave,tone.getToneId());
+
+            case BELL: case CHIME: case XYLOPHONE:
+                // 5-7
+                return mapToPitch(5,octave,tone.getToneId());
+            case FLUTE: case COW_BELL:
+                // 4-6
+                return mapToPitch(4,octave,tone.getToneId());
+            case GUITAR:
+                // 2-4
+                return mapToPitch(2,octave,tone.getToneId());
+            case IRON_XYLOPHONE: case BIT: case BANJO: case PLING: case HARP:
+                // 3-5
+                return mapToPitch(3,octave,tone.getToneId());
+            case SNARE: case HAT: case BASEDRUM:
+                // no octave
+                return mapToPitch(1,octave,tone.getToneId());
+        }
+        return 0;
+    }
+
+    private int mapToPitch(int minimumOctave, int octave, int toneId) {
+        return (octave-minimumOctave)*12+(toneId-5);
     }
 
     public int getIc() {
