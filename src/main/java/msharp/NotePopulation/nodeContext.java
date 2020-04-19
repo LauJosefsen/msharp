@@ -11,7 +11,7 @@ public class nodeContext implements Cloneable{
     tempo tempo = new tempo(1,4);
     float timing = 0;
 
-    Stack<Integer> repeatIterationStack = new Stack<>();
+    Stack<IntByReference> repeatIterationStack = new Stack<>();
 
     public nodeContext clone()
     {

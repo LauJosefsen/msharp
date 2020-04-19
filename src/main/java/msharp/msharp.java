@@ -26,7 +26,7 @@ public class msharp {
     public static void main(String[] args) throws IOException {
         // temporary input string to test with
         //String str = "a = 10 10 + a - 32";
-        String str = new String(Files.readAllBytes(Paths.get("examples/hallelujah.txt")));
+        String str = new String(Files.readAllBytes(Paths.get("examples/happy_birthday.txt")));
 
         // create a CharStream that reads from standard input
         CharStream input = CharStreams.fromString(str);
@@ -61,7 +61,7 @@ public class msharp {
         NoteStructure minecraftNotes = MinecraftFitment.fitToMinecraft(notes);
 
 
-        minecraftNotes.GenerateSchematic().saveToFile("C:\\Users\\lau-j\\Desktop\\minecraft-test\\plugins\\WorldEdit\\schematics\\hallelujah.schem");
+        minecraftNotes.GenerateSchematic().saveToFile("C:\\Users\\lau-j\\Desktop\\minecraft-test\\plugins\\WorldEdit\\schematics\\happy_birthday.schem");
 
 
 //        System.out.println(tree.toStringTree(parser)); // print LISP-style tree

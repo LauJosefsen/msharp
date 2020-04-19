@@ -61,7 +61,7 @@ public class NotePopulation {
         List<FinalNote> notes = new ArrayList<>();
 
         // Integer on the stack is 1-based
-        if(ctx.repeatIterationStack.peek() % node.getAmount() == 0){
+        if(ctx.repeatIterationStack.peek().value % node.getAmount() == 0){
             notes.addAll(node.getTrueCase().accept(this,ctx));
         }
         else{
@@ -111,6 +111,8 @@ public class NotePopulation {
         float secondPrBeat = (float) ((1.0/ctx.bpm.bpm)*60.0);    // calculates the time between beats
         float beatsPrNode = (float) ((1.0*ctx.bpm.tempo.toFraction()) / ctx.tempo.toFraction());
 
+        //todo fix accumulating rounding errors here..
+
         // bpm 120, 1/4
         // og vi vil spille 1/16 node
         // secondPrBeat = 0.5s
@@ -124,18 +126,18 @@ public class NotePopulation {
 
     public List<FinalNote> visit(octaveChangeNode node, nodeContext ctx){
         // This visit should only change the ctx, and add no new notes.
-        ctx.octave = node.getDeltaOctave();
-        return new ArrayList<>();   // returnes empty list
+        ctx.octave += node.getDeltaOctave();
+        return new ArrayList<>();   // returns empty list
     }
 
     public List<FinalNote> visit(repeatNode node, nodeContext ctx){
         List<FinalNote> notes = new ArrayList<>();
 
-        Integer iteration = 1;
+        IntByReference iteration = new IntByReference(1);
 
         // We add the iteration as a Integer class (reference type), so that the every-nodes can peek at the stack.
         ctx.repeatIterationStack.push(iteration);
-        for(; iteration <= node.getAmount(); iteration++){   // todo tjek at integer er en poienter
+        for(; iteration.value <= node.getAmount(); iteration.value++){   // todo tjek at integer er en poienter
             notes.addAll(node.getStmts().accept(this,ctx));
         }
         ctx.repeatIterationStack.pop();

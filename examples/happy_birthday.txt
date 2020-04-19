@@ -1,0 +1,38 @@
+part Melody
+    FLUTE:
+    repeat 2 times
+        1%8 g4 g 1%4 a g
+        every 2 times
+
+            d5 1%2 c
+        end every
+        else
+            c5 1%2 b4
+        end else
+    end repeat
+
+    1%8 g4 g / 1%4 g e
+    c \ b a
+    1%8 f5 f 1%4 e c
+    d 1%2 c
+end part
+
+
+part PianoChords
+    PIANO:
+    1%4
+    - (a3 & c4 & e4) -
+    - (b3 & d4 & e4) -
+    - (g3 & d4 & e4) -
+    - (a3 & c4 & e4) -
+    - (c4 & f4^ & a4) -
+    - (d4 & f4 & a4) -
+    - (c4 & e4 & a4) -
+    (b3 & d4 & e4) (a3 & c4 & e4) -
+end part
+
+play
+    BPM(110,1%4)
+    Melody & PianoChords
+end play
+
