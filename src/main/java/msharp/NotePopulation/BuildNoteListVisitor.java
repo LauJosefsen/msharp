@@ -97,7 +97,8 @@ public class BuildNoteListVisitor {
 
         // if the Node isn't a pause, we add the Node to the Node list.
         if(node.getLetter() != '-') {
-            notes.add(new FinalNote(ctx.instrument, ToneEnum.fromLetter(node.getLetter()), ctx.octave, ctx.timing));
+            notes.add(new FinalNote(ctx.instrument, ToneEnum.fromLetter(node.getLetter()), ctx.octave,
+                    new Fraction(ctx.timing,new Fraction(1,1)))); // new fraction to avoid using same reference.
         }
         
         // Move the timer in the context by the duration of the note.
@@ -108,8 +109,10 @@ public class BuildNoteListVisitor {
 
     private void moveTimerByNoteDuration(NodeContext ctx) {
         // adds the note "duration" to timing.This is calculated based on Bpm and Tempo.
-        float secondPrBeat = (float) ((1.0/ctx.bpm.bpm)*60.0);    // calculates the time between beats
-        float beatsPrNode = (float) ((1.0*ctx.bpm.tempo.toFraction()) / ctx.tempo.toFraction());
+//        float secondPrBeat = (float) ((1.0/ctx.bpm.bpm)*60.0);    // calculates the time between beats
+//        float beatsPrNode = (float) ((1.0*ctx.bpm.tempo.toFraction()) / ctx.tempo.toFraction());
+        Fraction secondPrBeat = new Fraction(60,ctx.bpm.bpm).abbreviate();
+        Fraction beatsPrNode = new Fraction(ctx.bpm.tempo.toFraction(),ctx.tempo.toFraction()); // todo should extend fraction instead of .toFraction
 
         //todo fix accumulating rounding errors here..
 
@@ -119,7 +122,8 @@ public class BuildNoteListVisitor {
         // beatsPrNode = (1/4) / (1/16) = 4
         // tid = 0.5s/4 = 1/8s
 
-        ctx.timing += ((float)Math.round((secondPrBeat/beatsPrNode)*1000))/1000;
+//        ctx.timing += ((float)Math.round((secondPrBeat/beatsPrNode)*1000))/1000;
+        ctx.timing.add(new Fraction(secondPrBeat,beatsPrNode));
 
         //ctx.timing += secondPrBeat/beatsPrNode;
     }

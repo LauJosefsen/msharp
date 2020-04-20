@@ -6,16 +6,16 @@ public class FinalNote implements Comparable<FinalNote>{
     Instrument instrument;
     int octave;
     ToneEnum tone;
-    float timing;
+    Fraction timing;
 
-    public FinalNote(Instrument instrument, ToneEnum tone, int octave, float timing) {
+    public FinalNote(Instrument instrument, ToneEnum tone, int octave, Fraction timing) {
         this.instrument = instrument;
         this.tone = tone;
         this.octave = octave;
         this.timing = timing;
     }
 
-    public void transpose(int amount){
+    void transpose(int amount){
         // determine if we are stepping postive or negative steps.
         int direction = amount > 0 ? 1 : -1;
 
@@ -33,12 +33,11 @@ public class FinalNote implements Comparable<FinalNote>{
             }
             tone = ToneEnum.fromToneId(toneId);
         }
-
     }
 
     @Override
     public int compareTo(FinalNote finalNote) {
-        return Float.compare(this.timing,finalNote.timing);
+        return this.timing.compareTo(finalNote.timing);
     }
 
     public Instrument getInstrument() {
@@ -53,7 +52,7 @@ public class FinalNote implements Comparable<FinalNote>{
         return tone;
     }
 
-    public float getTiming() {
+    public Fraction getTiming() {
         return timing;
     }
 }

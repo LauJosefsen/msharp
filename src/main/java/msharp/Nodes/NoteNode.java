@@ -21,16 +21,8 @@ public class NoteNode implements StmtNode {
         return letter;
     }
 
-    public void setLetter(char letter) {
-        this.letter = letter;
-    }
-
     public int getOctave() {
         return octave;
-    }
-
-    public void setOctave(int octave) {
-        this.octave = octave;
     }
 
     private char letter;

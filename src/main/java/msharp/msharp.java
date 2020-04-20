@@ -27,7 +27,7 @@ public class msharp {
         System.out.println(Arrays.toString(args));
         // temporary input string to test with
         //String str = "a = 10 10 + a - 32";
-        String str = new String(Files.readAllBytes(Paths.get("examples/happy_birthday.txt")));
+        String str = new String(Files.readAllBytes(Paths.get("examples/all_star.txt")));
 
         // create a CharStream that reads from standard input
         CharStream input = CharStreams.fromString(str);
