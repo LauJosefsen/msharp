@@ -1,9 +1,7 @@
 package msharp.Nodes;
 
-import guru.nidi.graphviz.attribute.Color;
 import guru.nidi.graphviz.attribute.GraphAttr;
 import guru.nidi.graphviz.attribute.Rank;
-import guru.nidi.graphviz.attribute.Style;
 import guru.nidi.graphviz.model.*;
 
 import java.util.ArrayList;
@@ -14,14 +12,14 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
-public class progNode implements node{
-    public List<partDclNode> parts = new ArrayList<>();
-    public playNode main;
+public class ProgNode implements Node {
+    public List<PartDclNode> parts = new ArrayList<>();
+    public PlayNode main;
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for(partDclNode part : parts){
+        for(PartDclNode part : parts){
             sb.append(part.toString());
             sb.append("\n");
         }
@@ -33,7 +31,7 @@ public class progNode implements node{
     @Override
     public Graph toGraph() {
 
-        Node program = node("program");
+        guru.nidi.graphviz.model.Node program = node("program");
         Graph g = graph("program").directed()
                 .graphAttr().with(Rank.dir(TOP_TO_BOTTOM))
                 .graphAttr().with(GraphAttr.splines(GraphAttr.SplineMode.ORTHO))
@@ -41,7 +39,7 @@ public class progNode implements node{
                 .graphAttr().with("compound",false);
 
         List<MutableNode> partGraphs = new ArrayList<>();
-        for(partDclNode partDcl : parts){
+        for(PartDclNode partDcl : parts){
             partGraphs.add(partDcl.toGraph().toMutable().rootNodes().iterator().next());
         }
         partGraphs.add(main.toGraph().toMutable().rootNodes().iterator().next());

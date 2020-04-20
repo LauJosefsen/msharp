@@ -6,10 +6,9 @@ import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import msharp.NotePopulation.FinalNote;
-import msharp.NotePopulation.NotePopulation;
-import msharp.NotePopulation.nodeContext;
+import msharp.NotePopulation.BuildNoteListVisitor;
+import msharp.NotePopulation.NodeContext;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,21 +16,21 @@ import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
-public class transposeNode implements stmtNode{
+public class TransposeNode implements StmtNode {
     private int deltaTonation;
 
     public int getDeltaTonation() {
         return deltaTonation;
     }
 
-    public stmtNode getToBeTransposed() {
+    public StmtNode getToBeTransposed() {
         return toBeTransposed;
     }
 
-    private stmtNode toBeTransposed;
+    private StmtNode toBeTransposed;
 
 
-    public transposeNode(int deltaTonation, stmtNode toBeTransposed) {
+    public TransposeNode(int deltaTonation, StmtNode toBeTransposed) {
         this.deltaTonation = deltaTonation;
         this.toBeTransposed = toBeTransposed;
     }
@@ -50,7 +49,7 @@ public class transposeNode implements stmtNode{
         return g;
     }
     @Override
-    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx ) {
         return visitor.visit(this, ctx);
     }
 }

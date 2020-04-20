@@ -1,10 +1,10 @@
 package msharp.NotePopulation;
 
-public class tempo {
+public class Tempo {
     int numerator;
     int denominator;
 
-    public tempo(int numerator, int denominator) {
+    public Tempo(int numerator, int denominator) {
         this.numerator = numerator;
         this.denominator = denominator;
     }

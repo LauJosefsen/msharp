@@ -1,5 +1,5 @@
 #Jeg antager at en oktav starter på c.
-#Den eneste tone der er transponeret er g i 3. sidste takt i guitarVerse
+# Den eneste tone der er transponeret er g i 3. sidste takt i guitarVerse
 # Her er noderne:  https://musescore.com/user/21965011/scores/4217351
 
 #Hallelujah
@@ -192,7 +192,7 @@ end part
 
 
 play
-    BPM(150, 1%8)
+    BPM(300, 1%8)
     WholeSong^1
 end play
 

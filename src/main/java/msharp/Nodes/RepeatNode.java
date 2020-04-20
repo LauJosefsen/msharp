@@ -6,8 +6,8 @@ import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import msharp.NotePopulation.FinalNote;
-import msharp.NotePopulation.NotePopulation;
-import msharp.NotePopulation.nodeContext;
+import msharp.NotePopulation.BuildNoteListVisitor;
+import msharp.NotePopulation.NodeContext;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,24 +17,24 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
-public class repeatNode implements stmtNode{
+public class RepeatNode implements StmtNode {
     private int amount;
 
-    public stmtNode getStmts() {
+    public StmtNode getStmts() {
         return stmts;
     }
 
-    public void setStmts(stmtNode stmts) {
+    public void setStmts(StmtNode stmts) {
         this.stmts = stmts;
     }
 
-    public repeatNode(int amount) {
+    public RepeatNode(int amount) {
         this.amount = amount;
     }
 
-    private stmtNode stmts;
+    private StmtNode stmts;
 
-    public repeatNode(int amount, stmtNode stmts) {
+    public RepeatNode(int amount, StmtNode stmts) {
         this.amount = amount;
         this.stmts = stmts;
     }
@@ -58,7 +58,7 @@ public class repeatNode implements stmtNode{
     }
 
     @Override
-    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx ) {
         return visitor.visit(this, ctx);
     }
 

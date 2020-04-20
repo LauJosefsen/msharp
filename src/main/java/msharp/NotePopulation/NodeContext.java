@@ -4,19 +4,19 @@ import msharp.MinecraftClasses.Instrument;
 
 import java.util.Stack;
 
-public class nodeContext implements Cloneable{
+public class NodeContext implements Cloneable{
     int octave = 0;
     Instrument instrument = Instrument.HARP;
-    bpm bpm = new bpm(150, new tempo(1,4));
-    tempo tempo = new tempo(1,4);
+    Bpm bpm = new Bpm(150, new Tempo(1,4));
+    Tempo tempo = new Tempo(1,4);
     float timing = 0;
 
     Stack<IntByReference> repeatIterationStack = new Stack<>();
 
-    public nodeContext clone()
+    public NodeContext clone()
     {
         try {
-            return (nodeContext) super.clone();
+            return (NodeContext) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;

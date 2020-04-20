@@ -6,8 +6,8 @@ import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import msharp.NotePopulation.FinalNote;
-import msharp.NotePopulation.NotePopulation;
-import msharp.NotePopulation.nodeContext;
+import msharp.NotePopulation.BuildNoteListVisitor;
+import msharp.NotePopulation.NodeContext;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,12 +17,12 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
-public class bpmDclNode implements stmtNode{
-    public tempoChangeNode getTempo() {
+public class BpmDclNode implements StmtNode {
+    public TempoChangeNode getTempo() {
         return tempo;
     }
 
-    public void setTempo(tempoChangeNode tempo) {
+    public void setTempo(TempoChangeNode tempo) {
         this.tempo = tempo;
     }
 
@@ -34,10 +34,10 @@ public class bpmDclNode implements stmtNode{
         this.bpm = bpm;
     }
 
-    private tempoChangeNode tempo;
+    private TempoChangeNode tempo;
     private int bpm;
 
-    public bpmDclNode(int bpm, tempoChangeNode tempo) {
+    public BpmDclNode(int bpm, TempoChangeNode tempo) {
         this.tempo = tempo;
         this.bpm = bpm;
     }
@@ -58,7 +58,7 @@ public class bpmDclNode implements stmtNode{
     }
 
     @Override
-    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx ) {
         return visitor.visit(this, ctx);
     }
 }

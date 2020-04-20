@@ -6,8 +6,8 @@ import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import msharp.NotePopulation.FinalNote;
-import msharp.NotePopulation.NotePopulation;
-import msharp.NotePopulation.nodeContext;
+import msharp.NotePopulation.BuildNoteListVisitor;
+import msharp.NotePopulation.NodeContext;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,11 +15,11 @@ import java.util.UUID;
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.*;
 
-public class tempoChangeNode implements stmtNode{
+public class TempoChangeNode implements StmtNode {
     private int numerator;
     private int denominator;
 
-    public tempoChangeNode(int numerator, int denomniator) {
+    public TempoChangeNode(int numerator, int denomniator) {
         this.numerator = numerator;
         this.denominator = denomniator;
     }
@@ -39,7 +39,7 @@ public class tempoChangeNode implements stmtNode{
         return g;
     }
     @Override
-    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx ) {
         return visitor.visit(this, ctx);
     }
 

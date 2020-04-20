@@ -1,10 +1,10 @@
 package msharp.NotePopulation;
 
-public class bpm {
+public class Bpm {
     int bpm;
-    tempo tempo;
+    Tempo tempo;
 
-    public bpm(int bpm, msharp.NotePopulation.tempo tempo) {
+    public Bpm(int bpm, Tempo tempo) {
         this.bpm = bpm;
         this.tempo = tempo;
     }

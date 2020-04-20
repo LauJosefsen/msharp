@@ -6,8 +6,8 @@ import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import msharp.NotePopulation.FinalNote;
-import msharp.NotePopulation.NotePopulation;
-import msharp.NotePopulation.nodeContext;
+import msharp.NotePopulation.BuildNoteListVisitor;
+import msharp.NotePopulation.NodeContext;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,14 +17,14 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
-public class idNode implements stmtNode{
+public class IdNode implements StmtNode {
     public String getId() {
         return id;
     }
 
     private String id;
 
-    public idNode(String id) {
+    public IdNode(String id) {
         this.id = id;
     }
 
@@ -44,7 +44,7 @@ public class idNode implements stmtNode{
     }
 
     @Override
-    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx ) {
         return visitor.visit(this, ctx);
     }
 }

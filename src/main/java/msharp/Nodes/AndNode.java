@@ -6,10 +6,9 @@ import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import msharp.NotePopulation.FinalNote;
-import msharp.NotePopulation.NotePopulation;
-import msharp.NotePopulation.nodeContext;
+import msharp.NotePopulation.BuildNoteListVisitor;
+import msharp.NotePopulation.NodeContext;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,19 +17,19 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
-public class andNode implements stmtNode{
-    public stmtNode getLeft() {
+public class AndNode implements StmtNode {
+    public StmtNode getLeft() {
         return left;
     }
 
-    public stmtNode getRight() {
+    public StmtNode getRight() {
         return right;
     }
 
-    private stmtNode left;
-    private stmtNode right;
+    private StmtNode left;
+    private StmtNode right;
 
-    public andNode(stmtNode left, stmtNode right) {
+    public AndNode(StmtNode left, StmtNode right) {
         this.left = left;
         this.right = right;
     }
@@ -51,7 +50,7 @@ public class andNode implements stmtNode{
     }
 
     @Override
-    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx ) {
         return visitor.visit(this, ctx);
     }
 }

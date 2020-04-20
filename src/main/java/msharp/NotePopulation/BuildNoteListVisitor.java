@@ -8,23 +8,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NotePopulation {
-    // todo Set standard octave, hvis nu den første node ikke har en oktav
+public class BuildNoteListVisitor {
+    // todo Set standard octave, hvis nu den første Node ikke har en oktav
     private Map<String, Object> symbolTable = new HashMap<>();
 
-    public NotePopulation(Map<String, Object> symbolTable) {
+    public BuildNoteListVisitor(Map<String, Object> symbolTable) {
         this.symbolTable = symbolTable;
     }
 
-    public List<FinalNote> visit(progNode prog){
-        // ctx is used to store current context about variables such as octaves, instrument, bpm, tempo and timing.
-        nodeContext ctx =  new nodeContext();
+    public List<FinalNote> visit(ProgNode prog){
+        // ctx is used to store current context about variables such as octaves, instrument, Bpm, Tempo and timing.
+        NodeContext ctx =  new NodeContext();
         return visit(prog.main,ctx);
     }
 
-    private List<FinalNote> visit(playNode play, nodeContext ctx) {
+    private List<FinalNote> visit(PlayNode play, NodeContext ctx) {
         List<FinalNote> noteList = new ArrayList<>();
-        for(stmtNode stmt : play.stmts){
+        for(StmtNode stmt : play.stmts){
             noteList.addAll(stmt.accept(this,ctx));
         }
         // De foskellige muligheder for stmt notes
@@ -34,14 +34,14 @@ public class NotePopulation {
         return noteList;
     }
 
-    public List<FinalNote> visit(andNode node, nodeContext ctx){
+    public List<FinalNote> visit(AndNode node, NodeContext ctx){
         List<FinalNote> notes = new ArrayList<>();
 
         // Makes a clone of the current context, so the changes to the context doesn't overlap into the "global" scope
-        nodeContext leftCtx = ctx.clone();
+        NodeContext leftCtx = ctx.clone();
         notes.addAll(node.getLeft().accept(this,leftCtx));
 
-        nodeContext rightCtx = ctx.clone();
+        NodeContext rightCtx = ctx.clone();
         notes.addAll(node.getRight().accept(this,rightCtx));
 
         // we now set the timing to the max point of either left or right.
@@ -50,14 +50,14 @@ public class NotePopulation {
         return notes;
     }
 
-    public List<FinalNote> visit(bpmDclNode node, nodeContext ctx){
+    public List<FinalNote> visit(BpmDclNode node, NodeContext ctx){
         // This visit should only change the ctx, and add no new notes.
         ctx.bpm.bpm = node.getBpm();
-        ctx.bpm.tempo = new tempo(node.getTempo().getNumerator(),node.getTempo().getDenominator());
+        ctx.bpm.tempo = new Tempo(node.getTempo().getNumerator(),node.getTempo().getDenominator());
         return new ArrayList<>();
     }
 
-    public List<FinalNote> visit(everyNode node, nodeContext ctx){
+    public List<FinalNote> visit(EveryNode node, NodeContext ctx){
         List<FinalNote> notes = new ArrayList<>();
 
         // Integer on the stack is 1-based
@@ -71,31 +71,31 @@ public class NotePopulation {
         return notes;
     }
 
-    public List<FinalNote> visit(idNode node, nodeContext ctx){
+    public List<FinalNote> visit(IdNode node, NodeContext ctx){
 
         if(!symbolTable.containsKey(node.getId())){
             // todo throw some error?
             throw new IllegalArgumentException("Id does not exists in symboltable"+node.getId());
         }
 
-        return ((stmtList)symbolTable.get(node.getId())).accept(this,ctx);
+        return ((StmtList)symbolTable.get(node.getId())).accept(this,ctx);
     }
 
-    public List<FinalNote> visit(instruNode node, nodeContext ctx){
+    public List<FinalNote> visit(InstruNode node, NodeContext ctx){
         // This visit should only change the ctx, and add no new notes.
         ctx.instrument = Instrument.fromString(node.getInstrument());
         return new ArrayList<>();
     }
 
-    public List<FinalNote> visit(noteNode node, nodeContext ctx){
+    public List<FinalNote> visit(NoteNode node, NodeContext ctx){
         List<FinalNote> notes = new ArrayList<>();
 
-        // if noteNode has an octave defined, we change the octave defined in the current ctx.
+        // if NoteNode has an octave defined, we change the octave defined in the current ctx.
         if(node.getOctave() != -1){
             ctx.octave = node.getOctave();
         }
 
-        // if the node isn't a pause, we add the node to the node list.
+        // if the Node isn't a pause, we add the Node to the Node list.
         if(node.getLetter() != '-') {
             notes.add(new FinalNote(ctx.instrument, ToneEnum.fromLetter(node.getLetter()), ctx.octave, ctx.timing));
         }
@@ -106,15 +106,15 @@ public class NotePopulation {
         return notes;
     }
 
-    private void moveTimerByNoteDuration(nodeContext ctx) {
-        // adds the note "duration" to timing.This is calculated based on bpm and tempo.
+    private void moveTimerByNoteDuration(NodeContext ctx) {
+        // adds the note "duration" to timing.This is calculated based on Bpm and Tempo.
         float secondPrBeat = (float) ((1.0/ctx.bpm.bpm)*60.0);    // calculates the time between beats
         float beatsPrNode = (float) ((1.0*ctx.bpm.tempo.toFraction()) / ctx.tempo.toFraction());
 
         //todo fix accumulating rounding errors here..
 
-        // bpm 120, 1/4
-        // og vi vil spille 1/16 node
+        // Bpm 120, 1/4
+        // og vi vil spille 1/16 Node
         // secondPrBeat = 0.5s
         // beatsPrNode = (1/4) / (1/16) = 4
         // tid = 0.5s/4 = 1/8s
@@ -124,13 +124,13 @@ public class NotePopulation {
         //ctx.timing += secondPrBeat/beatsPrNode;
     }
 
-    public List<FinalNote> visit(octaveChangeNode node, nodeContext ctx){
+    public List<FinalNote> visit(OctaveChangeNode node, NodeContext ctx){
         // This visit should only change the ctx, and add no new notes.
         ctx.octave += node.getDeltaOctave();
         return new ArrayList<>();   // returns empty list
     }
 
-    public List<FinalNote> visit(repeatNode node, nodeContext ctx){
+    public List<FinalNote> visit(RepeatNode node, NodeContext ctx){
         List<FinalNote> notes = new ArrayList<>();
 
         IntByReference iteration = new IntByReference(1);
@@ -145,24 +145,24 @@ public class NotePopulation {
         return notes;
     }
 
-    public List<FinalNote> visit(stmtList node, nodeContext ctx){
+    public List<FinalNote> visit(StmtList node, NodeContext ctx){
         List<FinalNote> notes = new ArrayList<>();
 
         // Visits all the nodes in the stmtlist
-        for(stmtNode stmt : node){
+        for(StmtNode stmt : node){
             notes.addAll(stmt.accept(this,ctx));
         }
 
         return notes;
     }
 
-    public List<FinalNote> visit(tempoChangeNode node, nodeContext ctx){
+    public List<FinalNote> visit(TempoChangeNode node, NodeContext ctx){
         // This visit should only change the ctx, and add no new notes.
-        ctx.tempo = new tempo(node.getNumerator(),node.getDenominator());
+        ctx.tempo = new Tempo(node.getNumerator(),node.getDenominator());
         return new ArrayList<>();
     }
 
-    public List<FinalNote> visit(transposeNode node, nodeContext ctx){
+    public List<FinalNote> visit(TransposeNode node, NodeContext ctx){
         List<FinalNote> toBeTransposed = node.getToBeTransposed().accept(this,ctx);
 
         for(FinalNote note : toBeTransposed){

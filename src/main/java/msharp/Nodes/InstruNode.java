@@ -6,8 +6,8 @@ import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import msharp.NotePopulation.FinalNote;
-import msharp.NotePopulation.NotePopulation;
-import msharp.NotePopulation.nodeContext;
+import msharp.NotePopulation.BuildNoteListVisitor;
+import msharp.NotePopulation.NodeContext;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +16,7 @@ import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
-public class instruNode implements stmtNode{
+public class InstruNode implements StmtNode {
     public String getInstrument() {
         return instrument;
     }
@@ -27,7 +27,7 @@ public class instruNode implements stmtNode{
 
     private String instrument;
 
-    public instruNode(String instrument) {
+    public InstruNode(String instrument) {
         this.instrument = instrument;
     }
 
@@ -47,7 +47,7 @@ public class instruNode implements stmtNode{
     }
 
     @Override
-    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx ) {
         return visitor.visit(this, ctx);
     }
 }

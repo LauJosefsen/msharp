@@ -3,12 +3,11 @@ package msharp;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import msharp.MinecraftClasses.MinecraftFitment;
-import msharp.MinecraftClasses.MinecraftNote;
 import msharp.MinecraftClasses.NoteStructure;
-import msharp.Nodes.node;
-import msharp.Nodes.progNode;
+import msharp.Nodes.Node;
+import msharp.Nodes.ProgNode;
 import msharp.NotePopulation.FinalNote;
-import msharp.NotePopulation.NotePopulation;
+import msharp.NotePopulation.BuildNoteListVisitor;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -18,12 +17,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class msharp {
 
     public static void main(String[] args) throws IOException {
+        System.out.println(Arrays.toString(args));
         // temporary input string to test with
         //String str = "a = 10 10 + a - 32";
         String str = new String(Files.readAllBytes(Paths.get("examples/happy_birthday.txt")));
@@ -38,8 +39,8 @@ public class msharp {
         cfgParser parser = new cfgParser(tokens);
         ParseTree tree = parser.prog(); // begin parsing at init rule
 
-        buildAstVisitor visitor = new buildAstVisitor();
-        node ast = visitor.visit(tree);
+        BuildAstVisitor visitor = new BuildAstVisitor();
+        Node ast = visitor.visit(tree);
 
         if(visitor.getSemanticErrors().size() > 0){
             for(String error : visitor.getSemanticErrors()){
@@ -52,8 +53,8 @@ public class msharp {
 
         // Code-Generation
         // Interprets the AST into a list of notes with timing
-        NotePopulation notePopulator = new NotePopulation(visitor.symbolTable);
-        List<FinalNote> notes = notePopulator.visit((progNode) ast);
+        BuildNoteListVisitor notePopulator = new BuildNoteListVisitor(visitor.symbolTable);
+        List<FinalNote> notes = notePopulator.visit((ProgNode) ast);
 
         Collections.sort(notes);
 

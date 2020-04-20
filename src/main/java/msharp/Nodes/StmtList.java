@@ -7,8 +7,8 @@ import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.MutableNode;
 import guru.nidi.graphviz.model.Node;
 import msharp.NotePopulation.FinalNote;
-import msharp.NotePopulation.NotePopulation;
-import msharp.NotePopulation.nodeContext;
+import msharp.NotePopulation.BuildNoteListVisitor;
+import msharp.NotePopulation.NodeContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +18,9 @@ import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
-public class stmtList extends ArrayList<stmtNode> implements stmtNode {
+public class StmtList extends ArrayList<StmtNode> implements StmtNode {
     @Override
-    public boolean add(stmtNode stmt) {
+    public boolean add(StmtNode stmt) {
         if(stmt != null)
             return super.add(stmt);
         return false;
@@ -31,7 +31,7 @@ public class stmtList extends ArrayList<stmtNode> implements stmtNode {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
 
-        for(stmtNode node : this){
+        for(StmtNode node : this){
             sb.append(node.toString());
             sb.append(" ");
         }
@@ -47,7 +47,7 @@ public class stmtList extends ArrayList<stmtNode> implements stmtNode {
         Graph g = graph("stmts").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
 
         List<MutableNode> partGraphs = new ArrayList<>();
-        for(stmtNode stmt : this){
+        for(StmtNode stmt : this){
             partGraphs.add(stmt.toGraph().toMutable().rootNodes().iterator().next());
         }
 
@@ -58,7 +58,7 @@ public class stmtList extends ArrayList<stmtNode> implements stmtNode {
     }
 
     @Override
-    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx ) {
         return visitor.visit(this, ctx);
     }
 }

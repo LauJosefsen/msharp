@@ -6,8 +6,8 @@ import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import msharp.NotePopulation.FinalNote;
-import msharp.NotePopulation.NotePopulation;
-import msharp.NotePopulation.nodeContext;
+import msharp.NotePopulation.BuildNoteListVisitor;
+import msharp.NotePopulation.NodeContext;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,13 +17,13 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
-public class everyNode implements stmtNode {
+public class EveryNode implements StmtNode {
     //something to store condition
     private int amount;
-    private stmtNode trueCase;
-    private stmtNode elseCase;
+    private StmtNode trueCase;
+    private StmtNode elseCase;
 
-    public everyNode(int amount) {
+    public EveryNode(int amount) {
         this.amount = amount;
     }
 
@@ -35,19 +35,19 @@ public class everyNode implements stmtNode {
         this.amount = amount;
     }
 
-    public stmtNode getTrueCase() {
+    public StmtNode getTrueCase() {
         return trueCase;
     }
 
-    public void setTrueCase(stmtNode trueCase) {
+    public void setTrueCase(StmtNode trueCase) {
         this.trueCase = trueCase;
     }
 
-    public stmtNode getElseCase() {
+    public StmtNode getElseCase() {
         return elseCase;
     }
 
-    public void setElseCase(stmtNode elseCase) {
+    public void setElseCase(StmtNode elseCase) {
         this.elseCase = elseCase;
     }
 
@@ -73,7 +73,7 @@ public class everyNode implements stmtNode {
     }
 
     @Override
-    public List<FinalNote> accept(NotePopulation visitor, nodeContext ctx ) {
+    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx ) {
         return visitor.visit(this, ctx);
     }
 }

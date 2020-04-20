@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class buildAstVisitor extends cfgBaseVisitor<node> {
+class BuildAstVisitor extends cfgBaseVisitor<Node> {
     List<String> getSemanticErrors() {
         return semanticErrors;
     }
@@ -21,13 +21,13 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     // Dawd35j
     // $instrument , GUITAR
     // $octave     , 3
-    // $bpm        ,
-    // $tempo
+    // $Bpm        ,
+    // $Tempo
 
 
     @Override
-    public stmtNode visitPbodyTone(cfgParser.PbodyToneContext ctx) {
-        noteNode node = new noteNode(ctx.Tone().getText().charAt(0),-1);
+    public StmtNode visitPbodyTone(cfgParser.PbodyToneContext ctx) {
+        NoteNode node = new NoteNode(ctx.Tone().getText().charAt(0),-1);
 
         if(ctx.Digs() != null){
             node.octave = Integer.parseInt(ctx.Digs().getText());
@@ -40,53 +40,53 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public stmtNode visitPbodyId(cfgParser.PbodyIdContext ctx) {
-        return new idNode(ctx.Id().getText());
+    public StmtNode visitPbodyId(cfgParser.PbodyIdContext ctx) {
+        return new IdNode(ctx.Id().getText());
     }
 
     @Override
-    public stmtNode visitPbodyPause(cfgParser.PbodyPauseContext ctx) {
-        return new noteNode('-',-1);
+    public StmtNode visitPbodyPause(cfgParser.PbodyPauseContext ctx) {
+        return new NoteNode('-',-1);
     }
 
     @Override
-    public node visitPbodyParen(cfgParser.PbodyParenContext ctx) {
-        stmtList node = new stmtList();
+    public Node visitPbodyParen(cfgParser.PbodyParenContext ctx) {
+        StmtList node = new StmtList();
 
         for(cfgParser.StmtContext stmt : ctx.stmt()){
-            node.add((stmtNode) visit(stmt));
+            node.add((StmtNode) visit(stmt));
         }
         return node;
     }
 
     @Override
-    public stmtNode visitPbodyTransUp(cfgParser.PbodyTransUpContext ctx) {
+    public StmtNode visitPbodyTransUp(cfgParser.PbodyTransUpContext ctx) {
         if(ctx.Digs() == null)
-            return new transposeNode(1, (stmtNode) visit(ctx.partBody()));
-        return new transposeNode(Integer.parseInt(ctx.Digs().getText()), (stmtNode) visit(ctx.partBody()));
+            return new TransposeNode(1, (StmtNode) visit(ctx.partBody()));
+        return new TransposeNode(Integer.parseInt(ctx.Digs().getText()), (StmtNode) visit(ctx.partBody()));
     }
 
     @Override
-    public stmtNode visitPbodyTransDown(cfgParser.PbodyTransDownContext ctx) {
+    public StmtNode visitPbodyTransDown(cfgParser.PbodyTransDownContext ctx) {
         if(ctx.Digs() == null)
-            return new transposeNode(-1, (stmtNode) visit(ctx.partBody()));
+            return new TransposeNode(-1, (StmtNode) visit(ctx.partBody()));
 
-        return new transposeNode(
+        return new TransposeNode(
                 - Integer.parseInt(ctx.Digs().getText()),
-                (stmtNode) visit(ctx.partBody())
+                (StmtNode) visit(ctx.partBody())
         );
     }
 
     @Override
-    public stmtNode visitPbodyAnd(cfgParser.PbodyAndContext ctx) {
-        return new andNode((stmtNode) visit(ctx.partBody(0)), (stmtNode) visit(ctx.partBody(1)));
+    public StmtNode visitPbodyAnd(cfgParser.PbodyAndContext ctx) {
+        return new AndNode((StmtNode) visit(ctx.partBody(0)), (StmtNode) visit(ctx.partBody(1)));
     }
 
     @Override
-    public node visitPbodySingleLRepeat(cfgParser.PbodySingleLRepeatContext ctx) {
-        return new repeatNode(Integer.parseInt(
+    public Node visitPbodySingleLRepeat(cfgParser.PbodySingleLRepeatContext ctx) {
+        return new RepeatNode(Integer.parseInt(
                 ctx.Digs().getText())
-                , (stmtNode) visit(ctx.partBody()));
+                , (StmtNode) visit(ctx.partBody()));
     }
   
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,37 +94,37 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public node visitOpsIntru(cfgParser.OpsIntruContext ctx) {
-        return new instruNode(ctx.Instrument().getText().replace(":",""));
+    public Node visitOpsIntru(cfgParser.OpsIntruContext ctx) {
+        return new InstruNode(ctx.Instrument().getText().replace(":",""));
     }
     
     @Override
-    public node visitOpsOctDown(cfgParser.OpsOctDownContext ctx){
-        return new octaveChangeNode(-1);
+    public Node visitOpsOctDown(cfgParser.OpsOctDownContext ctx){
+        return new OctaveChangeNode(-1);
     }
 
     @Override
-    public node visitOpsOctUp(cfgParser.OpsOctUpContext ctx) {
-        return new octaveChangeNode(1);
+    public Node visitOpsOctUp(cfgParser.OpsOctUpContext ctx) {
+        return new OctaveChangeNode(1);
     }
 
     @Override
-    public node visitOpsTempOp(cfgParser.OpsTempOpContext ctx){
+    public Node visitOpsTempOp(cfgParser.OpsTempOpContext ctx){
         return visit(ctx.tempoOp());
     }
 
     @Override
-    public tempoChangeNode visitTempoOp(cfgParser.TempoOpContext ctx){
-        return new tempoChangeNode(
+    public TempoChangeNode visitTempoOp(cfgParser.TempoOpContext ctx){
+        return new TempoChangeNode(
                 Integer.parseInt(ctx.Digs(0).getText()),
                 Integer.parseInt(ctx.Digs(1).getText())
         );
     }
 
     @Override
-    public node visitOpsBpmDcl(cfgParser.OpsBpmDclContext ctx) {
-        return new bpmDclNode(Integer.parseInt(ctx.Digs().getText()),
-                (tempoChangeNode) visit(ctx.tempoOp()));
+    public Node visitOpsBpmDcl(cfgParser.OpsBpmDclContext ctx) {
+        return new BpmDclNode(Integer.parseInt(ctx.Digs().getText()),
+                (TempoChangeNode) visit(ctx.tempoOp()));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,28 +132,28 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public node visitMultStmtStmt(cfgParser.MultStmtStmtContext ctx){
+    public Node visitMultStmtStmt(cfgParser.MultStmtStmtContext ctx){
         return visit(ctx.stmt());
     }
 
 //    @Override
-//    public node visitMultStmtNL(cfgParser.MultStmtNLContext ctx){
+//    public Node visitMultStmtNL(cfgParser.MultStmtNLContext ctx){
 //        return null;
 //    }
 
     @Override
-    public node visitMultStmtMultRepeat(cfgParser.MultStmtMultRepeatContext ctx) {
+    public Node visitMultStmtMultRepeat(cfgParser.MultStmtMultRepeatContext ctx) {
         return visit(ctx.multilineRepeat());
     }
 
     @Override
-    public node visitMultilineRepeat(cfgParser.MultilineRepeatContext ctx) {
-        repeatNode node = new repeatNode(Integer.parseInt(ctx.Digs().getText()));
+    public Node visitMultilineRepeat(cfgParser.MultilineRepeatContext ctx) {
+        RepeatNode node = new RepeatNode(Integer.parseInt(ctx.Digs().getText()));
 
 
-        stmtList stmts = new stmtList();
+        StmtList stmts = new StmtList();
         for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
-            stmts.add((stmtNode) visit(parseTree));
+            stmts.add((StmtNode) visit(parseTree));
         }
         node.setStmts(stmts);
 
@@ -165,13 +165,13 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     }
 
     @Override
-    public node visitEveryStmt(cfgParser.EveryStmtContext ctx) {
-        everyNode node = new everyNode(Integer.parseInt((ctx.Digs().getText())));
+    public Node visitEveryStmt(cfgParser.EveryStmtContext ctx) {
+        EveryNode node = new EveryNode(Integer.parseInt((ctx.Digs().getText())));
 
 
-        stmtList stmts = new stmtList();
+        StmtList stmts = new StmtList();
         for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
-            stmts.add((stmtNode) visit(parseTree));
+            stmts.add((StmtNode) visit(parseTree));
         }
         node.setTrueCase(stmts);
 
@@ -180,17 +180,17 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
         }
 
         if(ctx.elseStmt() != null){
-            node.setElseCase((stmtNode) visit(ctx.elseStmt()));
+            node.setElseCase((StmtNode) visit(ctx.elseStmt()));
         }
         return node;
     }
 
     @Override
-    public node visitElseStmt(cfgParser.ElseStmtContext ctx) {
+    public Node visitElseStmt(cfgParser.ElseStmtContext ctx) {
 
-        stmtList stmts = new stmtList();
+        StmtList stmts = new StmtList();
         for(ParseTree parseTree : ctx.multStmtOrEveryStmt()){       // For-each
-            stmts.add((stmtNode) visit(parseTree));
+            stmts.add((StmtNode) visit(parseTree));
         }
 
         if(stmts.size() == 1){
@@ -202,12 +202,12 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     }
 
     @Override
-    public node visitMultStmtOrEveryStmtMultStmt(cfgParser.MultStmtOrEveryStmtMultStmtContext ctx) {
+    public Node visitMultStmtOrEveryStmtMultStmt(cfgParser.MultStmtOrEveryStmtMultStmtContext ctx) {
         return visit(ctx.multStmt());
     }
 
     @Override
-    public node visitMultStmtOrEveryStmtEveryStmt(cfgParser.MultStmtOrEveryStmtEveryStmtContext ctx) {
+    public Node visitMultStmtOrEveryStmtEveryStmt(cfgParser.MultStmtOrEveryStmtEveryStmtContext ctx) {
         return visit(ctx.everyStmt());
     }
 
@@ -216,24 +216,24 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public node visitProg(cfgParser.ProgContext ctx) {
-        progNode prog = new progNode();
+    public Node visitProg(cfgParser.ProgContext ctx) {
+        ProgNode prog = new ProgNode();
 
         for(ParseTree pt : ctx.partDcl()){
-            prog.parts.add((partDclNode) visit(pt));
+            prog.parts.add((PartDclNode) visit(pt));
         }
 
-        prog.main = (playNode) visit(ctx.playDcl());
+        prog.main = (PlayNode) visit(ctx.playDcl());
 
         return prog;
     }
 
     @Override
-    public node visitPartDclSingleLine(cfgParser.PartDclSingleLineContext ctx) {
-        partDclNode part = new partDclNode(ctx.Id().getText());
+    public Node visitPartDclSingleLine(cfgParser.PartDclSingleLineContext ctx) {
+        PartDclNode part = new PartDclNode(ctx.Id().getText());
 
         for(ParseTree pt : ctx.stmt()){
-            part.stmts.add((stmtNode) visit(pt));
+            part.stmts.add((StmtNode) visit(pt));
         }
 
         if(symbolTable.containsKey(part.getId())) {
@@ -247,11 +247,11 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     }
 
     @Override
-    public node visitPartDclMultiLine(cfgParser.PartDclMultiLineContext ctx) {
-        partDclNode part = new partDclNode(ctx.Id().getText());
+    public Node visitPartDclMultiLine(cfgParser.PartDclMultiLineContext ctx) {
+        PartDclNode part = new PartDclNode(ctx.Id().getText());
 
         for(ParseTree pt : ctx.multStmt()){
-            part.stmts.add((stmtNode) visit(pt));
+            part.stmts.add((StmtNode) visit(pt));
         }
 
         if(symbolTable.containsKey(part.getId())) {
@@ -265,23 +265,23 @@ class buildAstVisitor extends cfgBaseVisitor<node> {
     }
 
     @Override
-    public node visitPlayDcl(cfgParser.PlayDclContext ctx) {
-        playNode node = new playNode();
+    public Node visitPlayDcl(cfgParser.PlayDclContext ctx) {
+        PlayNode node = new PlayNode();
 
         for(ParseTree pt : ctx.multStmt()){
-            node.stmts.add((stmtNode) visit(pt));
+            node.stmts.add((StmtNode) visit(pt));
         }
 
         return node;
     }
 
     @Override
-    public node visitStmtPBody(cfgParser.StmtPBodyContext ctx) {
+    public Node visitStmtPBody(cfgParser.StmtPBodyContext ctx) {
         return visit(ctx.partBody());
     }
 
     @Override
-    public node visitStmtOps(cfgParser.StmtOpsContext ctx) {
+    public Node visitStmtOps(cfgParser.StmtOpsContext ctx) {
         return visit(ctx.ops());
     }
 }
