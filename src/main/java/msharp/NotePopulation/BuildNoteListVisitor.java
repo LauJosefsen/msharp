@@ -7,10 +7,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class BuildNoteListVisitor {
-    // todo Set standard octave, hvis nu den første Node ikke har en oktav
     private Map<String, Object> symbolTable = new HashMap<>();
+
+    public List<String> getErrors() {
+        return errors;
+    }
+
+    private List<String> errors = new ArrayList<>();
 
     public BuildNoteListVisitor(Map<String, Object> symbolTable) {
         this.symbolTable = symbolTable;
@@ -44,8 +50,6 @@ public class BuildNoteListVisitor {
         NodeContext rightCtx = ctx.clone();
         notes.addAll(node.getRight().accept(this,rightCtx));
 
-        // we now set the timing to the max point of either left or right.
-        // todo var det den her måde timing skulle virke på????
         ctx.timing = leftCtx.timing;
         return notes;
     }
@@ -74,11 +78,12 @@ public class BuildNoteListVisitor {
     public List<FinalNote> visit(IdNode node, NodeContext ctx){
 
         if(!symbolTable.containsKey(node.getId())){
-            // todo throw some error?
-            throw new IllegalArgumentException("Id does not exists in symboltable"+node.getId());
+            errors.add("Part '"+node.getId()+"' was called but never defined.");
         }
-
-        return ((StmtList)symbolTable.get(node.getId())).accept(this,ctx);
+        NodeContext newCtx = ctx.clone();
+        List<FinalNote> toAdd = ((StmtList)symbolTable.get(node.getId())).accept(this,newCtx);
+        ctx.timing = newCtx.timing;
+        return toAdd;
     }
 
     public List<FinalNote> visit(InstruNode node, NodeContext ctx){
@@ -112,9 +117,8 @@ public class BuildNoteListVisitor {
 //        float secondPrBeat = (float) ((1.0/ctx.bpm.bpm)*60.0);    // calculates the time between beats
 //        float beatsPrNode = (float) ((1.0*ctx.bpm.tempo.toFraction()) / ctx.tempo.toFraction());
         Fraction secondPrBeat = new Fraction(60,ctx.bpm.bpm).abbreviate();
-        Fraction beatsPrNode = new Fraction(ctx.bpm.tempo.toFraction(),ctx.tempo.toFraction()); // todo should extend fraction instead of .toFraction
+        Fraction beatsPrNode = new Fraction(ctx.bpm.tempo.toFraction(),ctx.tempo.toFraction());
 
-        //todo fix accumulating rounding errors here..
 
         // Bpm 120, 1/4
         // og vi vil spille 1/16 Node
@@ -141,7 +145,7 @@ public class BuildNoteListVisitor {
 
         // We add the iteration as a Integer class (reference type), so that the every-nodes can peek at the stack.
         ctx.repeatIterationStack.push(iteration);
-        for(; iteration.value <= node.getAmount(); iteration.value++){   // todo tjek at integer er en poienter
+        for(; iteration.value <= node.getAmount(); iteration.value++){
             notes.addAll(node.getStmts().accept(this,ctx));
         }
         ctx.repeatIterationStack.pop();

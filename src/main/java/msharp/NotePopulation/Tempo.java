@@ -11,9 +11,6 @@ public class Tempo extends Fraction {
         super(numerator, denominator);
     }
 
-    //    public float toFraction(){
-//        return (float) ((1.0 *numerator)/denominator);
-//    }
     public Fraction toFraction(){
         return new Fraction(numerator,denominator);
     }

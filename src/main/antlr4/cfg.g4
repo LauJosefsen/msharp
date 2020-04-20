@@ -29,7 +29,7 @@ tempoOp
     : Digs Percent Digs
     ;
 
-multStmt    // Todo
+multStmt
     : stmt                  # MultStmtStmt
     | Nl                    # MultStmtNL
     | multilineRepeat       # MultStmtMultRepeat    // repeat x times ... end repeat

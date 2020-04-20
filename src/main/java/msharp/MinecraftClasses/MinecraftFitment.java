@@ -8,8 +8,7 @@ import java.util.List;
 public class MinecraftFitment {
     public static NoteStructure fitToMinecraft(List<FinalNote> finalNotes){
         double songDuration = finalNotes.get(finalNotes.size()-1).getTiming().toDouble();
-        // todo calculate timing to tick with math.round instead
-        long ticks = Math.round(songDuration*10+1);
+        long ticks = Math.round(songDuration*10);
 
         NoteStructure minecraftNotes = new NoteStructure();
         for(int i = 0 ; i < ticks; i++){

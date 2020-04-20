@@ -125,7 +125,7 @@ public class Schematic
         for (Map.Entry<String, Integer> stringIntegerEntry : blockTypes.entrySet()) {
             paletteTag.setInt(stringIntegerEntry.getKey(), stringIntegerEntry.getValue());
         }
-        tag.setTag(paletteTag); //todo causes compile error
+        tag.setTag(paletteTag);
 
         tag.setInt("PaletteMax",blockTypes.size());
 

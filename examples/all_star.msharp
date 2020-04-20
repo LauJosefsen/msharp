@@ -1,0 +1,39 @@
+
+FastDrop = 1%16 b5 a g^ e
+
+part ViolinOne
+    FLUTE:
+
+    3%8 e5 f5^ 1%4 b4
+    3%8 f5^ g^ FastDrop 3%8 -
+    f^ 1%4 b4 3%4 b FastDrop
+    #takt4
+    3%8 e f^ b4 FastDrop
+    #takt5
+    3%8 e f^ 1%4 b4
+    #takt6
+    3%8 f5^ g^ FastDrop
+    #takt7
+    3%8 - f^ b4
+    #8
+    1%8 - g5^ 3%8 g^ 1%8 e e b4
+    #9
+    4%4 g4^
+end part
+
+part ViolinTwo
+end part
+
+part Viola
+    4%4 -*8
+    PIANO:
+    #takt 9:
+    1%4 - 1%8 c4 c^ d d f c 1%16 c^ c 1%8a
+
+
+end part
+
+
+play
+    ViolinOne & ViolinTwo & Viola
+end play
