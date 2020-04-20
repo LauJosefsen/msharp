@@ -25,11 +25,14 @@ public class Compiler {
     String inputPath;
     Logger log = LogManager.getLogManager().getLogger("");
     CustomAntlrErrorListener antlrErrorListener = new CustomAntlrErrorListener(log);
-    private static String fatalError = "[FATAL] Fix above mentioned issues before compiling again. ABORTED.";
+    private static final String fatalError = "[FATAL] Fix above mentioned issues before compiling again. ABORTED.";
 
 
     public Compiler(String inputPath, Handler loggerHandler) {
         this.inputPath = inputPath;
+
+        // we remove the handler first, to ensure we dont add it twice.
+        log.removeHandler(loggerHandler);
         log.addHandler(loggerHandler);
     }
 
@@ -38,7 +41,7 @@ public class Compiler {
         try {
             str = new String(Files.readAllBytes(Paths.get(inputPath)));
         } catch (IOException e) {
-            log.info(e.toString());
+            log.info("[FATAL] "+e.toString());
             return;
         }
 
