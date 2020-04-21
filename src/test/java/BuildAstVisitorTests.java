@@ -43,6 +43,7 @@ public class BuildAstVisitorTests {
 
 
     @Test
+    @DisplayName("VisitPbodyToneWithoutOctave")
     void testVisitPbodyToneWithoutOctave(){
         // Arrange
         BuildAstVisitor astVisitor = new BuildAstVisitor();
