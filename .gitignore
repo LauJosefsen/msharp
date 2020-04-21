@@ -1,3 +1,11 @@
 
 /.idea/
 /gen/
+*.iml
+*.fxml
+*.tokens
+*.class
+*.interp
+*.iml
+*.iml
+msharp.iml
