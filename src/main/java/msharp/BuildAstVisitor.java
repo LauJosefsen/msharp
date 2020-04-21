@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class BuildAstVisitor extends cfgBaseVisitor<Node> {
+public class BuildAstVisitor extends cfgBaseVisitor<Node> {
     List<String> getSemanticErrors() {
         return semanticErrors;
     }
