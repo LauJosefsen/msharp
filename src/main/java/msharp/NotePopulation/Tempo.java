@@ -10,8 +10,4 @@ public class Tempo extends Fraction {
     public Tempo(Fraction numerator, Fraction denominator) {
         super(numerator, denominator);
     }
-
-    public Fraction toFraction(){
-        return new Fraction(numerator,denominator);
-    }
 }

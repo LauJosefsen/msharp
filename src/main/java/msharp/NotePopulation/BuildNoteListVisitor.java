@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class BuildNoteListVisitor {
-    private Map<String, Object> symbolTable = new HashMap<>();
+    private Map<String, Object> symbolTable;
 
     public List<String> getErrors() {
         return errors;
@@ -41,11 +41,10 @@ public class BuildNoteListVisitor {
     }
 
     public List<FinalNote> visit(AndNode node, NodeContext ctx){
-        List<FinalNote> notes = new ArrayList<>();
 
         // Makes a clone of the current context, so the changes to the context doesn't overlap into the "global" scope
         NodeContext leftCtx = ctx.clone();
-        notes.addAll(node.getLeft().accept(this,leftCtx));
+        List<FinalNote> notes = new ArrayList<>(node.getLeft().accept(this, leftCtx));
 
         NodeContext rightCtx = ctx.clone();
         notes.addAll(node.getRight().accept(this,rightCtx));
@@ -117,7 +116,7 @@ public class BuildNoteListVisitor {
 //        float secondPrBeat = (float) ((1.0/ctx.bpm.bpm)*60.0);    // calculates the time between beats
 //        float beatsPrNode = (float) ((1.0*ctx.bpm.tempo.toFraction()) / ctx.tempo.toFraction());
         Fraction secondPrBeat = new Fraction(60,ctx.bpm.bpm);
-        Fraction beatsPrNode = new Fraction(ctx.bpm.tempo.toFraction(),ctx.tempo.toFraction());
+        Fraction beatsPrNode = new Fraction(ctx.bpm.tempo,ctx.tempo);
 
 
         // Bpm 120, 1/4

@@ -2,6 +2,8 @@ package msharp.NotePopulation;
 
 import msharp.MinecraftClasses.Instrument;
 
+import java.util.Objects;
+
 public class FinalNote implements Comparable<FinalNote>{
     Instrument instrument;
     int octave;
@@ -15,7 +17,7 @@ public class FinalNote implements Comparable<FinalNote>{
         this.timing = timing;
     }
 
-    void transpose(int amount){
+    public void transpose(int amount){
         // determine if we are stepping postive or negative steps.
         int direction = amount > 0 ? 1 : -1;
 
@@ -33,6 +35,22 @@ public class FinalNote implements Comparable<FinalNote>{
             }
             tone = ToneEnum.fromToneId(toneId);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FinalNote finalNote = (FinalNote) o;
+        return octave == finalNote.octave &&
+                instrument == finalNote.instrument &&
+                tone == finalNote.tone &&
+                timing.equals(finalNote.timing);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(instrument, octave, tone, timing);
     }
 
     @Override

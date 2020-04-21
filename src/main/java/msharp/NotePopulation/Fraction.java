@@ -1,5 +1,7 @@
 package msharp.NotePopulation;
 
+import java.util.Objects;
+
 public class Fraction implements Comparable<Fraction>, Cloneable {
     public Fraction(long numerator, long denominator) {
         this.numerator = numerator;
@@ -36,6 +38,32 @@ public class Fraction implements Comparable<Fraction>, Cloneable {
         }
 
         this.numerator = Math.addExact(this.numerator, Math.multiplyExact(fraction.numerator,(this.denominator/fraction.denominator)));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Fraction fraction = (Fraction) o;
+
+        // since a fraction can be equal with a different denominator, we first check that the biggest denominator is a integer scalar of the smallest denominator
+        if(Math.max(Math.abs(this.denominator),Math.abs(fraction.denominator)) %
+                Math.min(Math.abs(this.denominator),Math.abs(fraction.denominator)) != 0){
+            return false;
+            // is not a integer scalar, and thus must be different fractions.
+        }
+
+        // if the max numerator is equal to the min numerator * scalar the fractions are equal
+        long scalar =
+                Math.max(Math.abs(this.denominator),Math.abs(fraction.denominator)) /
+                Math.min(Math.abs(this.denominator),Math.abs(fraction.denominator));
+          return Math.min(Math.abs(this.numerator), Math.abs(fraction.numerator)) * scalar ==
+                Math.max(Math.abs(this.numerator), Math.abs(fraction.numerator));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numerator, denominator);
     }
 
     @Override
