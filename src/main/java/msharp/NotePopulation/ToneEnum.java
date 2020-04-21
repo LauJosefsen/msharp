@@ -27,7 +27,7 @@ public enum ToneEnum {
                     return type;
                 }
             }
-            return null;
+            throw new IllegalArgumentException("Unknown tone-id: "+ic);
         }
 
     public static ToneEnum fromLetter(char letter) {
