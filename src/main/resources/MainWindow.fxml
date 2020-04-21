@@ -5,21 +5,12 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="msharp.MainWindowController">
    <children>
-      <Label layoutX="44.0" layoutY="39.0" text="Choose input file:" />
-      <ProgressIndicator fx:id="progressIndicator" layoutX="311.0" layoutY="230.0" progress="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="420.0" />
+      <Label layoutX="20.0" layoutY="39.0" text="Choose input file:" />
       <Button fx:id="compileButton" defaultButton="true" layoutX="364.0" layoutY="230.0" mnemonicParsing="false" onAction="#CompileButtonAction" text="Compile" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="20.0" />
       <TextField id="chosenFilePath" fx:id="chosenFilePath" layoutX="44.0" layoutY="56.0" prefHeight="25.0" prefWidth="425.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="120.0" />
       <Button id="chooseInputFileButton" fx:id="chooseInputFileButton" layoutX="469.0" layoutY="56.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#ChooseInputFileButtonAction" prefWidth="100.0" text="Explore.." AnchorPane.rightAnchor="20.0" />
       <ListView fx:id="log" layoutX="-135.0" layoutY="-11.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="100.0">
          </ListView>
-      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="565.0">
-        <menus>
-          <Menu mnemonicParsing="false" onAction="#openAdvancedOptions" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Advanced options" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
+      <Button layoutX="14.0" layoutY="330.0" mnemonicParsing="false" onAction="#openAdvancedOptions" text="Advanced Options" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="20.0" />
    </children>
 </AnchorPane>

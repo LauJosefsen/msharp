@@ -116,7 +116,7 @@ public class BuildNoteListVisitor {
         // adds the note "duration" to timing.This is calculated based on Bpm and Tempo.
 //        float secondPrBeat = (float) ((1.0/ctx.bpm.bpm)*60.0);    // calculates the time between beats
 //        float beatsPrNode = (float) ((1.0*ctx.bpm.tempo.toFraction()) / ctx.tempo.toFraction());
-        Fraction secondPrBeat = new Fraction(60,ctx.bpm.bpm).abbreviate();
+        Fraction secondPrBeat = new Fraction(60,ctx.bpm.bpm);
         Fraction beatsPrNode = new Fraction(ctx.bpm.tempo.toFraction(),ctx.tempo.toFraction());
 
 

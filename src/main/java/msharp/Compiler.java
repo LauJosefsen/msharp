@@ -1,5 +1,7 @@
 package msharp;
 
+import guru.nidi.graphviz.engine.Format;
+import guru.nidi.graphviz.engine.Graphviz;
 import msharp.MinecraftClasses.MinecraftFitment;
 import msharp.MinecraftClasses.NoteStructure;
 import msharp.Nodes.Node;
@@ -11,10 +13,10 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Handler;
@@ -22,14 +24,27 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class Compiler {
-    String inputPath;
+    private String inputPath;
+    private String outputPath;
+    private int turnAroundLength;
+    private boolean generateAst;
+    private String fillerBlock;
+    private boolean shortenRedstone;
+
     Logger log = LogManager.getLogManager().getLogger("");
     CustomAntlrErrorListener antlrErrorListener = new CustomAntlrErrorListener(log);
-    private static final String fatalError = "[FATAL] Fix above mentioned issues before compiling again. ABORTED.";
+    private final String fatalError = "[FATAL] Fix above mentioned issues before compiling again. ABORTED.";
 
 
-    public Compiler(String inputPath, Handler loggerHandler) {
+
+    public Compiler(String inputPath, String outputPath, int turnAroundLength, boolean generateAstPdf, boolean shortenRedstone, String fillerBlock, Handler loggerHandler) {
         this.inputPath = inputPath;
+        this.outputPath = outputPath;
+        this.turnAroundLength = turnAroundLength;
+        this.generateAst = generateAstPdf;
+        this.shortenRedstone = shortenRedstone;
+        this.fillerBlock = fillerBlock;
+
 
         // we remove the handler first, to ensure we dont add it twice.
         log.removeHandler(loggerHandler);
@@ -81,7 +96,16 @@ public class Compiler {
         }
 
 
-//        Graphviz.fromGraph(ast.toGraph()).totalMemory(1073741824).render(Format.SVG).toFile(new File("example/ex1.svg"));
+        if(generateAst) {
+            try {
+                String outputPath = inputPath.substring(0,inputPath.lastIndexOf("."))+".svg";
+                Graphviz.fromGraph(ast.toGraph()).totalMemory(1073741824).render(Format.SVG).toFile(new File(outputPath));
+                log.info("[SUCCESS] Saved AST to "+outputPath);
+            } catch (IOException e) {
+                log.info("[NOTE] Following error occured while generating AST:");
+                log.info(e.toString());
+            }
+        }
 
         // Code-Generation
         // Interprets the AST into a list of notes with timing
@@ -109,7 +133,9 @@ public class Compiler {
 
         log.info("Fitted the final notes to minecraft. Duration: "+minecraftNotes.size()+" redstone ticks");
 
-        String outputPath = inputPath.substring(0,inputPath.lastIndexOf("."))+".schem";
+        minecraftNotes.setFillerBlock(fillerBlock);
+        minecraftNotes.setTurnAroundLength(turnAroundLength);
+
         minecraftNotes.GenerateSchematic().saveToFile(outputPath);
 
         log.info("[SUCCESS] Generated output schematic file as "+outputPath);

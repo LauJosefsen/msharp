@@ -2,27 +2,19 @@ package msharp;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 public class MainWindowController extends Handler {
+
+    private CompilerBuilder compOptions;
 
     @FXML
     public Button chooseInputFileButton;
@@ -33,8 +25,6 @@ public class MainWindowController extends Handler {
     @FXML
     public Button compileButton;
 
-    @FXML
-    public ProgressIndicator progressIndicator;
 
     @FXML
     public ListView<String> log;
@@ -46,7 +36,9 @@ public class MainWindowController extends Handler {
                         "MSharp - Source file (.pdf)", "*.msharp");
         fc.getExtensionFilters().add(msharpExtensionFilter);
         fc.setSelectedExtensionFilter(msharpExtensionFilter);
-        fc.setInitialDirectory(new File(chosenFilePath.getText()));
+        File selectedFile = new File(chosenFilePath.getText());
+        if(!selectedFile.isDirectory()) selectedFile = new File(selectedFile.getParent());
+        fc.setInitialDirectory(selectedFile);
         File selected = fc.showOpenDialog(null);
         if(selected !=  null)
             chosenFilePath.setText(selected.getAbsolutePath());
@@ -54,6 +46,8 @@ public class MainWindowController extends Handler {
     }
 
     public void initialize(){
+        compOptions = new CompilerBuilder();
+
         chosenFilePath.setText(System.getProperty("user.dir"));
 
         log.setCellFactory(param -> new ListCell<String>() {
@@ -92,10 +86,11 @@ public class MainWindowController extends Handler {
 
     public void CompileButtonAction(ActionEvent e){
         log.getItems().clear();
-        Compiler comp = new Compiler(chosenFilePath.getText(),this);
-        progressIndicator.setProgress(0);
+        compOptions.setLoggerHandler(this);
+        compOptions.setInputPath(chosenFilePath.getText());
+        compOptions.setOutputPath(compOptions.getInputPath().substring(0,compOptions.getInputPath().lastIndexOf("."))+".schem");
+        Compiler comp = compOptions.buildCompiler();
         comp.compile();
-        progressIndicator.setProgress(100);
     }
 
     @Override
@@ -123,15 +118,11 @@ public class MainWindowController extends Handler {
     }
 
     public void openAdvancedOptions(ActionEvent e){
-        Parent root = null;
-        try {
-            root = FXMLLoader.load(getClass().getClassLoader().getResource("AdvancedOptions.fxml"));
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
-        Stage stage = new Stage();
-        stage.setTitle("My New Stage Title");
-        stage.setScene(new Scene(root));
-        stage.show();
+        AdvancedOptionsController advancedOptions = new AdvancedOptionsController();
+        advancedOptions = advancedOptions.showStage(((Node)e.getSource()).getScene().getWindow());
+        compOptions = advancedOptions.getCompOptions();
+        compOptions = advancedOptions.getCompOptions();
+
+
     }
 }

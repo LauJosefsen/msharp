@@ -4,11 +4,18 @@ import java.util.*;
 
 public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
 
-    private static int turnAroundLength = 20;
+    private int turnAroundLength = 1;
     private static int heightPrLane = 4;
-    private static Block fillerBlock = new Block("minecraft:stone");
+    private Block fillerBlock = new Block("minecraft:stone");
     private static Block redstone = new Block("minecraft:redstone_wire");
 
+    public void setTurnAroundLength(int turnAroundLength) {
+        this.turnAroundLength = turnAroundLength;
+    }
+
+    public void setFillerBlock(String fillerBlock) {
+        this.fillerBlock = new Block(fillerBlock);
+    }
 
     public Schematic GenerateSchematic() {
         Analyze();

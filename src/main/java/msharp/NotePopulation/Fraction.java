@@ -22,7 +22,6 @@ public class Fraction implements Comparable<Fraction>, Cloneable {
     public void add(Fraction fraction){
         // hvis den nye fractions denominator går op i vores fractions denominator, så bare tilføj numerator (men skaleret)
         // ellers skal vi ændre på denominator.
-        // todo decide if class should be immutable or not.
 
         // Example:
         // 1/4 + 1/3
@@ -37,10 +36,6 @@ public class Fraction implements Comparable<Fraction>, Cloneable {
         }
 
         this.numerator = Math.addExact(this.numerator, Math.multiplyExact(fraction.numerator,(this.denominator/fraction.denominator)));
-    }
-
-    public Fraction abbreviate(){
-        return this; //todo
     }
 
     @Override
