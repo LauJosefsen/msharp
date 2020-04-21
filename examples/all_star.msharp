@@ -22,6 +22,7 @@ part ViolinOne
 end part
 
 part ViolinTwo
+    c
 end part
 
 part Viola

@@ -86,8 +86,7 @@ public class MainWindowController extends Handler {
     }
 
     public void CompileButtonAction(ActionEvent e){
-        log.getItems().clear(); //todo does not work
-
+        log.getItems().clear();
         Compiler comp = new Compiler(chosenFilePath.getText(),this);
         progressIndicator.setProgress(0);
         comp.compile();
