@@ -2,11 +2,16 @@ package msharp;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -115,5 +120,18 @@ public class MainWindowController extends Handler {
     @Override
     public void close() throws SecurityException {
         // o,O
+    }
+
+    public void openAdvancedOptions(ActionEvent e){
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getClassLoader().getResource("AdvancedOptions.fxml"));
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        Stage stage = new Stage();
+        stage.setTitle("My New Stage Title");
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }
