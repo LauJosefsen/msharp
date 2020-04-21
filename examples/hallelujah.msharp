@@ -193,7 +193,7 @@ end part
 
 play
     BPM(300, 1%8)
-    WholeSong^1
+    (WholeSong^1)*20
 end play
 
 
