@@ -5,8 +5,8 @@ import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
-import msharp.NotePopulation.FinalNote;
 import msharp.NotePopulation.BuildNoteListVisitor;
+import msharp.NotePopulation.FinalNote;
 import msharp.NotePopulation.NodeContext;
 
 import java.util.List;
@@ -22,58 +22,68 @@ public class EveryNode implements StmtNode {
     private int amount;
     private StmtNode trueCase;
     private StmtNode elseCase;
-
-    public EveryNode(int amount) {
+    
+    public EveryNode (int amount)
+    {
         this.amount = amount;
     }
-
-    public int getAmount() {
+    
+    public int getAmount ()
+    {
         return amount;
     }
-
-    public void setAmount(int amount) {
+    
+    public void setAmount (int amount)
+    {
         this.amount = amount;
     }
-
-    public StmtNode getTrueCase() {
+    
+    public StmtNode getTrueCase ()
+    {
         return trueCase;
     }
-
-    public void setTrueCase(StmtNode trueCase) {
+    
+    public void setTrueCase (StmtNode trueCase)
+    {
         this.trueCase = trueCase;
     }
-
-    public StmtNode getElseCase() {
+    
+    public StmtNode getElseCase ()
+    {
         return elseCase;
     }
-
-    public void setElseCase(StmtNode elseCase) {
+    
+    public void setElseCase (StmtNode elseCase)
+    {
         this.elseCase = elseCase;
     }
-
+    
     @Override
-    public String toString() {
-
-
+    public String toString ()
+    {
+        
+        
         return "EVERY (" + amount + ") {" + trueCase.toString() + "} ELSE {" + elseCase.toString() + "}";
-
-
+        
+        
     }
-
+    
     @Override
-    public Graph toGraph() {
-        Node every = node("every"+ UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>EVERY</b><br/>"+amount));
-
+    public Graph toGraph ()
+    {
+        Node every = node("every" + UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>EVERY</b><br/>" + amount));
+        
         Graph g = graph("and").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
         g = g.with(every.link(
                 to(trueCase.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("TRUE")),
                 to(elseCase.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("ELSE"))));
-
+        
         return g;
     }
-
+    
     @Override
-    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx ) {
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    {
         return visitor.visit(this, ctx);
     }
 }

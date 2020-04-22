@@ -19,14 +19,16 @@ public enum Instrument {
     BANJO(13),
     PLING(14),
     HARP(15);
-
+    
     private int _ic;
-
-    Instrument(int instrumentCode) {
+    
+    Instrument (int instrumentCode)
+    {
         _ic = instrumentCode;
     }
-
-    public static Instrument fromIc(int ic) {
+    
+    public static Instrument fromIc (int ic)
+    {
         for (Instrument type : values()) {
             if (type.getIc() == ic) {
                 return type;
@@ -34,41 +36,53 @@ public enum Instrument {
         }
         return null;
     }
-
-    public int getPitch(ToneEnum tone, int octave) {
-        switch(this){
-            case BASS: case DIDGERIDOO:
+    
+    public int getPitch (ToneEnum tone, int octave)
+    {
+        switch (this) {
+            case BASS:
+            case DIDGERIDOO:
             case SNARE:
             case HAT:
             case BASEDRUM:
                 // no octave
                 //1-3
-                return mapToPitch(1,octave,tone.getToneId());
-            case BELL: case CHIME: case XYLOPHONE:
+                return mapToPitch(1, octave, tone.getToneId());
+            case BELL:
+            case CHIME:
+            case XYLOPHONE:
                 // 5-7
-                return mapToPitch(5,octave,tone.getToneId());
-            case FLUTE: case COW_BELL:
+                return mapToPitch(5, octave, tone.getToneId());
+            case FLUTE:
+            case COW_BELL:
                 // 4-6
-                return mapToPitch(4,octave,tone.getToneId());
+                return mapToPitch(4, octave, tone.getToneId());
             case GUITAR:
                 // 2-4
-                return mapToPitch(2,octave,tone.getToneId());
-            case IRON_XYLOPHONE: case BIT: case BANJO: case PLING: case HARP:
+                return mapToPitch(2, octave, tone.getToneId());
+            case IRON_XYLOPHONE:
+            case BIT:
+            case BANJO:
+            case PLING:
+            case HARP:
                 // 3-5
-                return mapToPitch(3,octave,tone.getToneId());
+                return mapToPitch(3, octave, tone.getToneId());
         }
         return 0; //should never happen
     }
-
-    private int mapToPitch(int minimumOctave, int octave, int toneId) {
-        return (octave-minimumOctave)*12+(toneId-5);
+    
+    private int mapToPitch (int minimumOctave, int octave, int toneId)
+    {
+        return (octave - minimumOctave) * 12 + (toneId - 5);
     }
-
-    public int getIc() {
+    
+    public int getIc ()
+    {
         return _ic;
     }
-
-    public Block mapToBlockBeneath() {
+    
+    public Block mapToBlockBeneath ()
+    {
         switch (_ic) {
             case 0:
                 return new Block("minecraft:oak_log");
@@ -104,8 +118,9 @@ public enum Instrument {
                 return new Block("minecraft:air"); // harp is any other block, so might as well be air for all other cases.
         }
     }
-
-    public static Instrument fromString(String string) throws IllegalArgumentException {
+    
+    public static Instrument fromString (String string) throws IllegalArgumentException
+    {
         string = string.toUpperCase();      // Just to be sure
         switch (string) {
             case "BASS":
@@ -142,7 +157,7 @@ public enum Instrument {
             case "PIANO": // fuck minecraftr
                 return Instrument.HARP;
             default:
-                throw new IllegalArgumentException("Instrument provided was invalid ("+string+")");
+                throw new IllegalArgumentException("Instrument provided was invalid (" + string + ")");
         }
     }
 }
