@@ -49,7 +49,7 @@ public class AdvancedOptionsController {
             loader = new FXMLLoader(getClass().getClassLoader().getResource("AdvancedOptions.fxml"));
             root = loader.load();//FXMLLoader.load(getClass().getClassLoader().getResource("AdvancedOptions.fxml"));
         } catch (IOException ioException) {
-            ioException.printStackTrace();
+            ioException.printStackTrace(); //todo fix this
         }
         Stage dialog = new Stage();
         

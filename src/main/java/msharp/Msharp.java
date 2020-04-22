@@ -16,7 +16,7 @@ public class Msharp extends Application {
     @Override
     public void start (Stage stage) throws Exception
     {
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("MainWindow.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("MainWindow.fxml")); //todo might be null
         stage.setTitle("MSharp Compiler");
         stage.setScene(new Scene(root));
         stage.show();
