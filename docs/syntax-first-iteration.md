@@ -104,3 +104,25 @@ This operator is used as
 <statement or part> & <statement or part>
 ```
 and will play both statements at the same time. It is worth noting, that the msharp compiler will wait for the LEFT-side to be finished playing, before playing the next statement. (The right-side statement might still be playing at this time.)
+
+## Instruments available and other notes
+While the language allows you to enter any instrument using the instrument change statement, this is not possible to play in Minecraft.
+
+Therefore only the following instruments may be used:
+* BASS
+* SNARE
+* HAT
+* BASEDRUM
+* BELL
+* FLUTE
+* CHIME
+* GUITAR
+* XYLOPHONE
+* VIBRAPHONE
+* COWBELL
+* DIDGERIDOO
+* BIT
+* BANJO
+* PLING
+* HARP or PIANO
+See [https://minecraft.gamepedia.com/Note_Block for what the instruments are. 
