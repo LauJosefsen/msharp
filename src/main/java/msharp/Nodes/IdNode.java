@@ -17,12 +17,12 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class IdNode implements StmtNode {
+    private final String id;
+    
     public String getId ()
     {
         return id;
     }
-    
-    private String id;
     
     public IdNode (String id)
     {

@@ -33,12 +33,10 @@ public class BuildAstVisitor extends cfgBaseVisitor<Node> {
     @Override
     public StmtNode visitPbodyTone (cfgParser.PbodyToneContext ctx)
     {
-        NoteNode node = new NoteNode(ctx.Tone().getText().charAt(0), -1);
-        
-        if (ctx.Digs() != null) {
-            node.octave = Integer.parseInt(ctx.Digs().getText());
-        }
-        return node;
+        int octave = -1;
+        if (ctx.Digs() != null)
+            octave = Integer.parseInt(ctx.Digs().getText());
+        return new NoteNode(ctx.Tone().getText().charAt(0), octave);
     }
     
     @Override
@@ -166,42 +164,27 @@ public class BuildAstVisitor extends cfgBaseVisitor<Node> {
     @Override
     public Node visitMultilineRepeat (cfgParser.MultilineRepeatContext ctx)
     {
-        RepeatNode node = new RepeatNode(Integer.parseInt(ctx.Digs().getText()));
-        
-        
         StmtList stmts = new StmtList();
         for (ParseTree parseTree : ctx.multStmtOrEveryStmt()) {       // For-each
             stmts.add((StmtNode) visit(parseTree));
         }
-        node.setStmts(stmts);
         
-        if (stmts.size() == 1) {
-            node.setStmts(stmts.get(0));
-        }
-        
-        return node;
+        return new RepeatNode(Integer.parseInt(ctx.Digs().getText()),stmts);
     }
     
     @Override
     public Node visitEveryStmt (cfgParser.EveryStmtContext ctx)
     {
-        EveryNode node = new EveryNode(Integer.parseInt((ctx.Digs().getText())));
-        
-        
-        StmtList stmts = new StmtList();
-        for (ParseTree parseTree : ctx.multStmtOrEveryStmt()) {       // For-each
-            stmts.add((StmtNode) visit(parseTree));
-        }
-        node.setTrueCase(stmts);
-        
-        if (stmts.size() == 1) {
-            node.setTrueCase(stmts.get(0));
+        StmtList trueCase = new StmtList();
+        for (ParseTree parseTree : ctx.multStmtOrEveryStmt()) {
+            trueCase.add((StmtNode) visit(parseTree));
         }
         
+        StmtNode elseCase = new StmtList();
         if (ctx.elseStmt() != null) {
-            node.setElseCase((StmtNode) visit(ctx.elseStmt()));
+            elseCase = (StmtNode) visit(ctx.elseStmt());
         }
-        return node;
+        return new EveryNode(Integer.parseInt((ctx.Digs().getText())), trueCase, elseCase);
     }
     
     @Override
@@ -240,30 +223,28 @@ public class BuildAstVisitor extends cfgBaseVisitor<Node> {
     @Override
     public Node visitProg (cfgParser.ProgContext ctx)
     {
-        ProgNode prog = new ProgNode();
+        List<PartDclNode> parts = new ArrayList<>();
+        for (ParseTree pt : ctx.partDcl())
+            parts.add((PartDclNode) visit(pt));
         
-        for (ParseTree pt : ctx.partDcl()) {
-            prog.parts.add((PartDclNode) visit(pt));
-        }
-        
-        prog.main = (PlayNode) visit(ctx.playDcl());
-        
-        return prog;
+        return new ProgNode(parts, (PlayNode) visit(ctx.playDcl()));
     }
     
     @Override
     public Node visitPartDclSingleLine (cfgParser.PartDclSingleLineContext ctx)
     {
-        PartDclNode part = new PartDclNode(ctx.Id().getText());
+        StmtList stmts = new StmtList();
         
         for (ParseTree pt : ctx.stmt()) {
-            part.stmts.add((StmtNode) visit(pt));
+            stmts.add((StmtNode) visit(pt));
         }
+        
+        PartDclNode part = new PartDclNode(ctx.Id().getText(), stmts);
         
         if (symbolTable.containsKey(part.getId())) {
             semanticErrors.add(part.getId() + " part name is already defined. (At line " + ctx.Id().getSymbol().getLine() + ")");
         } else {
-            symbolTable.put(part.getId(), part.stmts);
+            symbolTable.put(part.getId(), part.getStmts());
         }
         
         return part;
@@ -272,16 +253,18 @@ public class BuildAstVisitor extends cfgBaseVisitor<Node> {
     @Override
     public Node visitPartDclMultiLine (cfgParser.PartDclMultiLineContext ctx)
     {
-        PartDclNode part = new PartDclNode(ctx.Id().getText());
+        StmtList stmts = new StmtList();
+        
         
         for (ParseTree pt : ctx.multStmt()) {
-            part.stmts.add((StmtNode) visit(pt));
+            stmts.add((StmtNode) visit(pt));
         }
+        PartDclNode part = new PartDclNode(ctx.Id().getText(), stmts);
         
         if (symbolTable.containsKey(part.getId())) {
             semanticErrors.add(part.getId() + " part name is already defined. (At line " + ctx.Id().getSymbol().getLine() + ")");
         } else {
-            symbolTable.putIfAbsent(part.id, part.stmts);
+            symbolTable.putIfAbsent(part.getId(), part.getStmts());
         }
         
         return part;
@@ -290,13 +273,13 @@ public class BuildAstVisitor extends cfgBaseVisitor<Node> {
     @Override
     public Node visitPlayDcl (cfgParser.PlayDclContext ctx)
     {
-        PlayNode node = new PlayNode();
+        StmtList stmts = new StmtList();
         
         for (ParseTree pt : ctx.multStmt()) {
-            node.stmts.add((StmtNode) visit(pt));
+            stmts.add((StmtNode) visit(pt));
         }
         
-        return node;
+        return new PlayNode(stmts);
     }
     
     @Override

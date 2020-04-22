@@ -17,6 +17,9 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class NoteNode implements StmtNode {
+    private final char letter;
+    private final int octave;
+    
     public char getLetter ()
     {
         return letter;
@@ -26,9 +29,6 @@ public class NoteNode implements StmtNode {
     {
         return octave;
     }
-    
-    private char letter;
-    public int octave;
     
     public NoteNode (char letter, int octave)
     {

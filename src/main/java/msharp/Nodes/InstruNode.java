@@ -17,17 +17,12 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class InstruNode implements StmtNode {
+    private final String instrument;
+    
     public String getInstrument ()
     {
         return instrument;
     }
-    
-    public void setInstrument (String instrument)
-    {
-        this.instrument = instrument;
-    }
-    
-    private String instrument;
     
     public InstruNode (String instrument)
     {

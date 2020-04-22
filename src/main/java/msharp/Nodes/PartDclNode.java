@@ -14,18 +14,22 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class PartDclNode implements Node {
-    public PartDclNode (String id)
+    private final String id;
+    private final StmtList stmts;
+    
+    public PartDclNode (String id, StmtList stmts)
     {
         this.id = id;
+        this.stmts = stmts;
     }
+    
+    public StmtList getStmts () {return stmts;}
     
     public String getId ()
     {
         return id;
     }
     
-    public String id;
-    public StmtList stmts = new StmtList();
     
     @Override
     public String toString ()

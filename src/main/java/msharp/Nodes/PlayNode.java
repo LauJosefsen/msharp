@@ -14,7 +14,17 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class PlayNode implements Node {
-    public StmtList stmts = new StmtList();
+    private final StmtList stmts;
+    
+    public StmtList getStmts ()
+    {
+        return stmts;
+    }
+    
+    public PlayNode (StmtList stmts)
+    {
+        this.stmts = stmts;
+    }
     
     @Override
     public String toString ()

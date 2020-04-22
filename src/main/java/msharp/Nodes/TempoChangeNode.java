@@ -7,6 +7,7 @@ import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
 import msharp.NotePopulation.BuildNoteListVisitor;
 import msharp.NotePopulation.FinalNote;
+import msharp.NotePopulation.Fraction;
 import msharp.NotePopulation.NodeContext;
 
 import java.util.List;
@@ -16,14 +17,11 @@ import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
-public class TempoChangeNode implements StmtNode {
-    private int numerator;
-    private int denominator;
+public class TempoChangeNode extends Fraction implements StmtNode {
     
-    public TempoChangeNode (int numerator, int denomniator)
+    public TempoChangeNode (long numerator, long denominator)
     {
-        this.numerator = numerator;
-        this.denominator = denomniator;
+        super(numerator, denominator);
     }
     
     @Override
@@ -47,25 +45,5 @@ public class TempoChangeNode implements StmtNode {
     public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
-    }
-    
-    public int getNumerator ()
-    {
-        return numerator;
-    }
-    
-    public void setNumerator (int numerator)
-    {
-        this.numerator = numerator;
-    }
-    
-    public int getDenominator ()
-    {
-        return denominator;
-    }
-    
-    public void setDenominator (int denominator)
-    {
-        this.denominator = denominator;
     }
 }

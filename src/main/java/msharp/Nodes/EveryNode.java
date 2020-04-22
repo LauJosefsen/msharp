@@ -18,24 +18,21 @@ import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
 public class EveryNode implements StmtNode {
-    //something to store condition
-    private int amount;
-    private StmtNode trueCase;
-    private StmtNode elseCase;
-    
-    public EveryNode (int amount)
+    public EveryNode (int amount, StmtNode trueCase, StmtNode elseCase)
     {
         this.amount = amount;
+        this.trueCase = trueCase;
+        this.elseCase = elseCase;
     }
+    
+    //something to store condition
+    private final int amount;
+    private final StmtNode trueCase;
+    private final StmtNode elseCase;
     
     public int getAmount ()
     {
         return amount;
-    }
-    
-    public void setAmount (int amount)
-    {
-        this.amount = amount;
     }
     
     public StmtNode getTrueCase ()
@@ -43,19 +40,9 @@ public class EveryNode implements StmtNode {
         return trueCase;
     }
     
-    public void setTrueCase (StmtNode trueCase)
-    {
-        this.trueCase = trueCase;
-    }
-    
     public StmtNode getElseCase ()
     {
         return elseCase;
-    }
-    
-    public void setElseCase (StmtNode elseCase)
-    {
-        this.elseCase = elseCase;
     }
     
     @Override

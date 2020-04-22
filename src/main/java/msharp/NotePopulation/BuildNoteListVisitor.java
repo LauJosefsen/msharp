@@ -26,13 +26,13 @@ public class BuildNoteListVisitor {
     {
         // ctx is used to store current context about variables such as octaves, instrument, Bpm, Tempo and timing.
         NodeContext ctx = new NodeContext();
-        return visit(prog.main, ctx);
+        return visit(prog.getMain(), ctx);
     }
     
     private List<FinalNote> visit (PlayNode play, NodeContext ctx)
     {
         List<FinalNote> noteList = new ArrayList<>();
-        for (StmtNode stmt : play.stmts) {
+        for (StmtNode stmt : play.getStmts()) {
             noteList.addAll(stmt.accept(this, ctx));
         }
         return noteList;
@@ -79,6 +79,7 @@ public class BuildNoteListVisitor {
         
         if (!symbolTable.containsKey(node.getId())) {
             errors.add("Part '" + node.getId() + "' was called but never defined.");
+            return new ArrayList<>();
         }
         NodeContext newCtx = ctx.clone();
         List<FinalNote> toAdd = ((StmtList) symbolTable.get(node.getId())).accept(this, newCtx);
@@ -130,7 +131,7 @@ public class BuildNoteListVisitor {
         // tid = 0.5s/4 = 1/8s
         
         //        ctx.timing += ((float)Math.round((secondPrBeat/beatsPrNode)*1000))/1000;
-        ctx.timing.add(new Fraction(secondPrBeat, beatsPrNode));
+        ctx.timing = ctx.timing.add(new Fraction(secondPrBeat, beatsPrNode));
         
         //ctx.timing += secondPrBeat/beatsPrNode;
     }
@@ -162,10 +163,13 @@ public class BuildNoteListVisitor {
     {
         List<FinalNote> notes = new ArrayList<>();
         
+        NodeContext cloned = ctx.clone();
+        
         // Visits all the nodes in the stmtlist
         for (StmtNode stmt : node) {
-            notes.addAll(stmt.accept(this, ctx));
+            notes.addAll(stmt.accept(this, cloned));
         }
+        ctx.timing = cloned.timing;
         
         return notes;
     }

@@ -207,10 +207,10 @@ public class FractionTests {
         
         for (FractionTestCase testCase : testCases) {
             //Act
-            testCase.fractionToAddTo.add(testCase.fractionToAdd);
+            Fraction result = testCase.fractionToAddTo.add(testCase.fractionToAdd);
             
             //Assert
-            assertEquals(testCase.fractionToAddTo, testCase.fractionResult);
+            assertEquals(result, testCase.fractionResult);
         }
     }
     

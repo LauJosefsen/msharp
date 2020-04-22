@@ -3,6 +3,9 @@ package msharp.NotePopulation;
 import java.util.Objects;
 
 public class Fraction implements Comparable<Fraction>, Cloneable {
+    public final long numerator;
+    public final long denominator;
+    
     public Fraction (long numerator, long denominator)
     {
         this.numerator = numerator;
@@ -16,15 +19,22 @@ public class Fraction implements Comparable<Fraction>, Cloneable {
         this.denominator = Math.multiplyExact(numerator.denominator, denominator.numerator);
     }
     
-    public long numerator;
-    public long denominator;
+    public long getNumerator ()
+    {
+        return numerator;
+    }
+    
+    public long getDenominator ()
+    {
+        return denominator;
+    }
     
     public double toDouble ()
     {
         return (1.0 * numerator) / denominator;
     }
     
-    public void add (Fraction fraction)
+    public Fraction add (Fraction fraction)
     {
         // hvis den nye fractions denominator går op i vores fractions denominator, så bare tilføj numerator (men skaleret)
         // ellers skal vi ændre på denominator.
@@ -36,12 +46,16 @@ public class Fraction implements Comparable<Fraction>, Cloneable {
         // bliver til (3 fra this.numerator)+(1 fra denominator)*(12/4) (denominators divideret)
         // = 7/12
         
-        if (this.denominator % fraction.denominator != 0) {    // If they are
-            this.denominator = Math.multiplyExact(this.denominator, fraction.denominator);
-            this.numerator = Math.multiplyExact(this.numerator, fraction.denominator);
+        long numerator = this.numerator, denominator = this.denominator;
+        
+        if (denominator % fraction.denominator != 0) {    // If they are
+            denominator = Math.multiplyExact(denominator, fraction.denominator);
+            numerator = Math.multiplyExact(numerator, fraction.denominator);
         }
         
-        this.numerator = Math.addExact(this.numerator, Math.multiplyExact(fraction.numerator, (this.denominator / fraction.denominator)));
+        numerator = Math.addExact(numerator, Math.multiplyExact(fraction.numerator, (denominator / fraction.denominator)));
+        
+        return new Fraction(numerator,denominator);
     }
     
     @Override

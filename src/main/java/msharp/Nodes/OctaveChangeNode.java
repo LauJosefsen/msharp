@@ -17,7 +17,7 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class OctaveChangeNode implements StmtNode {
-    private int deltaOctave;
+    private final int deltaOctave;
     
     public OctaveChangeNode (int deltaOctave)
     {
@@ -57,10 +57,5 @@ public class OctaveChangeNode implements StmtNode {
     public int getDeltaOctave ()
     {
         return deltaOctave;
-    }
-    
-    public void setDeltaOctave (int deltaOctave)
-    {
-        this.deltaOctave = deltaOctave;
     }
 }

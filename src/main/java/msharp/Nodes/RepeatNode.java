@@ -17,24 +17,14 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class RepeatNode implements StmtNode {
-    private int amount;
+    private final int amount;
+    
+    private final StmtNode stmts;
     
     public StmtNode getStmts ()
     {
         return stmts;
     }
-    
-    public void setStmts (StmtNode stmts)
-    {
-        this.stmts = stmts;
-    }
-    
-    public RepeatNode (int amount)
-    {
-        this.amount = amount;
-    }
-    
-    private StmtNode stmts;
     
     public RepeatNode (int amount, StmtNode stmts)
     {
@@ -43,12 +33,7 @@ public class RepeatNode implements StmtNode {
     }
     
     @Override
-    public String toString ()
-    {
-        
-        
-        return "REPEAT (" + amount + ") {" + stmts.toString() + "}";
-    }
+    public String toString () { return "REPEAT (" + amount + ") {" + stmts.toString() + "}"; }
     
     @Override
     public Graph toGraph ()

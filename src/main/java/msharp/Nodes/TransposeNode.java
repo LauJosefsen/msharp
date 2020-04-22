@@ -17,7 +17,8 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class TransposeNode implements StmtNode {
-    private int deltaTonation;
+    private final int deltaTonation;
+    private final StmtNode toBeTransposed;
     
     public int getDeltaTonation ()
     {
@@ -29,7 +30,6 @@ public class TransposeNode implements StmtNode {
         return toBeTransposed;
     }
     
-    private StmtNode toBeTransposed;
     
     
     public TransposeNode (int deltaTonation, StmtNode toBeTransposed)

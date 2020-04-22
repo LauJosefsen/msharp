@@ -13,8 +13,19 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class ProgNode implements Node {
-    public List<PartDclNode> parts = new ArrayList<>();
-    public PlayNode main;
+    private final List<PartDclNode> parts;
+    private final PlayNode main;
+    
+    public ProgNode (List<PartDclNode> parts, PlayNode main)
+    {
+        this.parts = parts;
+        this.main = main;
+    }
+    
+    public PlayNode getMain ()
+    {
+        return main;
+    }
     
     @Override
     public String toString ()

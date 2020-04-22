@@ -18,6 +18,10 @@ import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
 public class AndNode implements StmtNode {
+    
+    private final StmtNode left;
+    private final StmtNode right;
+    
     public StmtNode getLeft ()
     {
         return left;
@@ -28,8 +32,6 @@ public class AndNode implements StmtNode {
         return right;
     }
     
-    private StmtNode left;
-    private StmtNode right;
     
     public AndNode (StmtNode left, StmtNode right)
     {

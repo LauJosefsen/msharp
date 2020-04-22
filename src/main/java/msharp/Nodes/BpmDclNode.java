@@ -17,28 +17,15 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class BpmDclNode implements StmtNode {
+    private final TempoChangeNode tempo;
+    private final int bpm;
+    
     public TempoChangeNode getTempo ()
     {
         return tempo;
     }
     
-    public void setTempo (TempoChangeNode tempo)
-    {
-        this.tempo = tempo;
-    }
-    
-    public int getBpm ()
-    {
-        return bpm;
-    }
-    
-    public void setBpm (int bpm)
-    {
-        this.bpm = bpm;
-    }
-    
-    private TempoChangeNode tempo;
-    private int bpm;
+    public int getBpm () { return bpm; }
     
     public BpmDclNode (int bpm, TempoChangeNode tempo)
     {
