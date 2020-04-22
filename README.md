@@ -9,4 +9,4 @@ Once you have written your .msharp file (just a regular text format), start the 
 This .schem file can be set into Minecraft using other tools, such as WorldEdit (both for clients and servers. Use the command //schem load <file_name>)
 
 ## Language rules
-Coming soon.
+See [docs](https://github.com/LauJosefsen/msharp/blob/master/docs/syntax-first-iteration.md)
