@@ -156,7 +156,6 @@ public class FractionTests {
             //Assert
             assertEquals(result, testCase.result);
         }
-
     }
 
     @Test

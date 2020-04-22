@@ -38,9 +38,12 @@ public enum Instrument {
     public int getPitch(ToneEnum tone, int octave) {
         switch(this){
             case BASS: case DIDGERIDOO:
+            case SNARE:
+            case HAT:
+            case BASEDRUM:
+                // no octave
                 //1-3
                 return mapToPitch(1,octave,tone.getToneId());
-
             case BELL: case CHIME: case XYLOPHONE:
                 // 5-7
                 return mapToPitch(5,octave,tone.getToneId());
@@ -53,11 +56,8 @@ public enum Instrument {
             case IRON_XYLOPHONE: case BIT: case BANJO: case PLING: case HARP:
                 // 3-5
                 return mapToPitch(3,octave,tone.getToneId());
-            case SNARE: case HAT: case BASEDRUM:
-                // no octave
-                return mapToPitch(1,octave,tone.getToneId());
         }
-        return 0;
+        return 0; //should never happen
     }
 
     private int mapToPitch(int minimumOctave, int octave, int toneId) {
@@ -139,7 +139,6 @@ public enum Instrument {
             case "PLING":
                 return Instrument.PLING;
             case "HARP":
-                return Instrument.HARP;
             case "PIANO": // fuck minecraftr
                 return Instrument.HARP;
             default:
