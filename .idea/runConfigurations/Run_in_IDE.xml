@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run in IDE" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="msharp.Msharp" />
+    <module name="msharp" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
