@@ -26,12 +26,12 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class Compiler {
-    private String inputPath;
-    private String outputPath;
-    private int turnAroundLength;
-    private boolean generateAstAsSvg;
-    private String fillerBlock;
-    private boolean shortenRedstone;
+    private final String inputPath;
+    private final String outputPath;
+    private final int turnAroundLength;
+    private final boolean generateAstAsSvg;
+    private final String fillerBlock;
+    private final boolean shortenRedstone;
     
     Logger log = LogManager.getLogManager().getLogger("");
     CustomAntlrErrorListener antlrErrorListener = new CustomAntlrErrorListener(log);
