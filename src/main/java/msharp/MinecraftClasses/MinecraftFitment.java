@@ -25,7 +25,6 @@ public class MinecraftFitment {
     
     private static MinecraftNote convertFinalNoteToMinecraftNote (FinalNote finalNote)
     {
-        
         return new MinecraftNote(finalNote.getInstrument(), finalNote.getInstrument().getPitch(finalNote.getTone(), finalNote.getOctave()));
     }
 }

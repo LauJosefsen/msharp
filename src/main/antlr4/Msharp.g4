@@ -1,4 +1,8 @@
-grammar cfg;
+grammar Msharp;
+
+@header {
+package antlr4;
+}
 
 prog
     : (partDcl | Nl)* playDcl

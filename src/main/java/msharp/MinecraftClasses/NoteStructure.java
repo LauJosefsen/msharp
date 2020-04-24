@@ -5,9 +5,9 @@ import java.util.*;
 public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
     
     private int turnAroundLength = 1;
-    private static int heightPrLane = 4;
+    private static final int heightPrLane = 4;
     private Block fillerBlock = new Block("minecraft:stone");
-    private static Block redstone = new Block("minecraft:redstone_wire");
+    private static final Block redstone = new Block("minecraft:redstone_wire");
     
     public void setTurnAroundLength (int turnAroundLength)
     {

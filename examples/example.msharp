@@ -7,7 +7,7 @@ bpm lort er en kommtnar
 **#
 
 part Mel1
-    PIANO: c4*8
+    PIANO: c4*8 1%388134139757135971379
 end part
 
 Mel2 = a8 \\\ 2%1 c 1%4 b - - 5%16 d // f^

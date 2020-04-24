@@ -1,5 +1,7 @@
 package msharp;
 
+import antlr4.MsharpLexer;
+import antlr4.MsharpParser;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import msharp.MinecraftClasses.MinecraftFitment;
@@ -27,7 +29,7 @@ public class Compiler {
     private String inputPath;
     private String outputPath;
     private int turnAroundLength;
-    private boolean generateAst;
+    private boolean generateAstAsSvg;
     private String fillerBlock;
     private boolean shortenRedstone;
     
@@ -41,7 +43,7 @@ public class Compiler {
         this.inputPath = inputPath;
         this.outputPath = outputPath;
         this.turnAroundLength = turnAroundLength;
-        this.generateAst = generateAstPdf;
+        this.generateAstAsSvg = generateAstPdf;
         this.shortenRedstone = shortenRedstone;
         this.fillerBlock = fillerBlock;
         
@@ -63,13 +65,14 @@ public class Compiler {
         
         // create a CharStream that reads from standard input
         CharStream input = CharStreams.fromString(str);
+        
         // create a lexer that feeds off of input CharStream
-        cfgLexer lexer = new cfgLexer(input);
+        MsharpLexer lexer = new MsharpLexer(input);
         
         // create a buffer of tokens pulled from the lexer
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         // create a parser that feeds off the tokens buffer
-        cfgParser parser = new cfgParser(tokens);
+        MsharpParser parser = new MsharpParser(tokens);
         
         parser.removeErrorListeners();
         lexer.removeErrorListeners();
@@ -97,7 +100,7 @@ public class Compiler {
         }
         
         
-        if (generateAst) {
+        if (generateAstAsSvg) {
             try {
                 String outputPath = inputPath.substring(0, inputPath.lastIndexOf(".")) + ".svg";
                 Graphviz.fromGraph(ast.toGraph()).totalMemory(1073741824).render(Format.SVG).toFile(new File(outputPath));

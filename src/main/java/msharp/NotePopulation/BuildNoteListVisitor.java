@@ -76,7 +76,6 @@ public class BuildNoteListVisitor {
     
     public List<FinalNote> visit (IdNode node, NodeContext ctx)
     {
-        
         if (!symbolTable.containsKey(node.getId())) {
             errors.add("Part '" + node.getId() + "' was called but never defined.");
             return new ArrayList<>();

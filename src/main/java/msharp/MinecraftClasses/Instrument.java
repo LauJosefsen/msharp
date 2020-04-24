@@ -73,7 +73,7 @@ public enum Instrument {
     
     private int mapToPitch (int minimumOctave, int octave, int toneId)
     {
-        return (octave - minimumOctave) * 12 + (toneId - 5);
+        return (octave - minimumOctave) * 12 + (toneId - 6);
     }
     
     public int getIc ()
