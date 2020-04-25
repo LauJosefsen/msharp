@@ -22,7 +22,7 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
     public Schematic GenerateSchematic ()
     {
         Analyze();
-        Schematic schem = new Schematic(getWidth(), getPowerOf2Lanes(_lanes) * heightPrLane, getLength());
+        Schematic schem = new Schematic(getWidth(), getMinimumPowerOfTwo(_lanes) * heightPrLane, getLength());
         
         GenerateStarter(schem, true);
         
@@ -63,7 +63,7 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
         // Since we are going to build this tree from the bottom up, we want to have a 2^n number, so all branches develop evenly.
         // this will probably end up in certain situations where the starter is way bigger than it has to be, but it will always work.
         // this could of course be improved upon later.
-        int lanes = getPowerOf2Lanes(_lanes);
+        int lanes = getMinimumPowerOfTwo(_lanes);
         
         
         for (int lane = 0; lane < lanes; lane++)
@@ -244,16 +244,53 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
         return turnAroundLength * 2 + 4; // 2 pr. note, and 2 at each end to connect, and 2 spare for the starter.
     }
     
-    private int getPowerOf2Lanes (int input)
+    
+    /**
+     * This method is supposed to return the lowest number, x, that follows the rules:  x >= input, and x is a power of 2.
+     * @param input - The integer, must be positive
+     * @return - The minimum power of 2 that is >= input.
+     */
+    private int getMinimumPowerOfTwo (int input)
     {
         if ((input & (input - 1)) == 0) {
             // the number is a power of 2
+            // why?
+            // Binary a integer is a power of 2 if only one bit is a 1.
+            // this means when we take the input -1, every bit to the right of the 1 will be set to 1, and the original 1 will be set to 0.
+            // this means that input and input-1 will have no common "1s" in any place, and input & (input-1) will always be 0.
+            //
+            // Example: 256 if a power of 2. (2^8)
+            // 256 =     0000 ... 0001 0000 0000
+            // 255 =     0000 ... 0000 1111 1111
+            // 256&255 = 0000 ... 0000 0000 0000 = 0
+            
             return input;
+            
         } else {
+            // the input isnt a power of 2. We need to find the minimum power of 2 greater than input.
+            
+            // we do this by bitshifting right untill all the bits are 0, and keeping track of the amount of bit shifts it takes.
+            //
+            // Example: 200 is not a power of 2, expected minimum power of two is 256.
+            // input = 200 = 11001000
+            // we bit shift untill it is
+            //           1 = 01100100
+            //           2 = 00110010
+            //           3 = 00011001
+            //           4 = 00001100
+            //           5 = 00000110
+            //           6 = 00000011
+            //           7 = 00000001
+            //           8 = 00000000
             int power;
-            for (power = 0; input > 1; power++)
+            for (power = 0; input != 0; power++)
                 input >>>= 1;
-            return 0x02 << power;
+            
+            // we then take the number 1, and left shift the amount we counted above.
+            //
+            // Example: We bitshifted 8 times to get 0. 1 shifted left 8 times is 0001 0000 0000 = 256. This is the correct result.
+            return 0x01 << power;
+            
         }
     }
     
