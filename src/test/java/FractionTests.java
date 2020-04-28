@@ -121,52 +121,52 @@ public class FractionTests {
         ));
         
         // same but with different denominators, but same fraction, should return true
-        
+
         // positive trivial test case
         testCases.add(new TestCase(
                 new Fraction(1, 4),
                 new Fraction(3, 12),
                 true
         ));
-        
+
         //numerator negative trivial test case
         testCases.add(new TestCase(
                 new Fraction(-4, 16),
                 new Fraction(-1, 4),
                 true
         ));
-        
+
         //denominator negative trivial test case
         testCases.add(new TestCase(
                 new Fraction(1, -4),
                 new Fraction(15, -60),
                 true
         ));
-        
+
         // negative trivial test case
         testCases.add(new TestCase(
                 new Fraction(-7, -28),
                 new Fraction(-1, -4),
                 true
         ));
-        
-        
+
+
         for (TestCase testCase : testCases) {
             //Act
             boolean result = testCase.a.equals(testCase.b);
-            
+
             //Assert
             assertEquals(result, testCase.result);
         }
     }
-    
+
     @Test
     public void FractionAddTest ()
     {
         // Arrange
         class FractionTestCase {
             Fraction fractionToAddTo, fractionToAdd, fractionResult;
-            
+
             public FractionTestCase (Fraction fractionToAddTo, Fraction fractionToAdd, Fraction fractionResult)
             {
                 this.fractionToAddTo = fractionToAddTo;
@@ -174,46 +174,46 @@ public class FractionTests {
                 this.fractionResult = fractionResult;
             }
         }
-        
+
         List<FractionTestCase> testCases = new ArrayList<>();
-        
+
         // trivial test case
         testCases.add(new FractionTestCase(
                 new Fraction(1, 4),
                 new Fraction(1, 4),
                 new Fraction(2, 4)
         ));
-        
+
         // test case where we need to change denominator
         testCases.add(new FractionTestCase(
                 new Fraction(1, 3),
                 new Fraction(1, 8),
                 new Fraction(11, 24)
         ));
-        
+
         // negative test case
         testCases.add(new FractionTestCase(
                 new Fraction(-4, 3),
                 new Fraction(1, 8),
                 new Fraction(-29, 24)
         ));
-        
+
         // tests 0.1 decimal, as that cant be represented without fractions as double.
         testCases.add(new FractionTestCase(
                 new Fraction(1, 20),
                 new Fraction(1, 20),
                 new Fraction(1, 10)
         ));
-        
+
         for (FractionTestCase testCase : testCases) {
             //Act
             Fraction result = testCase.fractionToAddTo.add(testCase.fractionToAdd);
-            
+
             //Assert
             assertEquals(result, testCase.fractionResult);
         }
     }
-    
+
     @Test
     public void FractionAddOverflowIsThrownDenominator ()
     {
@@ -221,11 +221,11 @@ public class FractionTests {
         // Arrange
         Fraction a = new Fraction(1, Long.MAX_VALUE);
         Fraction b = new Fraction(1, Long.MAX_VALUE - 1);
-        
+
         // Act&Assert
         assertThrows(ArithmeticException.class, () -> a.add(b));
     }
-    
+
     @Test
     public void FractionAddOverflowIsThrownNumerator ()
     {
@@ -233,18 +233,18 @@ public class FractionTests {
         // Arrange
         Fraction a = new Fraction(Long.MAX_VALUE, 1);
         Fraction b = new Fraction(Long.MAX_VALUE, 1);
-        
+
         // Act&Assert
         assertThrows(ArithmeticException.class, () -> a.add(b));
     }
-    
+
     @Test
     public void FractionFractionsInConstructor ()
     {
         // Arrange
         class FractionTestCase {
             Fraction numerator, denominator, result;
-            
+
             public FractionTestCase (Fraction numerator, Fraction denominator, Fraction result)
             {
                 this.numerator = numerator;
@@ -252,42 +252,42 @@ public class FractionTests {
                 this.result = result;
             }
         }
-        
+
         List<FractionTestCase> testCases = new ArrayList<>();
-        
+
         // same test cases (without the 0.1 test) as in add test, with different results though.
-        
+
         // trivial test case
         testCases.add(new FractionTestCase(
                 new Fraction(1, 4),
                 new Fraction(1, 4),
                 new Fraction(1, 1)
         ));
-        
+
         // test case where we need to change denominator
         testCases.add(new FractionTestCase(
                 new Fraction(1, 3),
                 new Fraction(1, 8),
                 new Fraction(8, 3)
         ));
-        
+
         // negative test case
         testCases.add(new FractionTestCase(
                 new Fraction(-4, 3),
                 new Fraction(1, 8),
                 new Fraction(-32, 3)
         ));
-        
-        
+
+
         for (FractionTestCase testCase : testCases) {
             //Act
             Fraction result = new Fraction(testCase.numerator, testCase.denominator);
-            
+
             //Assert
             assertEquals(result, testCase.result);
         }
     }
-    
+
     @Test
     public void FractionFractionsInConstructorOverflowIsThrownDenominator ()
     {
@@ -295,11 +295,11 @@ public class FractionTests {
         // Arrange
         Fraction a = new Fraction(1, Long.MAX_VALUE);
         Fraction b = new Fraction(Long.MAX_VALUE, 1);
-        
+
         // Act&Assert
         assertThrows(ArithmeticException.class, () -> new Fraction(a, b));
     }
-    
+
     @Test
     public void FractionFractionsInConstructorOverflowIsThrownNumerator ()
     {
@@ -307,7 +307,7 @@ public class FractionTests {
         // Arrange
         Fraction a = new Fraction(Long.MAX_VALUE, 1);
         Fraction b = new Fraction(1, Long.MAX_VALUE);
-        
+
         // Act&Assert
         assertThrows(ArithmeticException.class, () -> new Fraction(a, b));
     }

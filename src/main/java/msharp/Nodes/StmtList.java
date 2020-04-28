@@ -26,42 +26,42 @@ public class StmtList extends ArrayList<StmtNode> implements StmtNode {
             return super.add(stmt);
         return false;
     }
-    
+
     @Override
     public String toString ()
     {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
-        
+
         for (StmtNode node : this) {
             sb.append(node.toString());
             sb.append(" ");
         }
-        
+
         sb.append(")");
         return sb.toString();
     }
-    
+
     @Override
     public Graph toGraph ()
     {
         Node stmts = node("stmts" + UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>stmts</b>"));
-        
+
         Graph g = graph("stmts").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
-        
+
         List<MutableNode> partGraphs = new ArrayList<>();
         for (StmtNode stmt : this) {
             partGraphs.add(stmt.toGraph().toMutable().rootNodes().iterator().next());
         }
-        
-        
+
+
         g = g.with(stmts.link(partGraphs));
-        
+
         return g;
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }

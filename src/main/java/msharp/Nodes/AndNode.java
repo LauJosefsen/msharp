@@ -55,9 +55,8 @@ public class AndNode implements StmtNode {
         
         return g;
     }
-    
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }

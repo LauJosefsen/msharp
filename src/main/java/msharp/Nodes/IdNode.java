@@ -16,7 +16,7 @@ import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
-public class IdNode implements StmtNode {
+public class IdNode implements StmtNode,OperandInterface{
     private final String id;
     
     public String getId ()
@@ -47,7 +47,7 @@ public class IdNode implements StmtNode {
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }

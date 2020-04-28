@@ -7,5 +7,5 @@ import msharp.NotePopulation.NodeContext;
 import java.util.List;
 
 public interface StmtNode extends Node {
-    List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx);
+    List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx);
 }

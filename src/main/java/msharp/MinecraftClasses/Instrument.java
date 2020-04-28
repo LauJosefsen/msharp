@@ -19,14 +19,14 @@ public enum Instrument {
     BANJO(13),
     PLING(14),
     HARP(15);
-    
+
     private int _ic;
-    
+
     Instrument (int instrumentCode)
     {
         _ic = instrumentCode;
     }
-    
+
     public static Instrument fromIc (int ic)
     {
         for (Instrument type : values()) {
@@ -36,7 +36,7 @@ public enum Instrument {
         }
         return null;
     }
-    
+
     public int getPitch (ToneEnum tone, int octave)
     {
         switch (this) {
@@ -70,17 +70,17 @@ public enum Instrument {
         }
         return 0; //should never happen
     }
-    
+
     private int mapToPitch (int minimumOctave, int octave, int toneId)
     {
         return (octave - minimumOctave) * 12 + (toneId - 6);
     }
-    
+
     public int getIc ()
     {
         return _ic;
     }
-    
+
     public Block mapToBlockBeneath ()
     {
         switch (_ic) {
@@ -118,7 +118,7 @@ public enum Instrument {
                 return new Block("minecraft:air"); // harp is any other block, so might as well be air for all other cases.
         }
     }
-    
+
     public static Instrument fromString (String string) throws IllegalArgumentException
     {
         string = string.toUpperCase();      // Just to be sure

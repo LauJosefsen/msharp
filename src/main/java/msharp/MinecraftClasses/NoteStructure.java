@@ -70,6 +70,7 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
             toBeConnected.add(new BlockLocation(1, lane * heightPrLane + 3, 0));
         
         while (toBeConnected.size() > 1) {
+            
             // everytime this is run, at least 2 locations are in the queue.
             BlockLocation p1 = toBeConnected.remove();
             BlockLocation p2 = toBeConnected.remove();
@@ -247,7 +248,7 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
     
     /**
      * This method is supposed to return the lowest number, x, that follows the rules:  x >= input, and x is a power of 2.
-     * @param input - The integer, must be positive
+     * @param input - The integer, must be > 0
      * @return - The minimum power of 2 that is >= input.
      */
     private int getMinimumPowerOfTwo (int input)

@@ -17,42 +17,42 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class RepeatNode implements StmtNode {
-    private final int amount;
-    
+    private final OperandInterface amount;
+
     private final StmtNode stmts;
-    
+
     public StmtNode getStmts ()
     {
         return stmts;
     }
-    
-    public RepeatNode (int amount, StmtNode stmts)
+
+    public RepeatNode (OperandInterface amount, StmtNode stmts)
     {
         this.amount = amount;
         this.stmts = stmts;
     }
-    
+
     @Override
     public String toString () { return "REPEAT (" + amount + ") {" + stmts.toString() + "}"; }
-    
+
     @Override
     public Graph toGraph ()
     {
         Node repeat = node("repeat" + UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>REPEAT</b><br/>" + amount + "times"));
-        
+
         Graph g = graph("repeat").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
         g = g.with(repeat.link(stmts.toGraph().toMutable().rootNodes().iterator().next()));
-        
+
         return g;
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }
-    
-    public int getAmount ()
+
+    public OperandInterface getAmount ()
     {
         return amount;
     }

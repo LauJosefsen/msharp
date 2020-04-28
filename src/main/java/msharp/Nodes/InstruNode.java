@@ -18,36 +18,36 @@ import static guru.nidi.graphviz.model.Factory.node;
 
 public class InstruNode implements StmtNode {
     private final String instrument;
-    
+
     public String getInstrument ()
     {
         return instrument;
     }
-    
+
     public InstruNode (String instrument)
     {
         this.instrument = instrument;
     }
-    
+
     @Override
     public String toString ()
     {
         return instrument + ":";
     }
-    
+
     @Override
     public Graph toGraph ()
     {
         Node instru = node("instru" + UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>INSTRUMENT</b><br/>" + this.instrument));
-        
+
         Graph g = graph("instru").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
         g = g.with(instru);
-        
+
         return g;
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }

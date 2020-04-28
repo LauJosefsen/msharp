@@ -18,19 +18,19 @@ import static guru.nidi.graphviz.model.Factory.node;
 
 public class NoteNode implements StmtNode {
     private final char letter;
-    private final int octave;
+    private final OperandInterface octave;
     
     public char getLetter ()
     {
         return letter;
     }
     
-    public int getOctave ()
+    public OperandInterface getOctave ()
     {
         return octave;
     }
     
-    public NoteNode (char letter, int octave)
+    public NoteNode (char letter, OperandInterface octave)
     {
         this.letter = letter;
         this.octave = octave;
@@ -41,7 +41,7 @@ public class NoteNode implements StmtNode {
     {
         String o;
         
-        if (octave == -1)
+        if (octave == null)
             o = "";
         else
             o = String.valueOf(octave);
@@ -60,7 +60,7 @@ public class NoteNode implements StmtNode {
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }

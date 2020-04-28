@@ -17,11 +17,14 @@ import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
-public class TempoChangeNode extends Fraction implements StmtNode {
-    
-    public TempoChangeNode (long numerator, long denominator)
+public class TempoChangeNode implements StmtNode {
+    private final OperandInterface numerator;
+    private final OperandInterface denominator;
+
+    public TempoChangeNode (OperandInterface numerator, OperandInterface denominator)
     {
-        super(numerator, denominator);
+        this.numerator = numerator;
+        this.denominator = denominator;
     }
     
     @Override
@@ -42,7 +45,7 @@ public class TempoChangeNode extends Fraction implements StmtNode {
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }

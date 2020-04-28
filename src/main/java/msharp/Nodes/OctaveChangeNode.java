@@ -18,42 +18,42 @@ import static guru.nidi.graphviz.model.Factory.node;
 
 public class OctaveChangeNode implements StmtNode {
     private final int deltaOctave;
-    
+
     public OctaveChangeNode (int deltaOctave)
     {
         this.deltaOctave = deltaOctave;
     }
-    
+
     @Override
     public String toString ()
     {
         String str;
-        
+
         if (deltaOctave <= 0)
             str = "/" + deltaOctave;
         else
             str = "\\" + deltaOctave;
-        
+
         return str;
     }
-    
+
     @Override
     public Graph toGraph ()
     {
         Node octaveChange = node("octaveChange" + UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>OctChange</b><br/>" + this.deltaOctave));
-        
+
         Graph g = graph("and").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
         g = g.with(octaveChange);
-        
+
         return g;
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }
-    
+
     public int getDeltaOctave ()
     {
         return deltaOctave;

@@ -11,15 +11,15 @@ public class NodeContext implements Cloneable {
     public Bpm bpm = new Bpm(150, new Tempo(1, 4));
     public Tempo tempo = new Tempo(1, 4);
     public Fraction timing = new Fraction(0, 1);
-    
+
     public Stack<IntByReference> repeatIterationStack = new Stack<>();
-    
+
     public NodeContext clone ()
     {
         NodeContext nodeContext = null;
         try {
             nodeContext = (NodeContext) super.clone();
-            
+
             //literals will be copied, but bpm, tempo and fraction needs to be copied.
             nodeContext.tempo = (Tempo) tempo.clone();
             nodeContext.bpm = (Bpm) bpm.clone();
@@ -27,10 +27,10 @@ public class NodeContext implements Cloneable {
         } catch (CloneNotSupportedException e) {
             e.printStackTrace(); //should never happen.
         }
-        
+
         return nodeContext;
     }
-    
+
     @Override
     public boolean equals (Object o)
     {
@@ -44,7 +44,7 @@ public class NodeContext implements Cloneable {
                 Objects.equals(timing, that.timing) &&
                 Objects.equals(repeatIterationStack, that.repeatIterationStack);
     }
-    
+
     @Override
     public int hashCode ()
     {

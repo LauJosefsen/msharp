@@ -1,0 +1,29 @@
+Global = 10
+
+part Interlude
+    1%(Global)
+
+    c(Global)
+    X = 10
+
+    #**
+
+        (Variablens navn, Finder den nærmeste block, pointer til værdien)
+
+        end else
+
+        Part
+        Repeat
+        Every
+        Else
+        Play
+    **#
+end part
+
+
+
+play
+    BPM(Global,1%8)
+    Global = Global * -5
+    Interlude
+end play

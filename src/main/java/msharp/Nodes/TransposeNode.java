@@ -17,10 +17,10 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
 public class TransposeNode implements StmtNode {
-    private final int deltaTonation;
+    private final OperandInterface deltaTonation;
     private final StmtNode toBeTransposed;
     
-    public int getDeltaTonation ()
+    public OperandInterface getDeltaTonation ()
     {
         return deltaTonation;
     }
@@ -32,7 +32,7 @@ public class TransposeNode implements StmtNode {
     
     
     
-    public TransposeNode (int deltaTonation, StmtNode toBeTransposed)
+    public TransposeNode (OperandInterface deltaTonation, StmtNode toBeTransposed)
     {
         this.deltaTonation = deltaTonation;
         this.toBeTransposed = toBeTransposed;
@@ -55,7 +55,7 @@ public class TransposeNode implements StmtNode {
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }

@@ -5,13 +5,13 @@ import java.util.Objects;
 public class Bpm implements Cloneable {
     int bpm;
     Tempo tempo;
-    
+
     public Bpm (int bpm, Tempo tempo)
     {
         this.bpm = bpm;
         this.tempo = tempo;
     }
-    
+
     @Override
     protected Object clone () throws CloneNotSupportedException
     {
@@ -19,7 +19,7 @@ public class Bpm implements Cloneable {
         bpm.tempo = (Tempo) tempo.clone();
         return bpm;
     }
-    
+
     @Override
     public boolean equals (Object o)
     {
@@ -29,7 +29,7 @@ public class Bpm implements Cloneable {
         return bpm == bpm1.bpm &&
                 Objects.equals(tempo, bpm1.tempo);
     }
-    
+
     @Override
     public int hashCode ()
     {
