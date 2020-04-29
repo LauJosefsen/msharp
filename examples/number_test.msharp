@@ -4,7 +4,9 @@ part Interlude
     1%(Global)
 
     c(Global)
+    c (Global)
     X = 10
+    c
 end part
 
 

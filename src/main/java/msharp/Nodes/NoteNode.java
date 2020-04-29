@@ -40,13 +40,7 @@ public class NoteNode implements StmtNode {
     @Override
     public String toString ()
     {
-        String o;
-        
-        if (octave == null)
-            o = "";
-        else
-            o = String.valueOf(octave);
-        return letter + o;
+        return ""+letter;
     }
     
     @Override

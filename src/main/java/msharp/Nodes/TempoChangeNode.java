@@ -40,7 +40,6 @@ public class TempoChangeNode implements StmtNode {
         Node tempoChange = node("tempoChange" + UUID.randomUUID().toString()).with(Color.BLUE).with(Label.html("<b>TEMPO</b><br/>"));
         
         Graph g = graph("tempoChange").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
-        g = g.with(tempoChange);
     
         g = g.with(tempoChange.link(
                 to(numerator.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("NUMERATOR")),

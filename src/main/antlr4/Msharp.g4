@@ -68,15 +68,16 @@ elseStmt
     ;
 
 partBody
-    : Tone Digs?                                                                                                        # PbodyTone
+    : Tone Digs                                                                                                         # PbodyTone
     | {_input.LA(1) == Tone && _input.get(_input.index() + 1).getChannel() != HIDDEN}? Tone Lparen numberExpr Rparen    # PbodyTone
-    | Id                                                # PbodyId
-    | Pause                                             # PbodyPause
-    | Lparen stmt+ Rparen                               # PbodyParen
-    | partBody TransposeUp numberExpr?                  # PbodyTransUp
-    | partBody TransposeDown numberExpr?                # PbodyTransDown
-    | partBody And partBody                             # PbodyAnd
-    | partBody Repeat numberExpr                        # PbodySingleLRepeat
+    | Tone                                                                                                              # PbodyTone
+    | Id                                                                                                                # PbodyId
+    | Pause                                                                                                             # PbodyPause
+    | Lparen stmt+ Rparen                                                                                               # PbodyParen
+    | partBody TransposeUp numberExpr?                                                                                  # PbodyTransUp
+    | partBody TransposeDown numberExpr?                                                                                # PbodyTransDown
+    | partBody And partBody                                                                                             # PbodyAnd
+    | partBody Repeat numberExpr                                                                                        # PbodySingleLRepeat
     ;
 
 numberExpr
