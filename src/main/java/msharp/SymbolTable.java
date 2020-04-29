@@ -2,10 +2,7 @@ package msharp;
 
 import msharp.Nodes.ProgNode;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SymbolTable {
     class Symbol<T>{
@@ -20,55 +17,35 @@ public class SymbolTable {
 
     }
     class Scope{
-        int scopeId;
-        Scope parent; //null if top/global
         Map<String,Symbol> localSymbols = new HashMap<>();
-        
-        public Scope (int scopeId, Scope parent)
-        {
-            this.scopeId = scopeId;
-            this.parent = parent;
-        }
-        
-        Symbol findSymbol(String key){
-            if(localSymbols.containsKey(key))
-                return localSymbols.get(key);
-            if(parent == null)
-                return null;
-            return parent.findSymbol(key);
-        }
     }
     
-    
-    private int scopeCounter = 0;
-    Scope currentScope = null;
-    
-    List<Scope> scopes = new ArrayList<>();
+    Stack<Scope> scopes = new Stack<>();
     
     void openScope(){
-        Scope newScope = new Scope(scopeCounter++,currentScope);
-        scopes.add(newScope);
-        currentScope = newScope;
+        scopes.push(new Scope());
     }
     
     void closeScope(){
-        currentScope = currentScope.parent;
+        scopes.pop();
     }
     
     <T> void  enterSymbol(String key, T value){
-        if(currentScope.findSymbol(key) == null){
-            Symbol<T> toAdd = new Symbol<>(key,value);
-            currentScope.localSymbols.put(key,toAdd);
+        if(retrieveSymbol(key) == null)
+            scopes.peek().localSymbols.put(key,new Symbol(key,value));
+        else{
+            //todo change existing symbol
         }
     }
     
     Symbol retrieveSymbol(String key){
-        return currentScope.findSymbol(key);
+        // take from top to stack to bottom of stack, search every scope if they have this variable. todo
+        return null;
     }
     
     
     public SymbolTable (ProgNode ast)
     {
-        //do some visitor thing here
+        //do some visitor thing here todo
     }
 }
