@@ -15,6 +15,7 @@ import java.util.UUID;
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
+import static guru.nidi.graphviz.model.Link.to;
 
 public class NoteNode implements StmtNode {
     private final char letter;
@@ -54,9 +55,10 @@ public class NoteNode implements StmtNode {
         Node note = node("note" + UUID.randomUUID().toString()).with(Color.YELLOW).with(Label.html("<b>NOTE</b><br/>" + this.toString()));
         
         Graph g = graph("note").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
-        g = g.with(note);
-        
-        return g;
+        if(octave == null){
+            return g.with(note);
+        }
+        return g.with(note.link(to(octave.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("OCTAVE"))));
     }
     
     @Override

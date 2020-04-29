@@ -40,7 +40,7 @@ public class IdNode implements StmtNode,OperandInterface{
     {
         Node id = node("id" + UUID.randomUUID().toString()).with(Color.GREEN).with(Label.html("<b>ID</b><br/>" + this.id));
         
-        Graph g = graph("and").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
+        Graph g = graph("id").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
         g = g.with(id);
         
         return g;

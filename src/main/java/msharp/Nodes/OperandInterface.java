@@ -1,4 +1,4 @@
 package msharp.Nodes;
 
-public interface OperandInterface {
+public interface OperandInterface extends StmtNode {
 }

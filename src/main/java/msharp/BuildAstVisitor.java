@@ -26,7 +26,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<Node> {
         OperandInterface octave = null;
         if (ctx.Digs() != null)
             octave = new NumberNode(Integer.parseInt(ctx.Digs().getText()));
-        if(ctx.numberExpr() != null){
+        if (ctx.numberExpr() != null) {
             octave = (OperandInterface) visit(ctx.numberExpr());
         }
         return new NoteNode(ctx.Tone().getText().charAt(0), octave);
@@ -112,7 +112,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<Node> {
     public TempoChangeNode visitTempoOp (MsharpParser.TempoOpContext ctx)
     {
         return new TempoChangeNode(
-                (OperandInterface) visit(ctx.digsOrNumberExprInParenthesis(0)),
+                 (OperandInterface) visit(ctx.digsOrNumberExprInParenthesis(0)),
                 (OperandInterface) visit(ctx.digsOrNumberExprInParenthesis(1)));
     }
     
@@ -221,7 +221,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<Node> {
         for (ParseTree pt : ctx.stmt()) {
             stmts.add((StmtNode) visit(pt));
         }
-
+        
         return new PartDclNode(ctx.Id().getText(), stmts);
     }
     
@@ -234,7 +234,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<Node> {
         for (ParseTree pt : ctx.multStmt()) {
             stmts.add((StmtNode) visit(pt));
         }
-
+        
         return new PartDclNode(ctx.Id().getText(), stmts);
     }
     
@@ -257,14 +257,24 @@ public class BuildAstVisitor extends MsharpBaseVisitor<Node> {
     }
     
     @Override
+    public Node visitDigsOrNumberExprInParenthesis (MsharpParser.DigsOrNumberExprInParenthesisContext ctx)
+    {
+        
+        //either digs or number expr
+        if (ctx.Digs() != null)
+            return new NumberNode(Integer.parseInt(ctx.Digs().getText()));
+        return visit(ctx.numberExpr());
+    }
+    
+    @Override
     public Node visitStmtOps (MsharpParser.StmtOpsContext ctx)
     {
         return visit(ctx.ops());
     }
-
-
+    
+    
     // Methods added after second iteration
-
+    
     @Override
     public Node visitNumberExprActualExpression (MsharpParser.NumberExprActualExpressionContext ctx)
     {
@@ -272,44 +282,44 @@ public class BuildAstVisitor extends MsharpBaseVisitor<Node> {
                 (OperandInterface) visit(ctx.numberExpr(1)),
                 ExprOpEnum.fromString(ctx.numberOp().getText()));
     }
-
+    
     @Override
     public Node visitAssignNumVariable (MsharpParser.AssignNumVariableContext ctx)
     {
         return new NumDeclNode(ctx.Id().getText(), (OperandInterface) visit(ctx.numberExpr()));
     }
-
+    
     @Override
     public Node visitMultStmtAssignNum (MsharpParser.MultStmtAssignNumContext ctx)
     {
         return visit(ctx.assignNumVariable());
     }
-
+    
     @Override
     public Node visitOpsScale (MsharpParser.OpsScaleContext ctx)
     {
         // If the Scale is empty, it will transpose down an empty list, which is okay
         List<ToneEnum> tones = new ArrayList<>();
-        for(TerminalNode tone : ctx.Tone()){
+        for (TerminalNode tone : ctx.Tone()) {
             tones.add(ToneEnum.fromLetter(tone.getText().charAt(0)));
         }
         boolean up = ctx.TransposeUp() != null;
-
+        
         return new ScaleNode(tones, up);
     }
-
+    
     @Override
     public Node visitNumberExprParens (MsharpParser.NumberExprParensContext ctx)
     {
         return visit(ctx.numberExpr());
     }
-
+    
     @Override
     public Node visitNumberExprId (MsharpParser.NumberExprIdContext ctx)
     {
         return new IdNode(ctx.Id().getText());
     }
-
+    
     @Override
     public Node visitNumberExprDigs (MsharpParser.NumberExprDigsContext ctx)
     {

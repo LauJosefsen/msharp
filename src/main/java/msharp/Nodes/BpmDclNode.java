@@ -15,6 +15,7 @@ import java.util.UUID;
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
+import static guru.nidi.graphviz.model.Link.to;
 
 public class BpmDclNode implements StmtNode {
     private final TempoChangeNode tempo;
@@ -42,11 +43,12 @@ public class BpmDclNode implements StmtNode {
     @Override
     public Graph toGraph ()
     {
-        Node bpmDcl = node("bpmDcl" + UUID.randomUUID().toString()).with(Color.BLUE).with(Label.html("<b>BPM</b><br/>" + bpm));
+        Node bpmDcl = node("bpmDcl" + UUID.randomUUID().toString()).with(Color.BLUE).with(Label.html("<b>BPM</b>"));
         
         Graph g = graph("and").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
-        g = g.with(bpmDcl.link(tempo.toGraph()));
-        
+        g = g.with(bpmDcl.link(
+                to(bpm.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("BPM")),
+                to(tempo.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("TEMPO"))));
         return g;
     }
     

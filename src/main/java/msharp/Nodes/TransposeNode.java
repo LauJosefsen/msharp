@@ -15,6 +15,7 @@ import java.util.UUID;
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
+import static guru.nidi.graphviz.model.Link.to;
 
 public class TransposeNode implements StmtNode {
     private final OperandInterface deltaTonation;
@@ -50,6 +51,10 @@ public class TransposeNode implements StmtNode {
         Node transpose = node("transpose" + UUID.randomUUID().toString()).with(Color.BLUE).with(Label.html("<b>TRANSPOSE</b><br/>" + this.deltaTonation));
         Graph g = graph("transpose").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
         g = g.with(transpose.link(toBeTransposed.toGraph().toMutable().rootNodes().iterator().next()));
+    
+        g = g.with(transpose.link(
+                to(deltaTonation.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("AMOUNT")),
+                to(toBeTransposed.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("BODY"))));
         
         return g;
     }

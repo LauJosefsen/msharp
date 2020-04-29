@@ -16,6 +16,7 @@ import java.util.UUID;
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
+import static guru.nidi.graphviz.model.Link.to;
 
 public class TempoChangeNode implements StmtNode {
     private final OperandInterface numerator;
@@ -36,10 +37,14 @@ public class TempoChangeNode implements StmtNode {
     @Override
     public Graph toGraph ()
     {
-        Node tempoChange = node("tempoChange" + UUID.randomUUID().toString()).with(Color.BLUE).with(Label.html("<b>TEMPO</b><br/>" + this.toString()));
+        Node tempoChange = node("tempoChange" + UUID.randomUUID().toString()).with(Color.BLUE).with(Label.html("<b>TEMPO</b><br/>"));
         
         Graph g = graph("tempoChange").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
         g = g.with(tempoChange);
+    
+        g = g.with(tempoChange.link(
+                to(numerator.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("NUMERATOR")),
+                to(denominator.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("DENOMINATOR"))));
         
         return g;
     }

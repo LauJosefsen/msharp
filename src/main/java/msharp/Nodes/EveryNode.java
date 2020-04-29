@@ -62,6 +62,7 @@ public class EveryNode implements StmtNode {
 
         Graph g = graph("and").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
         g = g.with(every.link(
+                to(amount.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("AMOUNT")),
                 to(trueCase.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("TRUE")),
                 to(elseCase.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("ELSE"))));
 

@@ -5,19 +5,6 @@ part Interlude
 
     c(Global)
     X = 10
-
-    #**
-
-        (Variablens navn, Finder den nærmeste block, pointer til værdien)
-
-        end else
-
-        Part
-        Repeat
-        Every
-        Else
-        Play
-    **#
 end part
 
 

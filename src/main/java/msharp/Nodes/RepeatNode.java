@@ -15,6 +15,7 @@ import java.util.UUID;
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
+import static guru.nidi.graphviz.model.Link.to;
 
 public class RepeatNode implements StmtNode {
     private final OperandInterface amount;
@@ -38,11 +39,12 @@ public class RepeatNode implements StmtNode {
     @Override
     public Graph toGraph ()
     {
-        Node repeat = node("repeat" + UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>REPEAT</b><br/>" + amount + "times"));
+        Node repeat = node("repeat" + UUID.randomUUID().toString()).with(Color.RED).with(Label.html("<b>REPEAT</b>"));
 
         Graph g = graph("repeat").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
-        g = g.with(repeat.link(stmts.toGraph().toMutable().rootNodes().iterator().next()));
-
+        g = g.with(repeat.link(
+                to(amount.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("AMOUNT")),
+                to(stmts.toGraph().toMutable().rootNodes().iterator().next()).with(Label.of("BODY"))));
         return g;
     }
     
