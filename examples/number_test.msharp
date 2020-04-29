@@ -1,12 +1,11 @@
 Global = 10
 
 part Interlude
-    1%(Global)
-
+    SomethingLoop = 0
     c(Global)
-    c (Global)
-    X = 10
-    c
+    repeat 10 times
+        SomethingLoop = SomethingLoop + 1
+    end repeat
 end part
 
 

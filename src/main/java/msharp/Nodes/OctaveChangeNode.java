@@ -45,7 +45,7 @@ public class OctaveChangeNode implements StmtNode {
         Graph g = graph("and").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
         g = g.with(octaveChange);
 
-        return g;
+            return g;
     }
     
     @Override

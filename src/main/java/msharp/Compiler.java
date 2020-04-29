@@ -5,6 +5,7 @@ import antlr4.MsharpParser;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import msharp.Nodes.Node;
+import msharp.Nodes.ProgNode;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -104,6 +105,13 @@ public class Compiler {
             }
         }
         
+        // Generate symbol table from AST
+        SymbolTable symbolTable = new SymbolTable((ProgNode) ast);
+
+        // Scope check every statement accessing a variable using AST and SymbolTable
+
+        // Type check every statement using AST and SymbolTable.
+
         // Code-Generation
         // Interprets the AST into a list of notes with timing
 //        BuildNoteListVisitor notePopulator = new BuildNoteListVisitor(visitor.symbolTable);

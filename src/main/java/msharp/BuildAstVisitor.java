@@ -206,11 +206,17 @@ public class BuildAstVisitor extends MsharpBaseVisitor<Node> {
     @Override
     public Node visitProg (MsharpParser.ProgContext ctx)
     {
+    
+        List<NumDeclNode> globalVariables = new ArrayList<>();
+        for (ParseTree pt : ctx.assignNumVariable())
+            globalVariables.add((NumDeclNode) visit(pt));
+    
         List<PartDclNode> parts = new ArrayList<>();
         for (ParseTree pt : ctx.partDcl())
             parts.add((PartDclNode) visit(pt));
         
-        return new ProgNode(parts, (PlayNode) visit(ctx.playDcl()));
+        
+        return new ProgNode(globalVariables,parts, (PlayNode) visit(ctx.playDcl()));
     }
     
     @Override

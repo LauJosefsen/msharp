@@ -43,7 +43,7 @@ public class InstruNode implements StmtNode {
         Graph g = graph("instru").directed().graphAttr().with(Rank.dir(TOP_TO_BOTTOM));
         g = g.with(instru);
 
-        return g;
+            return g;
     }
     
     @Override
