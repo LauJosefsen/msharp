@@ -280,14 +280,14 @@ public class BuildAstVisitor extends MsharpBaseVisitor<Node> {
     
     
     // Methods added after second iteration
-    
+    /*
     @Override
     public Node visitNumberExprActualExpression (MsharpParser.NumberExprActualExpressionContext ctx)
     {
         return new ExprNode((OperandInterface) visit(ctx.numberExpr(0)),
                 (OperandInterface) visit(ctx.numberExpr(1)),
                 ExprOpEnum.fromString(ctx.numberOp().getText()));
-    }
+    }*/
     
     @Override
     public Node visitAssignNumVariable (MsharpParser.AssignNumVariableContext ctx)
@@ -315,6 +315,95 @@ public class BuildAstVisitor extends MsharpBaseVisitor<Node> {
     }
     
     @Override
+    public Node visitMultStmtNL (MsharpParser.MultStmtNLContext ctx)
+    {
+        return super.visitMultStmtNL(ctx);
+    }
+    
+    
+    
+    
+    
+    
+    @Override
+    public Node visitExprOp (MsharpParser.ExprOpContext ctx)
+    {
+        if (ctx.Plus() != null){
+            // Plus node
+            return new ExprNode(
+                    (OperandInterface) visit(ctx.numberExpr())
+                    , (OperandInterface) visit(ctx.numberTerm())
+                    , ExprOpEnum.ADD);
+        }
+        else{
+            // Minus node
+            return new ExprNode(
+                    (OperandInterface) visit(ctx.numberExpr())
+                    , (OperandInterface) visit(ctx.numberTerm())
+                    , ExprOpEnum.SUBTRACT);
+        }
+    }
+    
+    @Override
+    public Node visitTermOp (MsharpParser.TermOpContext ctx)
+    {
+        ExprOpEnum op = ExprOpEnum.MODULO;
+        
+        if (ctx.Repeat() != null) {
+            // Multiply
+            op = ExprOpEnum.MULTIPLY;
+        }
+        if (ctx.OctaveUp() != null)
+        {
+            // Divide
+            op = ExprOpEnum.DIVIDE;
+        }
+        
+        return new ExprNode(
+                (OperandInterface) visit(ctx.numberTerm())
+                , (OperandInterface) visit(ctx.numberFactor())
+                , op);
+    }
+    
+    
+    
+    
+    
+    
+    @Override
+    public Node visitFactorParens (MsharpParser.FactorParensContext ctx)
+    {
+        return visit(ctx.numberExpr());
+    }
+    
+    @Override
+    public Node visitExprValue (MsharpParser.ExprValueContext ctx)
+    {
+        return visit(ctx.numberTerm());
+    }
+    
+    @Override
+    public Node visitFactorDigs (MsharpParser.FactorDigsContext ctx)
+    {
+        return new NumberNode(Integer.parseInt(ctx.Digs().getText()));
+    }
+    
+    @Override
+    public Node visitTermValue (MsharpParser.TermValueContext ctx)
+    {
+        return visit(ctx.numberFactor());
+    }
+    
+    @Override
+    public Node visitFactorId (MsharpParser.FactorIdContext ctx)
+    {
+        return new IdNode(ctx.Id().getText());
+    }
+    
+    
+    
+    /*
+    @Override
     public Node visitNumberExprParens (MsharpParser.NumberExprParensContext ctx)
     {
         return visit(ctx.numberExpr());
@@ -330,7 +419,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<Node> {
     public Node visitNumberExprDigs (MsharpParser.NumberExprDigsContext ctx)
     {
         return new NumberNode(Integer.parseInt(ctx.Digs().getText()));
-    }
+    }*/
 }
 
 

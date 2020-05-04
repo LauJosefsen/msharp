@@ -81,7 +81,25 @@ partBody
     ;
 
 numberExpr
-    : Id                                    # NumberExprId
+    : numberExpr Plus numberTerm            # ExprOp
+    | numberExpr Pause numberTerm           # ExprOp
+    | numberTerm                            # ExprValue
+    ;
+numberTerm
+    : numberTerm Repeat numberFactor        # TermOp
+    | numberTerm OctaveUp numberFactor      # TermOp
+    | numberTerm Percent numberFactor       # TermOp
+    | numberFactor                          # TermValue
+    ;
+numberFactor
+    : Lparen numberExpr Rparen              # FactorParens
+    | Id                                    # FactorId
+    | Digs                                  # FactorDigs
+    ;
+
+
+
+    /*Id                                    # NumberExprId
     | Digs                                  # NumberExprDigs
     | numberExpr numberOp numberExpr        # NumberExprActualExpression
     | Lparen numberExpr Rparen              # NumberExprParens
@@ -94,7 +112,7 @@ numberOp
     | Pause
     | OctaveUp
     | Percent
-    ;
+    ;*/
 
 assignNumVariable
     : Id Assign numberExpr Nl
