@@ -2,13 +2,11 @@ Global = 150
 
 part AnotherPart
     Interlude
-end
+
+end part
 
 part Interlude
-    SomethingLoop = 120 * 5 + GlobalVariable
-
-    c4 c(4) (SomethingLoop)%1
-    c (SomethingLoop)
+    SomethingLoop = 0
     repeat 25 times
         BPM(Global+(SomethingLoop*5),1%8)
         (f3^)^(SomethingLoop)

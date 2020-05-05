@@ -69,7 +69,7 @@ elseStmt
 
 partBody
     : Tone Digs                                                                                                         # PbodyTone
-    | {_input.LA(1) == Tone && _input.get(_input.index() + 1).getChannel() != HIDDEN}? Tone Lparen numberExpr Rparen    # PbodyTone
+    | {_input.LA(1) == Tone && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? Tone Lparen numberExpr Rparen    # PbodyTone
     | Tone                                                                                                              # PbodyTone
     | Id                                                                                                                # PbodyId
     | Pause                                                                                                             # PbodyPause
@@ -81,12 +81,12 @@ partBody
   //  | partBody And partBody                                                                                             # PbodyAnd
 //    | partBody Repeat numberExpr                                                                                        # PbodySingleLRepeat
 partAfter
-    : {_input.LA(1) == Tone && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeUp numberExpr           # PbodyTransUp
-    | TransposeUp                                                                                                       # PbodyTransUp
-    | {_input.LA(1) == Tone && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeDown numberExpr         # PbodyTransDown
-    | TransposeDown                                                                                                     # PbodyTransDown
-    | And partBody                                                                                                      # PbodyAnd
-    | Repeat numberExpr                                                                                                 # PbodySingleLRepeat
+    : {_input.LA(1) == TransposeUp && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeUp numberExpr           # TransposeOperator
+    | TransposeUp                                                                                                       # TransposeOperator
+    | {_input.LA(1) == TransposeDown && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeDown numberExpr         # TransposeOperator
+    | TransposeDown                                                                                                     # TransposeOperator
+    | And partBody                                                                                                      # AndOperator
+    | Repeat numberExpr                                                                                                 # RepeatOperator
     ;
 
 numberExpr

@@ -18,7 +18,7 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
-public class AndNode implements StmtNode {
+public class AndNode implements StmtNode,PartBodyOperator {
     
     private final StmtNode left;
     private final StmtNode right;
@@ -60,5 +60,11 @@ public class AndNode implements StmtNode {
     public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
     {
         return visitor.visit(this, ctx);
+    }
+    
+    @Override
+    public PartBodyOperator setLeftOperand (StmtNode left)
+    {
+        return new AndNode(left,this.right);
     }
 }

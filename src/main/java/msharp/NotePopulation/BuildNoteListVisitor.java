@@ -86,13 +86,13 @@ public class BuildNoteListVisitor{
         //scope checking
         if(symbol == null){
             // make some error noise
-            throw new IllegalArgumentException("Name \""+node.getId()+"\", was not declared in current scope.");
+            throw new IllegalCompilerAction("Name \""+node.getId()+"\", was not declared in current scope.");
         }
     
         //type checking
         if(symbol.value.getClass() != StmtList.class){
             // make some error noise
-            throw new IllegalArgumentException("Name \""+node.getId()+"\", was declared in current scope, but is not integer.");
+            throw new IllegalCompilerAction("Name \""+node.getId()+"\", was declared in current scope, but is not a part.");
         }
         
         StmtList part = (StmtList) symbol.value;

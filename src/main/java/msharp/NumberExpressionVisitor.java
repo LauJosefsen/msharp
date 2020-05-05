@@ -16,7 +16,7 @@ public class NumberExpressionVisitor {
             case MULTIPLY: return left * right;
             case SUBTRACT: return left - right;
         }
-        throw new IllegalArgumentException("Did not know how to compute operation: "+exprNode.getOperator());
+        throw new IllegalCompilerAction("Did not know how to compute operation: "+exprNode.getOperator());
     }
     public int visit(NumberNode numberNode, SymbolTable symbolTable){
         return numberNode.getN();
@@ -29,13 +29,13 @@ public class NumberExpressionVisitor {
         //scope checking
         if(symbol == null){
             // make some error noise
-            throw new IllegalArgumentException("Name \""+idNode.getId()+"\", was not declared in current scope.");
+            throw new IllegalCompilerAction("Name \""+idNode.getId()+"\", was not declared in current scope.");
         }
         
         //type checking
         if(symbol.value.getClass() != Integer.class){
             // make some error noise
-            throw new IllegalArgumentException("Name \""+idNode.getId()+"\", was declared in current scope, but is not integer.");
+            throw new IllegalCompilerAction("Name \""+idNode.getId()+"\", was declared in current scope, but is not integer.");
         }
         
         return (int) symbol.value;
