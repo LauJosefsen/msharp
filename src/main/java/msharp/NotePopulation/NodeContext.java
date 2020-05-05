@@ -1,7 +1,7 @@
 package msharp.NotePopulation;
 
 import msharp.MinecraftClasses.Instrument;
-import msharp.Nodes.ScaleNode;
+import msharp.ASTBuilder.ScaleNode;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -10,10 +10,10 @@ import java.util.Stack;
 public class NodeContext implements Cloneable {
     public int octave = 0;
     public Instrument instrument = Instrument.HARP;
-    public Bpm bpm = new Bpm(150, new Tempo(1, 4));
-    public Tempo tempo = new Tempo(1, 4);
+    public Bpm bpm = new Bpm(150, new Fraction(1, 4));
+    public Fraction tempo = new Fraction(1, 4);
     public FractionPrecise timing = new FractionPrecise(0, 1);
-    public ScaleNode scale = new ScaleNode(new ArrayList<ToneEnum>(),false);
+    public ScaleNode scale = new ScaleNode(new ArrayList<>(),false);
 
     public Stack<IntByReference> repeatIterationStack = new Stack<>();
     
@@ -26,7 +26,7 @@ public class NodeContext implements Cloneable {
             nodeContext = (NodeContext) super.clone();
 
             //literals will be copied, but bpm, tempo and fraction needs to be copied.
-            nodeContext.tempo = (Tempo) tempo.clone();
+            nodeContext.tempo = (Fraction) tempo.clone();
             nodeContext.bpm = (Bpm) bpm.clone();
             nodeContext.timing = (FractionPrecise) timing.clone();
         } catch (CloneNotSupportedException e) {

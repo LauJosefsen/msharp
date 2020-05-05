@@ -1,17 +1,18 @@
 package msharp.NotePopulation;
 
-import msharp.IllegalCompilerAction;
+import msharp.Compiler.IllegalCompilerAction;
 import msharp.MinecraftClasses.Instrument;
-import msharp.Nodes.*;
-import msharp.NumberExpressionVisitor;
-import msharp.SymbolTable;
+import msharp.ASTBuilder.*;
+import msharp.Compiler.NumberExpressionVisitor;
+import msharp.Compiler.Symbol;
+import msharp.Compiler.SymbolTable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BuildNoteListVisitor{
     private SymbolTable symbolTable;
-    private NumberExpressionVisitor exprVisitor = new NumberExpressionVisitor();
+    private final NumberExpressionVisitor exprVisitor = new NumberExpressionVisitor();
 
     public BuildNoteListVisitor (SymbolTable symbolTable)
     {
@@ -54,7 +55,7 @@ public class BuildNoteListVisitor{
     {
         // This visit should only change the ctx, and add no new notes.
         ctx.bpm.bpm = node.getBpm().accept(exprVisitor,symbolTable);
-        ctx.bpm.tempo = new Tempo(
+        ctx.bpm.tempo = new Fraction(
                 node.getTempo().getNumerator().accept(exprVisitor,symbolTable),
                 node.getTempo().getDenominator().accept(exprVisitor,symbolTable));
         return new ArrayList<>();
@@ -81,7 +82,7 @@ public class BuildNoteListVisitor{
     public List<FinalNote> visit (IdNode node, NodeContext ctx) throws IllegalCompilerAction
     {
         // type check and check scope
-        SymbolTable.Symbol symbol = symbolTable.retrieveSymbol(node.getId());
+        Symbol symbol = symbolTable.retrieveSymbol(node.getId());
     
         //scope checking
         if(symbol == null){
@@ -207,7 +208,7 @@ public class BuildNoteListVisitor{
     public List<FinalNote> visit (TempoChangeNode node, NodeContext ctx) throws IllegalCompilerAction
     {
         // This visit should only change the ctx, and add no new notes.
-        ctx.tempo = new Tempo(
+        ctx.tempo = new Fraction(
                 node.getNumerator().accept(exprVisitor,symbolTable),
                 node.getDenominator().accept(exprVisitor,symbolTable));
         return new ArrayList<>();

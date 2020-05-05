@@ -8,6 +8,8 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
+import msharp.Compiler.Compiler;
+import msharp.Compiler.CompilerBuilder;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

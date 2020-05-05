@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class Bpm implements Cloneable {
     int bpm;
-    Tempo tempo;
+    Fraction tempo;
 
-    public Bpm (int bpm, Tempo tempo)
+    public Bpm (int bpm, Fraction tempo)
     {
         this.bpm = bpm;
         this.tempo = tempo;
@@ -16,7 +16,7 @@ public class Bpm implements Cloneable {
     protected Object clone () throws CloneNotSupportedException
     {
         Bpm bpm = (Bpm) super.clone();
-        bpm.tempo = (Tempo) tempo.clone();
+        bpm.tempo = (Fraction) tempo.clone();
         return bpm;
     }
 

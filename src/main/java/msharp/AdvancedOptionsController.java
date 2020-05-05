@@ -11,6 +11,7 @@ import javafx.scene.control.TextFormatter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import msharp.Compiler.CompilerBuilder;
 
 import java.io.IOException;
 import java.util.function.UnaryOperator;
@@ -55,6 +56,7 @@ public class AdvancedOptionsController {
         
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setTitle("Advanced options");
+        assert root != null;
         dialog.setScene(new Scene(root));
         dialog.initOwner(window);
         

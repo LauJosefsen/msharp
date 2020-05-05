@@ -1,5 +1,6 @@
 package msharp;
 
+import msharp.Compiler.IllegalCompilerAction;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
@@ -7,7 +8,13 @@ import org.antlr.v4.runtime.Recognizer;
 import java.util.logging.Logger;
 
 public class CustomAntlrErrorListener extends BaseErrorListener {
-    private Logger logger;
+    private final Logger logger;
+    private boolean foundError = false;
+    
+    public boolean isFoundError ()
+    {
+        return foundError;
+    }
     
     public CustomAntlrErrorListener (Logger logger)
     {
@@ -17,6 +24,7 @@ public class CustomAntlrErrorListener extends BaseErrorListener {
     @Override
     public void syntaxError (Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e)
     {
+        foundError = true;
         logger.info("[SYNTAX ERROR] " + msg + " at line " + line + " position " + charPositionInLine + ".");
     }
     
