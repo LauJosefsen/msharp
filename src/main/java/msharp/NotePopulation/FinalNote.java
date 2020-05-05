@@ -8,9 +8,9 @@ public class FinalNote implements Comparable<FinalNote> {
     Instrument instrument;
     int octave;
     ToneEnum tone;
-    Fraction timing;
+    FractionPrecise timing;
 
-    public FinalNote (Instrument instrument, ToneEnum tone, int octave, Fraction timing)
+    public FinalNote (Instrument instrument, ToneEnum tone, int octave, FractionPrecise timing)
     {
         this.instrument = instrument;
         this.tone = tone;
@@ -78,7 +78,7 @@ public class FinalNote implements Comparable<FinalNote> {
         return tone;
     }
 
-    public Fraction getTiming ()
+    public FractionPrecise getTiming ()
     {
         return timing;
     }

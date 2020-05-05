@@ -1,9 +1,17 @@
-Global = 10
+Global = 150
+
+part AnotherPart
+    Interlude
+end
 
 part Interlude
-    SomethingLoop = 0
-    c(Global)
-    repeat 10 times
+    SomethingLoop = 120 * 5 + GlobalVariable
+
+    c4 c(4) (SomethingLoop)%1
+    c (SomethingLoop)
+    repeat 25 times
+        BPM(Global+(SomethingLoop*5),1%8)
+        (f3^)^(SomethingLoop)
         SomethingLoop = SomethingLoop + 1
     end repeat
 end part
@@ -11,7 +19,7 @@ end part
 
 
 play
+    PIANO:
     BPM(Global,1%8)
-    Global = Global * -5
     Interlude
 end play

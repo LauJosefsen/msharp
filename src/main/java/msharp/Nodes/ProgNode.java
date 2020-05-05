@@ -30,6 +30,16 @@ public class ProgNode implements Node {
         return main;
     }
     
+    public List<NumDeclNode> getGlobalVariables ()
+    {
+        return globalVariables;
+    }
+    
+    public List<PartDclNode> getParts ()
+    {
+        return parts;
+    }
+    
     @Override
     public String toString ()
     {

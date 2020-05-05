@@ -5,6 +5,7 @@ import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
+import msharp.IllegalCompilerAction;
 import msharp.NotePopulation.BuildNoteListVisitor;
 import msharp.NotePopulation.FinalNote;
 import msharp.NotePopulation.Fraction;
@@ -28,6 +29,16 @@ public class TempoChangeNode implements StmtNode {
         this.denominator = denominator;
     }
     
+    public OperandInterface getNumerator ()
+    {
+        return numerator;
+    }
+    
+    public OperandInterface getDenominator ()
+    {
+        return denominator;
+    }
+    
     @Override
     public String toString ()
     {
@@ -49,7 +60,7 @@ public class TempoChangeNode implements StmtNode {
     }
     
     @Override
-    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
     {
         return visitor.visit(this, ctx);
     }

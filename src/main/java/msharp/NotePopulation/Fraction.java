@@ -55,7 +55,12 @@ public class Fraction implements Comparable<Fraction>, Cloneable {
         
         numerator = Math.addExact(numerator, Math.multiplyExact(fraction.numerator, (denominator / fraction.denominator)));
         
-        return new Fraction(numerator,denominator);
+        return (new Fraction(numerator,denominator)).abbreviate();
+    }
+    
+    private Fraction abbreviate(){
+        long gcd = gcd(numerator,denominator);
+        return new Fraction(numerator/gcd,denominator/gcd);
     }
     
     @Override
@@ -96,5 +101,12 @@ public class Fraction implements Comparable<Fraction>, Cloneable {
     protected Object clone () throws CloneNotSupportedException
     {
         return super.clone();
+    }
+    
+    private static long gcd(long a, long b) {
+        if (b == 0) {
+            return a;
+        }
+        return gcd(b, a % b);
     }
 }

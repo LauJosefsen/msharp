@@ -5,9 +5,12 @@ import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.Node;
+import msharp.IllegalCompilerAction;
 import msharp.NotePopulation.BuildNoteListVisitor;
 import msharp.NotePopulation.FinalNote;
 import msharp.NotePopulation.NodeContext;
+import msharp.NumberExpressionVisitor;
+import msharp.SymbolTable;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +32,21 @@ public class ExprNode implements OperandInterface {
         this.operator = operator;
     }
     
+    public OperandInterface getLeft ()
+    {
+        return left;
+    }
+    
+    public OperandInterface getRight ()
+    {
+        return right;
+    }
+    
+    public ExprOpEnum getOperator ()
+    {
+        return operator;
+    }
+    
     @Override
     public Graph toGraph ()
     {
@@ -43,9 +61,14 @@ public class ExprNode implements OperandInterface {
     }
     
     @Override
-    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
     {
-        return visitor.visit(this, ctx);
+        return null; // this doesnt get visited by this visitor. //todo fix interfaces
+    }
+    @Override
+    public int accept (NumberExpressionVisitor visitor, SymbolTable symbolTable) throws IllegalCompilerAction
+    {
+        return visitor.visit(this, symbolTable);
     }
 
 }

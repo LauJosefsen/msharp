@@ -95,7 +95,7 @@ public class MainWindowController extends Handler {
         compOptions.setInputPath(chosenFilePath.getText());
         compOptions.setOutputPath(compOptions.getInputPath().substring(0, compOptions.getInputPath().lastIndexOf(".")) + ".schem");
         Compiler comp = compOptions.buildCompiler();
-        comp.compile();
+        comp.tryCompile();
     }
     
     @Override

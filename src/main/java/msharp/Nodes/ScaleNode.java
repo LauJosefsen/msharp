@@ -27,9 +27,19 @@ public class ScaleNode implements StmtNode{
         this.inScale = inScale;
         this.up = up;
     }
-
+    
+    public List<ToneEnum> getInScale ()
+    {
+        return inScale;
+    }
+    
+    public boolean isUp ()
+    {
+        return up;
+    }
+    
     @Override
-    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }

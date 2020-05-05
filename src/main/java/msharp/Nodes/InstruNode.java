@@ -47,7 +47,7 @@ public class InstruNode implements StmtNode {
     }
     
     @Override
-    public List<FinalNote> accept (AstVisitorInterface visitor, NodeContext ctx)
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }
