@@ -74,10 +74,19 @@ partBody
     | Id                                                                                                                # PbodyId
     | Pause                                                                                                             # PbodyPause
     | Lparen stmt+ Rparen                                                                                               # PbodyParen
-    | partBody TransposeUp numberExpr?                                                                                  # PbodyTransUp
-    | partBody TransposeDown numberExpr?                                                                                # PbodyTransDown
-    | partBody And partBody                                                                                             # PbodyAnd
-    | partBody Repeat numberExpr                                                                                        # PbodySingleLRepeat
+    | partBody partAfter                                                                                                # PbodyOperators
+    ;
+    //| partBody TransposeUp numberExpr?                                                                                  # PbodyTransUp
+    //| partBody TransposeDown numberExpr?                                                                                # PbodyTransDown
+  //  | partBody And partBody                                                                                             # PbodyAnd
+//    | partBody Repeat numberExpr                                                                                        # PbodySingleLRepeat
+partAfter
+    : {_input.LA(1) == Tone && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeUp numberExpr           # PbodyTransUp
+    | TransposeUp                                                                                                       # PbodyTransUp
+    | {_input.LA(1) == Tone && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeDown numberExpr         # PbodyTransDown
+    | TransposeDown                                                                                                     # PbodyTransDown
+    | And partBody                                                                                                      # PbodyAnd
+    | Repeat numberExpr                                                                                                 # PbodySingleLRepeat
     ;
 
 numberExpr
