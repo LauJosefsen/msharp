@@ -1,5 +1,6 @@
 package msharp;
 
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -15,7 +16,7 @@ import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.prefs.Preferences;
 
-public class MainWindowController extends Handler {
+public class MainWindowController {
     
     
     private CompilerBuilder compOptions;
@@ -36,9 +37,8 @@ public class MainWindowController extends Handler {
     @FXML
     public TextField chosenOutputPath;
     
-    
     @FXML
-    public ListView<String> log;
+    public ProgressIndicator spinner;
     
     public void ChooseInputFileButtonAction (ActionEvent e)
     {
@@ -107,38 +107,6 @@ public class MainWindowController extends Handler {
         compOptions.setGenerateAst(prefs.getBoolean(prefGenerateAst,false));
         compOptions.setTurnAroundLength(prefs.getInt(prefTurnAroundLength, 20));
         compOptions.setFillerBlock(prefs.get(prefFillerBlock,"minecraft:stone"));
-        
-        log.setCellFactory(param -> new ListCell<String>() {
-            @Override
-            protected void updateItem (String item, boolean empty)
-            {
-                super.updateItem(item, empty);
-                
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle(null);
-                } else if (item.contains("[FATAL]")) {
-                    
-                    setText(item);
-                    setStyle("-fx-background-color: orange;");
-                    
-                } else if (item.contains("[SUCCESS]")) {
-                    
-                    setText(item);
-                    setStyle("-fx-background-color: lightgreen;");
-                    
-                } else if (item.contains("[WARNING]")) {
-                    
-                    setText(item);
-                    setStyle("-fx-background-color: lightgreen;");
-                    
-                } else {
-                    
-                    setText(item);
-                    setStyle("-fx-background-color: white;");
-                }
-            }
-        });
     }
     public void overrideOutputPathAction(ActionEvent e){
         outputFileButton.setDisable(!overrideOutputPath.isSelected());
@@ -150,8 +118,7 @@ public class MainWindowController extends Handler {
     
     public void CompileButtonAction (ActionEvent e)
     {
-        log.getItems().clear();
-        compOptions.setLoggerHandler(this);
+        //todo clear the log
         compOptions.setInputPath(chosenFilePath.getText());
         compOptions.setOutputPath(chosenOutputPath.getText());
         
@@ -165,27 +132,34 @@ public class MainWindowController extends Handler {
 
         // and compile.
         Compiler comp = compOptions.buildCompiler();
-        comp.tryCompile();
+    
+        // oh, and also we want to disable the compile button, and enable a load icon.
+        compileButton.setDisable(true);
+        spinner.setVisible(true);
+        spinner.setProgress(-1d);
         
-        // todo make this async. Will throw an error, because it will try to log to JavaFx which is not happy when performing changes from another thread.
-        // todo should also remove the logger handler from this class... which is needed for aforementioned.
-        // Because compiling, especially when generating the AST can take some time, and we meanwhile want the program to not freeze, we want to run this in another thread.
-        // the double colon operator creates a reference to the methods.  https://www.geeksforgeeks.org/double-colon-operator-in-java/
-        // new Thread (comp::tryCompile).start();
+
+        // Because compiling, especially when generating the AST-svg can take some time, and we meanwhile want the program to not freeze, we want to run this in another thread.
+        Task<Void> task = new Task<Void>(){
+    
+            @Override
+            protected Void call () throws Exception
+            {
+                comp.tryCompile();
+                return null;
+            }
+        };
+        
+        task.setOnSucceeded(event ->{
+            spinner.setVisible(false);
+            compileButton.setDisable(false);
+        });
+        
+        Thread thread =  new Thread (task);
+        thread.start();
     }
     
-    @Override
-    public void publish (LogRecord logRecord)
-    {
-        String pattern = " HH:mm:ss";
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        String date = simpleDateFormat.format(new Date(logRecord.getMillis()));
-        String sb = date +
-                ": " +
-                logRecord.getMessage();
-        log.getItems().add(sb);
-        log.scrollTo(log.getItems().size() - 1);
-    }
+    
     private void setInputPath(String inputPath){
         chosenFilePath.setText(inputPath);
         if(!overrideOutputPath.isSelected()) {
@@ -193,19 +167,6 @@ public class MainWindowController extends Handler {
                 chosenOutputPath.setText(""); // user haven't selected a file for some reason. We cant really handle that here.
             chosenOutputPath.setText(inputPath.substring(0, inputPath.lastIndexOf(".")) + ".schem");
         }
-    }
-    
-    @Override
-    public void flush ()
-    {
-        log.getItems().removeAll();
-        
-    }
-    
-    @Override
-    public void close () throws SecurityException
-    {
-        // o,O
     }
     
     public void openAdvancedOptions (ActionEvent e)

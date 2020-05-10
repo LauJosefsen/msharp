@@ -9,13 +9,11 @@ public class CompilerBuilder {
     private String outputPath;
     private int turnAroundLength = 20;
     private boolean generateAst = false;
-    private boolean shortenRedstone = false;
     private String fillerBlock = "minecraft:stone";
-    private Handler loggerHandler;
 
     public Compiler buildCompiler ()
     {
-        return new Compiler(inputPath, outputPath, turnAroundLength, generateAst, shortenRedstone, fillerBlock, loggerHandler);
+        return new Compiler(inputPath, outputPath, turnAroundLength, generateAst,  fillerBlock);
     }
 
     public String getInputPath ()
@@ -58,16 +56,6 @@ public class CompilerBuilder {
         this.generateAst = generateAst;
     }
 
-    public boolean isShortenRedstone ()
-    {
-        return shortenRedstone;
-    }
-
-    public void setShortenRedstone (boolean shortenRedstone)
-    {
-        this.shortenRedstone = shortenRedstone;
-    }
-
     public String getFillerBlock ()
     {
         return fillerBlock;
@@ -76,16 +64,6 @@ public class CompilerBuilder {
     public void setFillerBlock (String fillerBlock)
     {
         this.fillerBlock = fillerBlock;
-    }
-
-    public Handler getLoggerHandler ()
-    {
-        return loggerHandler;
-    }
-
-    public void setLoggerHandler (Handler loggerHandler)
-    {
-        this.loggerHandler = loggerHandler;
     }
 
 

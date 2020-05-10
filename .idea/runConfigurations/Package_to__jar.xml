@@ -11,8 +11,8 @@
           <option name="goals">
             <list>
               <option value="clean" />
-              <option value="install" />
-              <option value="package" />
+              <option value="compile" />
+              <option value="assembly:single" />
             </list>
           </option>
           <option name="pomFileName" />

@@ -22,7 +22,8 @@ public class Msharp extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("MainWindow.fxml")));
         stage.getIcons().add(new Image(this.getClass().getResourceAsStream( "/icon.png" )));
         stage.setTitle("MSharp Compiler");
-        stage.setScene(new Scene(root));
+        Scene scene =  new Scene(root);
+        stage.setScene(scene);
         stage.show();
     }
 }

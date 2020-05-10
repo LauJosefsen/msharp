@@ -33,25 +33,18 @@ public class Compiler {
     private final int turnAroundLength;
     private final boolean generateAstAsSvg;
     private final String fillerBlock;
-    private final boolean shortenRedstone;
     
     Logger log = LogManager.getLogManager().getLogger("");
     CustomAntlrErrorListener antlrErrorListener = new CustomAntlrErrorListener(log);
     
     
-    public Compiler (String inputPath, String outputPath, int turnAroundLength, boolean generateAstPdf, boolean shortenRedstone, String fillerBlock, Handler loggerHandler)
+    public Compiler (String inputPath, String outputPath, int turnAroundLength, boolean generateAstPdf, String fillerBlock)
     {
         this.inputPath = inputPath;
         this.outputPath = outputPath;
         this.turnAroundLength = turnAroundLength;
         this.generateAstAsSvg = generateAstPdf;
-        this.shortenRedstone = shortenRedstone;
         this.fillerBlock = fillerBlock;
-        
-        
-        // we remove the handler first, to ensure we dont add it twice.
-        log.removeHandler(loggerHandler);
-        log.addHandler(loggerHandler);
     }
     
     public void tryCompile(){
