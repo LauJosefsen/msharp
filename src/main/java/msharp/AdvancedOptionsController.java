@@ -17,10 +17,19 @@ import java.io.IOException;
 import java.util.function.UnaryOperator;
 
 public class AdvancedOptionsController {
-    CompilerBuilder compOptions = new CompilerBuilder();
+    public void setCompOptions (CompilerBuilder compOptions)
+    {
+        this.compOptions = compOptions;
+        astPdf.setSelected(compOptions.isGenerateAst());
+        turnAroundLength.setText(String.valueOf(compOptions.getTurnAroundLength()));
+        fillerBlock.setText(compOptions.getFillerBlock());
+    }
+    
+    CompilerBuilder compOptions;
+    
+
     
     public CheckBox astPdf;
-    public CheckBox shortenRedstone;
     public TextField turnAroundLength;
     public TextField fillerBlock;
     
@@ -42,12 +51,12 @@ public class AdvancedOptionsController {
         turnAroundLength.setTextFormatter(textFormatter);
     }
     
-    public AdvancedOptionsController showStage (Window window)
+    public static AdvancedOptionsController showStage (Window window, CompilerBuilder compOptions)
     {
         Parent root = null;
         FXMLLoader loader = null;
         try {
-            loader = new FXMLLoader(getClass().getClassLoader().getResource("AdvancedOptions.fxml"));
+            loader = new FXMLLoader(AdvancedOptionsController.class.getClassLoader().getResource("AdvancedOptions.fxml"));
             root = loader.load();//FXMLLoader.load(getClass().getClassLoader().getResource("AdvancedOptions.fxml"));
         } catch (IOException ioException) {
             ioException.printStackTrace(); //todo fix this
@@ -60,15 +69,12 @@ public class AdvancedOptionsController {
         dialog.setScene(new Scene(root));
         dialog.initOwner(window);
         
+        ((AdvancedOptionsController) loader.getController()).setCompOptions(compOptions);
+        
         
         dialog.showAndWait();
         
         return loader.getController();
-    }
-    
-    public CompilerBuilder getCompOptions ()
-    {
-        return compOptions;
     }
     
     public void saveOptionsAction (ActionEvent e)
@@ -76,11 +82,9 @@ public class AdvancedOptionsController {
         
         compOptions.setFillerBlock(fillerBlock.getText());
         compOptions.setTurnAroundLength(Integer.parseInt(turnAroundLength.getText()));
-        compOptions.setShortenRedstone(shortenRedstone.isSelected());
         compOptions.setGenerateAst(astPdf.isSelected());
         
         Stage stage = (Stage) ((Button) e.getSource()).getScene().getWindow();
-        // do what you have to do
         stage.close();
     }
 }

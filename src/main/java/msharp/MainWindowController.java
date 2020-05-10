@@ -12,7 +12,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.prefs.Preferences;
 
@@ -94,8 +93,15 @@ public class MainWindowController extends Handler {
         
         chosenFilePath.setText(prefs.get(prefInputPath,""));
         overrideOutputPath.setSelected(prefs.getBoolean(prefOverrideOutputPath,false));
-        if(overrideOutputPath.isSelected())
+        if(overrideOutputPath.isSelected()){
             chosenOutputPath.setText(prefs.get(prefOutputPath,""));
+        }
+        else{
+            setInputPath(chosenFilePath.getText()); // resets the disabled output text field to a proper value.
+        }
+        // dependent on the preferences, enable or disable output path.
+        outputFileButton.setDisable(!overrideOutputPath.isSelected());
+        chosenOutputPath.setDisable(!overrideOutputPath.isSelected());
         
         // comp options
         compOptions.setGenerateAst(prefs.getBoolean(prefGenerateAst,false));
@@ -204,10 +210,6 @@ public class MainWindowController extends Handler {
     
     public void openAdvancedOptions (ActionEvent e)
     {
-        AdvancedOptionsController advancedOptions = new AdvancedOptionsController();
-        advancedOptions = advancedOptions.showStage(((Node) e.getSource()).getScene().getWindow());
-        compOptions = advancedOptions.getCompOptions();
-        
-        
+        AdvancedOptionsController.showStage(((Node) e.getSource()).getScene().getWindow(),compOptions);
     }
 }

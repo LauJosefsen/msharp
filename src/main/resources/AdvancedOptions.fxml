@@ -6,7 +6,6 @@
 <AnchorPane prefHeight="185.0" prefWidth="375.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="msharp.AdvancedOptionsController">
    <children>
       <CheckBox fx:id="astPdf" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Genereate AST as PDF" />
-      <CheckBox fx:id="shortenRedstone" layoutX="14.0" layoutY="40.0" mnemonicParsing="false" text="Try to shorten the redstone path by usign delay on repeaters." />
       <AnchorPane layoutX="14.0" layoutY="128.0">
          <children>
             <TextField fx:id="fillerBlock" layoutY="20.0" prefHeight="25.0" prefWidth="217.0" text="minecraft:stone" />
