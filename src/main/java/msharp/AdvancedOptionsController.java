@@ -71,6 +71,7 @@ public class AdvancedOptionsController {
     {
         
         compOptions.setFillerBlock(fillerBlock.getText());
+        //todo what is number is bigger/smaller than int32?
         compOptions.setTurnAroundLength(Integer.parseInt(turnAroundLength.getText()));
         compOptions.setGenerateAst(astPdf.isSelected());
         

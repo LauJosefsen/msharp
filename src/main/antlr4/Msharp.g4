@@ -10,6 +10,7 @@ prog
     ;
 
 partDcl
+// todo id = id is either a part decl or number decl
     : Id Assign stmt+ Nl                        # PartDclSingleLine
     | 'part' Id Nl multStmt+ Nl 'end part' Nl   # PartDclMultiLine
     ;

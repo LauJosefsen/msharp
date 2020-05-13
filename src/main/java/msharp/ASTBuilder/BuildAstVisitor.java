@@ -16,10 +16,12 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     {
         ArithmeticExpressionNodeInterface octave = null;
         if (ctx.Digs() != null)
+            //todo what is number is bigger/smaller than int32?
             octave = new NumberNode(Integer.parseInt(ctx.Digs().getText()));
         if (ctx.numberExpr() != null) {
             octave = (ArithmeticExpressionNodeInterface) visit(ctx.numberExpr());
         }
+        //todo use scale
         return new NoteNode(ctx.Tone().getText().charAt(0), octave);
     }
     
@@ -231,6 +233,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
         
         //either digs or number expr
         if (ctx.Digs() != null)
+            //todo what is number is bigger/smaller than int32?
             return new NumberNode(Integer.parseInt(ctx.Digs().getText()));
         return visit(ctx.numberExpr());
     }
@@ -328,6 +331,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     @Override
     public NodeInterface visitFactorDigs (MsharpParser.FactorDigsContext ctx)
     {
+        //todo what is number is bigger/smaller than int32?
         return new NumberNode(Integer.parseInt(ctx.Digs().getText()));
     }
     
