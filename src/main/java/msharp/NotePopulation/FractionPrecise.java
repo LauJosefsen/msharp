@@ -55,6 +55,31 @@ public class FractionPrecise implements Comparable<FractionPrecise>, Cloneable {
         return fractionValue.doubleValue() / 1000;
     }
     
+    public FractionPrecise addTHIS_IS_THE_OLD_ONE (FractionPrecise fraction)
+    {
+        // hvis den nye fractions denominator går op i vores fractions denominator, så bare tilføj numerator (men skaleret)
+        // ellers skal vi ændre på denominator.
+        
+        // Example:
+        // 1/4 + 1/3
+        // De kan ikke bare ligges sammen
+        // 3/12 + 1/3
+        // bliver til (3 fra this.numerator)+(1 fra denominator)*(12/4) (denominators divideret)
+        // = 7/12
+        
+        BigInteger numerator = this.numerator, denominator = this.denominator;
+        if (!denominator.mod(fraction.denominator).equals(BigInteger.ZERO)) {    // If they are
+            denominator = denominator.multiply(fraction.denominator);
+            numerator = numerator.multiply(fraction.denominator);
+        }
+        
+        numerator = numerator.add(
+                fraction.numerator.multiply(
+                        denominator.divide(fraction.denominator)));
+        
+        return (new FractionPrecise(numerator, denominator)).abbreviate();
+    }
+    
     public FractionPrecise add (FractionPrecise fraction)
     {
         // hvis den nye fractions denominator går op i vores fractions denominator, så bare tilføj numerator (men skaleret)
