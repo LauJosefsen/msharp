@@ -93,21 +93,6 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
                 (TempoChangeNode) visit(ctx.tempoOp()));
     }
     
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // MultStmt
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    @Override
-    public NodeInterface visitMultStmtStmt (MsharpParser.MultStmtStmtContext ctx)
-    {
-        return visit(ctx.stmt());
-    }
-    
-    //    @Override
-    //    public Node visitMultStmtNL(cfgParser.MultStmtNLContext ctx){
-    //        return null;
-    //    }
-    
     @Override
     public NodeInterface visitMultStmtMultRepeat (MsharpParser.MultStmtMultRepeatContext ctx)
     {
@@ -118,7 +103,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     public NodeInterface visitMultilineRepeat (MsharpParser.MultilineRepeatContext ctx)
     {
         StmtList stmts = new StmtList();
-        for (ParseTree parseTree : ctx.multStmtOrEveryStmt()) {       // For-each
+        for (ParseTree parseTree : ctx.stmtOrEveryStmt()) {       // For-each
             stmts.add((StmtNode) visit(parseTree));
         }
         
@@ -129,7 +114,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     public NodeInterface visitEveryStmt (MsharpParser.EveryStmtContext ctx)
     {
         StmtList trueCase = new StmtList();
-        for (ParseTree parseTree : ctx.multStmtOrEveryStmt()) {
+        for (ParseTree parseTree : ctx.stmtOrEveryStmt()) {
             trueCase.add((StmtNode) visit(parseTree));
         }
         
@@ -145,7 +130,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     {
         
         StmtList stmts = new StmtList();
-        for (ParseTree parseTree : ctx.multStmtOrEveryStmt()) {       // For-each
+        for (ParseTree parseTree : ctx.stmtOrEveryStmt()) {       // For-each
             stmts.add((StmtNode) visit(parseTree));
         }
         
@@ -160,7 +145,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     @Override
     public NodeInterface visitMultStmtOrEveryStmtMultStmt (MsharpParser.MultStmtOrEveryStmtMultStmtContext ctx)
     {
-        return visit(ctx.multStmt());
+        return visit(ctx.stmt());
     }
     
     @Override
@@ -168,10 +153,6 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     {
         return visit(ctx.everyStmt());
     }
-    
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // declarations and main
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     @Override
     public NodeInterface visitProg (MsharpParser.ProgContext ctx)
@@ -190,36 +171,11 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     }
     
     @Override
-    public NodeInterface visitPartDclSingleLine (MsharpParser.PartDclSingleLineContext ctx)
-    {
-        StmtList stmts = new StmtList();
-        
-        for (ParseTree pt : ctx.stmt()) {
-            stmts.add((StmtNode) visit(pt));
-        }
-        
-        return new PartDclNode(ctx.Id().getText(), stmts);
-    }
-    
-    @Override
-    public NodeInterface visitPartDclMultiLine (MsharpParser.PartDclMultiLineContext ctx)
-    {
-        StmtList stmts = new StmtList();
-        
-        
-        for (ParseTree pt : ctx.multStmt()) {
-            stmts.add((StmtNode) visit(pt));
-        }
-        
-        return new PartDclNode(ctx.Id().getText(), stmts);
-    }
-    
-    @Override
     public NodeInterface visitPlayDcl (MsharpParser.PlayDclContext ctx)
     {
         StmtList stmts = new StmtList();
         
-        for (ParseTree pt : ctx.multStmt()) {
+        for (ParseTree pt : ctx.stmt()) {
             stmts.add((StmtNode) visit(pt));
         }
         
@@ -393,6 +349,19 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
         
         
         return new TransposeNode((ArithmeticExpressionNodeInterface) visit(ctx.numberExpr()), null);
+    }
+    
+    @Override
+    public NodeInterface visitPartDcl (MsharpParser.PartDclContext ctx)
+    {
+        StmtList stmts = new StmtList();
+    
+    
+        for (ParseTree pt : ctx.stmt()) {
+            stmts.add((StmtNode) visit(pt));
+        }
+    
+        return new PartDclNode(ctx.Id().getText(), stmts);
     }
 }
 

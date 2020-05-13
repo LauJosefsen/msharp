@@ -9,18 +9,19 @@ prog
     : (partDcl | Nl | assignNumVariable)* playDcl
     ;
 
-partDcl
-// todo id = id is either a part decl or number decl
-    : Id Assign stmt+ Nl                        # PartDclSingleLine
-    | 'part' Id Nl multStmt+ Nl 'end part' Nl   # PartDclMultiLine
+partDcl:
+     'part' Id Nl stmt+ Nl 'end part' Nl
     ;
 playDcl
-    : 'play' Nl multStmt+  Nl 'end play'
+    : 'play' Nl stmt+  Nl 'end play'
     ;
 
 stmt
     : partBody              # StmtPBody
     | ops                   # StmtOps
+    | Nl                    # MultStmtNL
+    | multilineRepeat       # MultStmtMultRepeat    // repeat x times ... end repeat
+    | assignNumVariable     # MultStmtAssignNum
     ;
 
 ops
@@ -41,31 +42,24 @@ digsOrNumberExprInParenthesis
     | Lparen numberExpr Rparen
     ;
 
-multStmt
-    : stmt                  # MultStmtStmt
-    | Nl                    # MultStmtNL
-    | multilineRepeat       # MultStmtMultRepeat    // repeat x times ... end repeat
-    | assignNumVariable     # MultStmtAssignNum
-    ;
-
 multilineRepeat
-    : 'repeat' numberExpr 'times' Nl multStmtOrEveryStmt+ 'end repeat'
+    : 'repeat' numberExpr 'times' Nl stmtOrEveryStmt+ 'end repeat'
     ;
 
 // Question: Why do we need this as a parser rule and not just use (multStmt | everyStmt)+ in multilineRepeat.
 // Answer: Antlr generates the context so that we, using that proposed method gets TWO arrays of stmts, one being
 //         the multStmt array and one being everyStmt array. Having two arrays, we cant determine the order of the
 //         different statements. By using this parser rule, we only get one, sorted array.
-multStmtOrEveryStmt
-    : multStmt              # MultStmtOrEveryStmtMultStmt
+stmtOrEveryStmt
+    : stmt              # MultStmtOrEveryStmtMultStmt
     | everyStmt             # MultStmtOrEveryStmtEveryStmt
     ;
 
 everyStmt
-    : 'every' numberExpr 'times' Nl multStmtOrEveryStmt+ 'end every' Nl+ elseStmt?
+    : 'every' numberExpr 'times' Nl stmtOrEveryStmt+ 'end every' Nl+ elseStmt?
     ;
 elseStmt
-    : 'else' Nl multStmtOrEveryStmt+ 'end else'
+    : 'else' Nl stmtOrEveryStmt+ 'end else'
     ;
 
 partBody
