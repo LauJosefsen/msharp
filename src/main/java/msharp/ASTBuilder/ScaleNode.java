@@ -9,12 +9,13 @@ import msharp.NotePopulation.FinalNote;
 import msharp.NotePopulation.NodeContext;
 import msharp.NotePopulation.ToneEnum;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
-import static guru.nidi.graphviz.model.Factory.graph;
-import static guru.nidi.graphviz.model.Factory.node;
+import static guru.nidi.graphviz.model.Factory.*;
 
 public class ScaleNode implements StmtNode{
     private final List<ToneEnum> inScale;
@@ -25,6 +26,12 @@ public class ScaleNode implements StmtNode{
         this.inScale = inScale;
         this.up = up;
     }
+    // copy constructor
+    public ScaleNode(ScaleNode toBeCopied){
+        this.inScale = new ArrayList<>(toBeCopied.getInScale());
+        this.up = toBeCopied.up;
+    }
+    
     
     public List<ToneEnum> getInScale ()
     {
@@ -53,5 +60,21 @@ public class ScaleNode implements StmtNode{
         g = g.with(scaleNode);
     
         return g;
+    }
+    
+    @Override
+    public boolean equals (Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ScaleNode scaleNode = (ScaleNode) o;
+        return up == scaleNode.up &&
+                Objects.equals(inScale, scaleNode.inScale);
+    }
+    
+    @Override
+    public int hashCode ()
+    {
+        return Objects.hash(inScale, up);
     }
 }

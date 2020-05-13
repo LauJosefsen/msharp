@@ -55,7 +55,7 @@ public class ExprNode implements ArithmeticExpressionNodeInterface {
         return g;
     }
     @Override
-    public int accept (ArithmeticExpressionVisitor visitor, SymbolTable symbolTable) throws IllegalCompilerAction
+    public int accept (ArithmeticExpressionVisitor visitor, SymbolTable symbolTable)
     {
         return visitor.visit(this, symbolTable);
     }

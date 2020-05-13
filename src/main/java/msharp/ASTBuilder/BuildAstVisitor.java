@@ -2,6 +2,7 @@ package msharp.ASTBuilder;
 
 import antlr4.MsharpBaseVisitor;
 import antlr4.MsharpParser;
+import msharp.Compiler.IllegalCompilerAction;
 import msharp.NotePopulation.ToneEnum;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -15,13 +16,17 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     public StmtNode visitPbodyTone (MsharpParser.PbodyToneContext ctx)
     {
         ArithmeticExpressionNodeInterface octave = null;
-        if (ctx.Digs() != null)
-            //todo what is number is bigger/smaller than int32?
-            octave = new NumberNode(Integer.parseInt(ctx.Digs().getText()));
+        if (ctx.Digs() != null) {
+            try {
+                octave = new NumberNode(Integer.parseInt(ctx.Digs().getText()));
+            } catch (NumberFormatException e){
+                throw new IllegalCompilerAction(e.toString());
+            }
+        }
         if (ctx.numberExpr() != null) {
             octave = (ArithmeticExpressionNodeInterface) visit(ctx.numberExpr());
         }
-        //todo use scale
+        
         return new NoteNode(ctx.Tone().getText().charAt(0), octave);
     }
     
@@ -233,8 +238,11 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
         
         //either digs or number expr
         if (ctx.Digs() != null)
-            //todo what is number is bigger/smaller than int32?
-            return new NumberNode(Integer.parseInt(ctx.Digs().getText()));
+            try {
+                return new NumberNode(Integer.parseInt(ctx.Digs().getText()));
+            } catch (NumberFormatException e) {
+                throw new IllegalCompilerAction(e.toString());
+            }
         return visit(ctx.numberExpr());
     }
     
@@ -331,8 +339,12 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     @Override
     public NodeInterface visitFactorDigs (MsharpParser.FactorDigsContext ctx)
     {
-        //todo what is number is bigger/smaller than int32?
-        return new NumberNode(Integer.parseInt(ctx.Digs().getText()));
+        try {
+            return new NumberNode(Integer.parseInt(ctx.Digs().getText()));
+        }
+        catch(NumberFormatException e){
+            throw new IllegalCompilerAction(e.toString());
+        }
     }
     
     @Override

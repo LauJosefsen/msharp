@@ -7,33 +7,27 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Stack;
 
-public class NodeContext implements Cloneable {
+public class NodeContext  {
     public int octave = 0;
     public Instrument instrument = Instrument.HARP;
     public Bpm bpm = new Bpm(150, new Fraction(1, 4));
     public Fraction tempo = new Fraction(1, 4);
     public FractionPrecise timing = new FractionPrecise(0, 1);
     public ScaleNode scale = new ScaleNode(new ArrayList<>(),false);
-
     public Stack<IntByReference> repeatIterationStack = new Stack<>();
     
+    public NodeContext(){}
 
-
-    public NodeContext clone ()
+    // copy constructor
+    public NodeContext(NodeContext toBeCloned)
     {
-        NodeContext nodeContext = null;
-        try {
-            nodeContext = (NodeContext) super.clone();
-
-            //literals will be copied, but bpm, tempo and fraction needs to be copied.
-            nodeContext.tempo = (Fraction) tempo.clone();
-            nodeContext.bpm = (Bpm) bpm.clone();
-            nodeContext.timing = (FractionPrecise) timing.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace(); //should never happen.
-        }
-
-        return nodeContext;
+            octave = toBeCloned.octave;
+            instrument = toBeCloned.instrument;
+            bpm = new Bpm(toBeCloned.bpm);
+            tempo = new Fraction(toBeCloned.tempo);
+            timing = new FractionPrecise(toBeCloned.timing);
+            scale = new ScaleNode(toBeCloned.scale);
+            repeatIterationStack = toBeCloned.repeatIterationStack; // doesnt need to be cloned.
     }
 
     @Override
@@ -47,12 +41,13 @@ public class NodeContext implements Cloneable {
                 Objects.equals(bpm, that.bpm) &&
                 Objects.equals(tempo, that.tempo) &&
                 Objects.equals(timing, that.timing) &&
-                Objects.equals(repeatIterationStack, that.repeatIterationStack);
+                Objects.equals(repeatIterationStack, that.repeatIterationStack) &&
+                Objects.equals(scale, that.scale);
     }
 
     @Override
     public int hashCode ()
     {
-        return Objects.hash(octave, instrument, bpm, tempo, timing, repeatIterationStack);
+        return Objects.hash(octave, instrument, bpm, tempo, timing, repeatIterationStack, scale);
     }
 }

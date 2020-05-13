@@ -8,7 +8,7 @@ import msharp.Compiler.Symbol;
 import msharp.Compiler.SymbolTable;
 
 public class ArithmeticExpressionVisitor {
-    public int visit(ExprNode exprNode, SymbolTable symbolTable) throws IllegalCompilerAction
+    public int visit(ExprNode exprNode, SymbolTable symbolTable)
     {
         int left = exprNode.getLeft().accept(this,symbolTable);
         int right = exprNode.getRight().accept(this,symbolTable);
@@ -24,7 +24,7 @@ public class ArithmeticExpressionVisitor {
     public int visit(NumberNode numberNode, SymbolTable symbolTable){
         return numberNode.getN();
     }
-    public int visit(IdNode idNode, SymbolTable symbolTable) throws IllegalCompilerAction
+    public int visit(IdNode idNode, SymbolTable symbolTable)
     {
         // type check and check scope
         Symbol symbol = symbolTable.retrieveSymbol(idNode.getId());

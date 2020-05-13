@@ -61,7 +61,7 @@ public class TransposeNode implements StmtNode, PartBodyOperatorInterface {
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }

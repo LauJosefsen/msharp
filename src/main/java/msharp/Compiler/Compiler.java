@@ -51,18 +51,18 @@ public class Compiler {
             compile();
         }
         catch(IllegalCompilerAction e){
-            log.info("[FATAL] " + e.getError());
+            log.info("[HALT] " + e.getError());
         }
     }
     
-    public void compile()  throws IllegalCompilerAction
+    public void compile()
     {
         long startTime = System.nanoTime();
         String str;
         try {
             str = new String(Files.readAllBytes(Paths.get(inputPath)));
         } catch (IOException e) {
-            throw new IllegalCompilerAction("[FATAL] " + e.toString());
+            throw new IllegalCompilerAction(e.toString());
         }
         
         // create a CharStream that reads from standard input
@@ -86,7 +86,7 @@ public class Compiler {
         log.info("Made parse tree");
         
         if(antlrErrorListener.isFoundError())
-            throw new IllegalCompilerAction("[FATAL] Found one or more syntax errors while parsing. See above.");
+            throw new IllegalCompilerAction("Found one or more syntax errors while parsing. See above.");
         
         BuildAstVisitor visitor = new BuildAstVisitor();
         NodeInterface ast = visitor.visit(tree);

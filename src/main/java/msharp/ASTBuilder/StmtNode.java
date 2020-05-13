@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface StmtNode extends NodeInterface {
     // every stmt should be able to be visited by our ast-builder.
-    List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction;
+    List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) ;
 }

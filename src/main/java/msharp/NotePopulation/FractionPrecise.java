@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Objects;
 
-public class FractionPrecise implements Comparable<FractionPrecise>, Cloneable {
+public class FractionPrecise implements Comparable<FractionPrecise> {
     
     public final BigInteger numerator;
     public final BigInteger denominator;
@@ -33,6 +33,11 @@ public class FractionPrecise implements Comparable<FractionPrecise>, Cloneable {
         // this is basically dividing by fraction.
         this.numerator = BigInteger.valueOf(numerator.numerator).multiply(BigInteger.valueOf(denominator.denominator));
         this.denominator = BigInteger.valueOf(numerator.denominator).multiply(BigInteger.valueOf(denominator.numerator));
+    }
+    // copy constructor
+    public FractionPrecise(FractionPrecise fraction){
+        this.numerator = fraction.getNumerator();
+        this.denominator = fraction.getDenominator();
     }
     
     public BigInteger getNumerator ()
@@ -86,45 +91,10 @@ public class FractionPrecise implements Comparable<FractionPrecise>, Cloneable {
         return new FractionPrecise(numerator.divide(gcd), denominator.divide(gcd));
     }
     
-    //        @Override
-    //        public boolean equals (Object o)
-    //        {
-    //            if (this == o) return true;
-    //            if (o == null || getClass() != o.getClass()) return false;
-    //            msharp.NotePopulation.Fraction fraction = (msharp.NotePopulation.Fraction) o;
-    //
-    //            // since a fraction can be equal with a different denominator, we first check that the biggest denominator is a integer scalar of the smallest denominator
-    //            if (Math.max(Math.abs(this.denominator), Math.abs(fraction.denominator)) %
-    //                    Math.min(Math.abs(this.denominator), Math.abs(fraction.denominator)) != 0) {
-    //                return false;
-    //                // is not a integer scalar, and thus must be different fractions.
-    //            }
-    //
-    //            // if the max numerator is equal to the min numerator * scalar the fractions are equal
-    //            long scalar =
-    //                    Math.max(Math.abs(this.denominator), Math.abs(fraction.denominator)) /
-    //                            Math.min(Math.abs(this.denominator), Math.abs(fraction.denominator));
-    //            return Math.min(Math.abs(this.numerator), Math.abs(fraction.numerator)) * scalar ==
-    //                    Math.max(Math.abs(this.numerator), Math.abs(fraction.numerator));
-    //        }
-    
-    //        @Override
-    //        public int hashCode ()
-    //        {
-    //            return Objects.hash(numerator, denominator);
-    //        }
-    
     @Override
     public int compareTo (FractionPrecise fraction)
     {
         return Double.compare(this.toDouble(), fraction.toDouble());
-    }
-    
-    @Override
-    protected Object clone () throws CloneNotSupportedException
-    {
-        // todo test if denominator/numerator gets cloned or only references gets cloned.
-        return super.clone();
     }
     
     private static BigInteger gcd (BigInteger a, BigInteger b)

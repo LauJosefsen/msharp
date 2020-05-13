@@ -1,5 +1,7 @@
 package msharp;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -49,6 +51,13 @@ public class AdvancedOptionsController {
         };
         TextFormatter<String> textFormatter = new TextFormatter<>(filter);
         turnAroundLength.setTextFormatter(textFormatter);
+    
+        // make sure length doesnt exceed 5 decimals.
+        turnAroundLength.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (turnAroundLength.getText().length() > 5) {
+                turnAroundLength.setText(turnAroundLength.getText().substring(0, 5));
+            }
+        });
     }
     
     public static void showStage (Window window, CompilerBuilder compOptions) throws IOException
@@ -71,7 +80,6 @@ public class AdvancedOptionsController {
     {
         
         compOptions.setFillerBlock(fillerBlock.getText());
-        //todo what is number is bigger/smaller than int32?
         compOptions.setTurnAroundLength(Integer.parseInt(turnAroundLength.getText()));
         compOptions.setGenerateAst(astPdf.isSelected());
         

@@ -49,13 +49,13 @@ public class IdNode implements StmtNode, ArithmeticExpressionNodeInterface {
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }
     
     @Override
-    public int accept (ArithmeticExpressionVisitor visitor, SymbolTable symbolTable) throws IllegalCompilerAction
+    public int accept (ArithmeticExpressionVisitor visitor, SymbolTable symbolTable)
     {
         return visitor.visit(this, symbolTable);
     }

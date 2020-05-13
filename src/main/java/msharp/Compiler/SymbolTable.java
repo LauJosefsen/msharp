@@ -50,7 +50,7 @@ public class SymbolTable {
     }
     
     
-    public SymbolTable (ProgNode ast) throws IllegalCompilerAction
+    public SymbolTable (ProgNode ast)
     {
         Scope scope = new Scope();
         

@@ -57,7 +57,7 @@ public class AndNode implements StmtNode, PartBodyOperatorInterface {
         return g;
     }
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }
