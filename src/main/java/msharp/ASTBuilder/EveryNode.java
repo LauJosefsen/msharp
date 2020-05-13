@@ -19,7 +19,7 @@ import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
 public class EveryNode implements StmtNode {
-    public EveryNode (OperandInterface amount, StmtNode trueCase, StmtNode elseCase)
+    public EveryNode (ArithmeticExpressionNodeInterface amount, StmtNode trueCase, StmtNode elseCase)
     {
         this.amount = amount;
         this.trueCase = trueCase;
@@ -27,11 +27,11 @@ public class EveryNode implements StmtNode {
     }
 
     //something to store condition
-    private final OperandInterface amount;
+    private final ArithmeticExpressionNodeInterface amount;
     private final StmtNode trueCase;
     private final StmtNode elseCase;
 
-    public OperandInterface getAmount ()
+    public ArithmeticExpressionNodeInterface getAmount ()
     {
         return amount;
     }
@@ -72,7 +72,7 @@ public class EveryNode implements StmtNode {
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }

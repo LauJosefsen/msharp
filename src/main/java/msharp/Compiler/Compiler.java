@@ -8,7 +8,7 @@ import msharp.ASTBuilder.BuildAstVisitor;
 import msharp.CustomAntlrErrorListener;
 import msharp.MinecraftClasses.MinecraftFitment;
 import msharp.MinecraftClasses.NoteStructure;
-import msharp.ASTBuilder.Node;
+import msharp.ASTBuilder.NodeInterface;
 import msharp.ASTBuilder.ProgNode;
 import msharp.NotePopulation.BuildNoteListVisitor;
 import msharp.NotePopulation.FinalNote;
@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Handler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -52,17 +51,18 @@ public class Compiler {
             compile();
         }
         catch(IllegalCompilerAction e){
-            log.info("[FATAL] " + e.getError());
+            log.info("[HALT] " + e.getError());
         }
     }
     
-    public void compile()  throws IllegalCompilerAction
+    public void compile()
     {
+        long startTime = System.nanoTime();
         String str;
         try {
             str = new String(Files.readAllBytes(Paths.get(inputPath)));
         } catch (IOException e) {
-            throw new IllegalCompilerAction("[FATAL] " + e.toString());
+            throw new IllegalCompilerAction(e.toString());
         }
         
         // create a CharStream that reads from standard input
@@ -86,10 +86,10 @@ public class Compiler {
         log.info("Made parse tree");
         
         if(antlrErrorListener.isFoundError())
-            throw new IllegalCompilerAction("[FATAL] Found one or more syntax errors while parsing. See above.");
+            throw new IllegalCompilerAction("Found one or more syntax errors while parsing. See above.");
         
         BuildAstVisitor visitor = new BuildAstVisitor();
-        Node ast = visitor.visit(tree);
+        NodeInterface ast = visitor.visit(tree);
         log.info("Made Abstract Syntax Tree");
         
         
@@ -134,7 +134,7 @@ public class Compiler {
 
         minecraftNotes.GenerateSchematic().saveToFile(outputPath);
 
-        log.info("[SUCCESS] Generated output schematic file as " + outputPath);
+        log.info("[SUCCESS] Generated output schematic file as " + outputPath + ". Took "+ Math.round((1.0*System.nanoTime()-startTime)/1e7)/1e2+" seconds.");
         
     }
 }
