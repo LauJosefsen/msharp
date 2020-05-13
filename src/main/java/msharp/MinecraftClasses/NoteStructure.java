@@ -1,35 +1,57 @@
 package msharp.MinecraftClasses;
 
+import msharp.NotePopulation.FinalNote;
+
 import java.util.*;
 
 public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
     
-    private int turnAroundLength = 1;
+    private final int turnAroundLength;
     private static final int heightPrLane = 4;
-    private Block fillerBlock = new Block("minecraft:stone");
+    private final Block fillerBlock;
     private static final Block redstone = new Block("minecraft:redstone_wire");
     
-    public void setTurnAroundLength (int turnAroundLength)
+    private int _lanes = 0;
+    private int _turns = 0;
+    
+    
+    public NoteStructure (List<FinalNote> finalNotes, String fillerBlock, int turnAroundLength)
     {
         this.turnAroundLength = turnAroundLength;
-    }
-    
-    public void setFillerBlock (String fillerBlock)
-    {
         this.fillerBlock = new Block(fillerBlock);
+        
+        double songDuration = finalNotes.get(finalNotes.size() - 1).getTiming().toDouble();
+        long ticks = Math.round(songDuration * 10) + 1;
+        for (int i = 0; i < ticks; i++)
+            this.add(new ArrayList<>());
+        
+        for (FinalNote note : finalNotes) {
+            int tick = (int) Math.round(note.getTiming().toDouble() * 10);
+            this.get(tick).add(note.convertToMinecraftNote());
+        }
+        
     }
     
     public Schematic GenerateSchematic ()
     {
-        Analyze();
+        // lets calculate the lanes and turns
+        for (ArrayList<MinecraftNote> minecraftNotes : this) {
+            if (minecraftNotes.size() > _lanes * 2) _lanes = (int) Math.ceil(minecraftNotes.size() / 2.0);
+        }
+        _turns = (int) Math.ceil((this.size() * 1.0) / turnAroundLength);
+        
+        // based on that, we can create the schematic to hold the output.
         Schematic schem = new Schematic(getWidth(), getMinimumPowerOfTwo(_lanes) * heightPrLane, getLength());
         
+        // we know the amount of lanes, lets build the "starter" (the binary tree of redstone starting the song)
         GenerateStarter(schem, true);
         
+        // we generate the "empty track" which has a lot of locations where a noteblock can be placed to be played at a specific tick.
+        // when we generate the track, we fill a map, that maps from the tick(int) to a list of BlockLocation.
         Map<Integer, List<BlockLocation>> emptyLocations = new HashMap<>();
-        
         GenerateTrack(schem, emptyLocations);
         
+        // we now add the MinecraftNotes to these empty locations.
         int currentTick = 0;
         for (ArrayList<MinecraftNote> minecraftNotes : this) {
             for (MinecraftNote minecraftNote : minecraftNotes) {
@@ -40,16 +62,17 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
             currentTick++;
         }
         
+        // Lets go through the schematic and place the "prober" blocks under the noteblocks. - previous step only placed the noteblocks.
         schem.fixNoteblocksBlockBeneath();
         
         return schem;
     }
     
+    
     private BlockLocation GenerateStarter (Schematic schem, boolean building)
     {
-        
         // lanes need to be combined to start at the same time. This is one method of doing so
-        // Basically we can calculate all the locations where a lane starts, using the lame logic as in GenerateTrack.
+        // Basically we can calculate all the locations where a lane starts, using the same logic as in GenerateTrack.
         // From this we will make a list of all points that need to be collected, sort of a queue.
         // Then we will connect 2 points at a time, and then add the new point to the queue.
         // This should result in a tree like structure.
@@ -62,14 +85,14 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
         // and fill it
         // Since we are going to build this tree from the bottom up, we want to have a 2^n number, so all branches develop evenly.
         // this will probably end up in certain situations where the starter is way bigger than it has to be, but it will always work.
-        // this could of course be improved upon later.
+        // this could of course be improved upon in the future.
         int lanes = getMinimumPowerOfTwo(_lanes);
         
         
         for (int lane = 0; lane < lanes; lane++)
             toBeConnected.add(new BlockLocation(1, lane * heightPrLane + 3, 0));
         
-        while (toBeConnected.size() > 1) {
+        while (toBeConnected.size() >= 3) {
             
             // everytime this is run, at least 2 locations are in the queue.
             BlockLocation p1 = toBeConnected.remove();
@@ -85,13 +108,8 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
                 p2.y--;
                 
                 p1.x++;
-                if (building) {
-                    schem.setBlock(p2, redstone);
-                    schem.setBlock(p2.x, p2.y - 1, p2.z, fillerBlock);
-                    schem.setBlock(p1, redstone);
-                    schem.setBlock(p1.x, p1.y - 1, p1.z, fillerBlock);
-                }
-                
+                placeRedstoneWithFillerBlock(schem, building, p1, p2);
+    
             }
             
             //the 2 points are now an even amount apart.
@@ -102,12 +120,7 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
                 
                 p1.x++;
                 p1.y++;
-                if (building) {
-                    schem.setBlock(p2, redstone);
-                    schem.setBlock(p2.x, p2.y - 1, p2.z, fillerBlock);
-                    schem.setBlock(p1, redstone);
-                    schem.setBlock(p1.x, p1.y - 1, p1.z, fillerBlock);
-                }
+                placeRedstoneWithFillerBlock(schem, building, p1, p2);
                 iterations++;
                 if (iterations > 13) {
                     Map<String, String> meta_data = new HashMap<>();
@@ -123,12 +136,7 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
                     }
                     p2.x++;
                     p1.x++;
-                    if (building) {
-                        schem.setBlock(p2, redstone);
-                        schem.setBlock(p2.x, p2.y - 1, p2.z, fillerBlock);
-                        schem.setBlock(p1, redstone);
-                        schem.setBlock(p1.x, p1.y - 1, p1.z, fillerBlock);
-                    }
+                    placeRedstoneWithFillerBlock(schem, building, p1, p2);
                     iterations = 0;
                 }
             }
@@ -169,8 +177,19 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
         return toBeConnected.remove();
     }
     
+    private void placeRedstoneWithFillerBlock (Schematic schem, boolean building, BlockLocation p1, BlockLocation p2)
+    {
+        if (building) {
+            schem.setBlock(p2, redstone);
+            schem.setBlock(p2.x, p2.y - 1, p2.z, fillerBlock);
+            schem.setBlock(p1, redstone);
+            schem.setBlock(p1.x, p1.y - 1, p1.z, fillerBlock);
+        }
+    }
+    
     private void GenerateTrack (Schematic schem, Map<Integer, List<BlockLocation>> emptyLocations)
     {
+        // todo documentation and prettify this
         // ok, lets start by placing the stone track.
         // xxxxx
         // x
@@ -222,17 +241,6 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
         }
     }
     
-    private int _lanes = 0;
-    private int _turns = 0;
-    
-    
-    private void Analyze ()
-    {
-        for (ArrayList<MinecraftNote> minecraftNotes : this) {
-            if (minecraftNotes.size() > _lanes * 2) _lanes = (int) Math.ceil(minecraftNotes.size() / 2.0);
-        }
-        _turns = (int) Math.ceil((this.size() * 1.0) / turnAroundLength);
-    }
     
     private int getWidth ()
     {
@@ -248,6 +256,7 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
     
     /**
      * This method is supposed to return the lowest number, x, that follows the rules:  x >= input, and x is a power of 2.
+     *
      * @param input - The integer, must be > 0
      * @return - The minimum power of 2 that is >= input.
      */

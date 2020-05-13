@@ -78,7 +78,7 @@ public class Schematic {
             for (int y = 0; y < _height; y++) {
                 for (int z = 0; z < _length; z++) {
                     if (
-                            _blocks[x][y][z].get_blockName().equalsIgnoreCase("minecraft:note_block") &&
+                            _blocks[x][y][z].getBlockName().equalsIgnoreCase("minecraft:note_block") &&
                                     _blocks[x][y][z].get_metadata().containsKey("instrument")
                     ) {
                         Block blockBeneath = Enum.valueOf(Instrument.class,
@@ -86,7 +86,7 @@ public class Schematic {
                         _blocks[x][y - 1][z] = blockBeneath;
                         
                         // if block is sand, set block below to be stone, in order to avoid gravity.
-                        if (blockBeneath.get_blockName().equalsIgnoreCase("minecraft:sand"))
+                        if (blockBeneath.getBlockName().equalsIgnoreCase("minecraft:sand"))
                             _blocks[x][y - 2][z] = new Block("minecraft:stone");
                         
                     }
@@ -107,7 +107,6 @@ public class Schematic {
         List<Byte> block_data = new ArrayList<>();
         
         int blockTypeIndex = 0;
-        int block_data_position = 0;
         
         for (int y = 0; y < _height; y++) {
             for (int z = 0; z < _length; z++) {

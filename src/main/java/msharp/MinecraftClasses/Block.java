@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Block {
-    private String _blockName;
+    private String blockName;
     private Map<String, String> _metadata = new HashMap<>();
     
     
     public Block (String blockName)
     {
-        _blockName = blockName;
+        this.blockName = blockName;
     }
     
     public Block (String blockName, Map<String, String> metadata)
@@ -28,18 +28,18 @@ public class Block {
         }
         if (formattedMetadata.length() > 0) {
             formattedMetadata = new StringBuilder(formattedMetadata.substring(0, formattedMetadata.length() - 1)); // remove last ','
-            return _blockName + '[' + formattedMetadata + ']';
-        } else return _blockName;
+            return blockName + '[' + formattedMetadata + ']';
+        } else return blockName;
     }
     
-    public String get_blockName ()
+    public String getBlockName ()
     {
-        return _blockName;
+        return blockName;
     }
     
-    public void set_blockName (String _blockName)
+    public void setBlockName (String blockName)
     {
-        this._blockName = _blockName;
+        this.blockName = blockName;
     }
     
     public Map<String, String> get_metadata ()

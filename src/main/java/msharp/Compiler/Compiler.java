@@ -6,7 +6,6 @@ import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import msharp.ASTBuilder.BuildAstVisitor;
 import msharp.CustomAntlrErrorListener;
-import msharp.MinecraftClasses.MinecraftFitment;
 import msharp.MinecraftClasses.NoteStructure;
 import msharp.ASTBuilder.NodeInterface;
 import msharp.ASTBuilder.ProgNode;
@@ -125,12 +124,9 @@ public class Compiler {
         log.info("Sorted final notes. Song length is " + notes.get(notes.size() - 1).getTiming().toDouble() + " seconds.");
 
         // Lets fit the collection of notes to the Minecraft-limitations
-        NoteStructure minecraftNotes = MinecraftFitment.fitToMinecraft(notes);
+        NoteStructure minecraftNotes = new NoteStructure(notes, fillerBlock, turnAroundLength);
 
         log.info("Fitted the final notes to minecraft. Duration: " + minecraftNotes.size() + " redstone ticks");
-
-        minecraftNotes.setFillerBlock(fillerBlock);
-        minecraftNotes.setTurnAroundLength(turnAroundLength);
 
         minecraftNotes.GenerateSchematic().saveToFile(outputPath);
 
