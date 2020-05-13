@@ -165,7 +165,7 @@ public class MainWindowController {
         if(!overrideOutputPath.isSelected()) {
             if (!inputPath.contains("."))
                 chosenOutputPath.setText(""); // user haven't selected a file for some reason. We cant really handle that here.
-            //chosenOutputPath.setText(inputPath.substring(0, inputPath.lastIndexOf(".")) + ".schem");
+            else chosenOutputPath.setText(inputPath.substring(0, inputPath.lastIndexOf(".")) + ".schem");
         }
     }
     
