@@ -50,6 +50,26 @@ public class FractionPrecise implements Comparable<FractionPrecise> {
         return denominator;
     }
     
+    @Override
+    public boolean equals (Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FractionPrecise fraction = (FractionPrecise) o;
+        
+        // since a fraction can be equal with a different denominator, we first check that the biggest denominator is a integer scalar of the smallest denominator
+        if (!this.numerator.max(fraction.denominator).mod(this.denominator.min(fraction.denominator)).equals(BigInteger.ZERO)) {
+            return false;
+            // is not a integer scalar, and thus must be different fractions.
+        }
+        
+        // if the max numerator is equal to the min numerator * scalar the fractions are equal
+        BigInteger scalar =
+                this.denominator.max(fraction.denominator).divide(this.denominator.min(fraction.denominator));
+                
+        return this.numerator.min(fraction.numerator).multiply(scalar).equals(this.numerator.max(fraction.numerator));
+    }
+    
     public double toDouble ()
     {
         // precision of 0.001 is fine
