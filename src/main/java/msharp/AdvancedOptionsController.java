@@ -51,30 +51,20 @@ public class AdvancedOptionsController {
         turnAroundLength.setTextFormatter(textFormatter);
     }
     
-    public static AdvancedOptionsController showStage (Window window, CompilerBuilder compOptions)
+    public static void showStage (Window window, CompilerBuilder compOptions) throws IOException
     {
-        Parent root = null;
-        FXMLLoader loader = null;
-        try {
-            loader = new FXMLLoader(AdvancedOptionsController.class.getClassLoader().getResource("AdvancedOptions.fxml"));
-            root = loader.load();//FXMLLoader.load(getClass().getClassLoader().getResource("AdvancedOptions.fxml"));
-        } catch (IOException ioException) {
-            ioException.printStackTrace(); //todo fix this
-        }
+        FXMLLoader loader = new FXMLLoader(AdvancedOptionsController.class.getClassLoader().getResource("AdvancedOptions.fxml"));
+        Parent root = loader.load();
         Stage dialog = new Stage();
         
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setTitle("Advanced options");
-        assert root != null;
         dialog.setScene(new Scene(root));
         dialog.initOwner(window);
         
         ((AdvancedOptionsController) loader.getController()).setCompOptions(compOptions);
         
-        
         dialog.showAndWait();
-        
-        return loader.getController();
     }
     
     public void saveOptionsAction (ActionEvent e)

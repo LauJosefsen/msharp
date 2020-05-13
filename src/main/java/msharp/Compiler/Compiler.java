@@ -8,7 +8,7 @@ import msharp.ASTBuilder.BuildAstVisitor;
 import msharp.CustomAntlrErrorListener;
 import msharp.MinecraftClasses.MinecraftFitment;
 import msharp.MinecraftClasses.NoteStructure;
-import msharp.ASTBuilder.Node;
+import msharp.ASTBuilder.NodeInterface;
 import msharp.ASTBuilder.ProgNode;
 import msharp.NotePopulation.BuildNoteListVisitor;
 import msharp.NotePopulation.FinalNote;
@@ -23,7 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Handler;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -89,7 +88,7 @@ public class Compiler {
             throw new IllegalCompilerAction("[FATAL] Found one or more syntax errors while parsing. See above.");
         
         BuildAstVisitor visitor = new BuildAstVisitor();
-        Node ast = visitor.visit(tree);
+        NodeInterface ast = visitor.visit(tree);
         log.info("Made Abstract Syntax Tree");
         
         

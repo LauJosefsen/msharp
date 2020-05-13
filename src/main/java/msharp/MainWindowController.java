@@ -10,6 +10,7 @@ import msharp.Compiler.Compiler;
 import msharp.Compiler.CompilerBuilder;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Handler;
@@ -118,7 +119,6 @@ public class MainWindowController {
     
     public void CompileButtonAction (ActionEvent e)
     {
-        //todo clear the log
         compOptions.setInputPath(chosenFilePath.getText());
         compOptions.setOutputPath(chosenOutputPath.getText());
         
@@ -143,7 +143,7 @@ public class MainWindowController {
         Task<Void> task = new Task<Void>(){
     
             @Override
-            protected Void call () throws Exception
+            protected Void call ()
             {
                 comp.tryCompile();
                 return null;
@@ -169,7 +169,7 @@ public class MainWindowController {
         }
     }
     
-    public void openAdvancedOptions (ActionEvent e)
+    public void openAdvancedOptions (ActionEvent e) throws IOException
     {
         AdvancedOptionsController.showStage(((Node) e.getSource()).getScene().getWindow(),compOptions);
     }

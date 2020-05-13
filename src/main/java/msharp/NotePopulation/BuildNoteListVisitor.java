@@ -3,7 +3,7 @@ package msharp.NotePopulation;
 import msharp.Compiler.IllegalCompilerAction;
 import msharp.MinecraftClasses.Instrument;
 import msharp.ASTBuilder.*;
-import msharp.Compiler.NumberExpressionVisitor;
+import msharp.ASTBuilder.ArithmeticExpressionVisitor;
 import msharp.Compiler.Symbol;
 import msharp.Compiler.SymbolTable;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class BuildNoteListVisitor{
     private SymbolTable symbolTable;
-    private final NumberExpressionVisitor exprVisitor = new NumberExpressionVisitor();
+    private final ArithmeticExpressionVisitor exprVisitor = new ArithmeticExpressionVisitor();
 
     public BuildNoteListVisitor (SymbolTable symbolTable)
     {

@@ -1,10 +1,13 @@
-package msharp.Compiler;
+package msharp.ASTBuilder;
 
 import msharp.ASTBuilder.ExprNode;
 import msharp.ASTBuilder.IdNode;
 import msharp.ASTBuilder.NumberNode;
+import msharp.Compiler.IllegalCompilerAction;
+import msharp.Compiler.Symbol;
+import msharp.Compiler.SymbolTable;
 
-public class NumberExpressionVisitor {
+public class ArithmeticExpressionVisitor {
     public int visit(ExprNode exprNode, SymbolTable symbolTable) throws IllegalCompilerAction
     {
         int left = exprNode.getLeft().accept(this,symbolTable);

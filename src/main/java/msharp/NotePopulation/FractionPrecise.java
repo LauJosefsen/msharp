@@ -123,7 +123,7 @@ public class FractionPrecise implements Comparable<FractionPrecise>, Cloneable {
     @Override
     protected Object clone () throws CloneNotSupportedException
     {
-        //todo
+        // todo test if denominator/numerator gets cloned or only references gets cloned.
         return super.clone();
     }
     

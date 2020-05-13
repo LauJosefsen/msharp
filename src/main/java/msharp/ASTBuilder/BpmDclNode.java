@@ -20,16 +20,16 @@ import static guru.nidi.graphviz.model.Link.to;
 
 public class BpmDclNode implements StmtNode {
     private final TempoChangeNode tempo;
-    private final OperandInterface bpm;
+    private final ArithmeticExpressionNodeInterface bpm;
     
     public TempoChangeNode getTempo ()
     {
         return tempo;
     }
     
-    public OperandInterface getBpm () { return bpm; }
+    public ArithmeticExpressionNodeInterface getBpm () { return bpm; }
     
-    public BpmDclNode (OperandInterface bpm, TempoChangeNode tempo)
+    public BpmDclNode (ArithmeticExpressionNodeInterface bpm, TempoChangeNode tempo)
     {
         this.tempo = tempo;
         this.bpm = bpm;

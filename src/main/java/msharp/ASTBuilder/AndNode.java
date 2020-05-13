@@ -18,7 +18,7 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
-public class AndNode implements StmtNode,PartBodyOperator {
+public class AndNode implements StmtNode, PartBodyOperatorInterface {
     
     private final StmtNode left;
     private final StmtNode right;
@@ -63,7 +63,7 @@ public class AndNode implements StmtNode,PartBodyOperator {
     }
     
     @Override
-    public PartBodyOperator setLeftOperand (StmtNode left)
+    public PartBodyOperatorInterface setLeftOperand (StmtNode left)
     {
         return new AndNode(left,this.right);
     }
