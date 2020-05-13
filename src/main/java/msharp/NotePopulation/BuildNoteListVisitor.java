@@ -3,7 +3,7 @@ package msharp.NotePopulation;
 import msharp.Compiler.IllegalCompilerAction;
 import msharp.MinecraftClasses.Instrument;
 import msharp.ASTBuilder.*;
-import msharp.Compiler.NumberExpressionVisitor;
+import msharp.ASTBuilder.ArithmeticExpressionVisitor;
 import msharp.Compiler.Symbol;
 import msharp.Compiler.SymbolTable;
 
@@ -12,21 +12,21 @@ import java.util.List;
 
 public class BuildNoteListVisitor{
     private SymbolTable symbolTable;
-    private final NumberExpressionVisitor exprVisitor = new NumberExpressionVisitor();
+    private final ArithmeticExpressionVisitor exprVisitor = new ArithmeticExpressionVisitor();
 
     public BuildNoteListVisitor (SymbolTable symbolTable)
     {
         this.symbolTable = symbolTable;
     }
 
-    public List<FinalNote> visit (ProgNode prog) throws IllegalCompilerAction
+    public List<FinalNote> visit (ProgNode prog)
     {
         // ctx is used to store current context about variables such as octaves, instrument, Bpm, Tempo and timing.
         NodeContext ctx = new NodeContext();
         return visit(prog.getMain(), ctx);
     }
 
-    private List<FinalNote> visit (PlayNode play, NodeContext ctx) throws IllegalCompilerAction
+    private List<FinalNote> visit (PlayNode play, NodeContext ctx)
     {
         symbolTable.openScope();
         List<FinalNote> noteList = new ArrayList<>();
@@ -37,21 +37,21 @@ public class BuildNoteListVisitor{
         return noteList;
     }
 
-    public List<FinalNote> visit (AndNode node, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> visit (AndNode node, NodeContext ctx)
     {
 
         // Makes a clone of the current context, so the changes to the context doesn't overlap into the "global" scope
-        NodeContext leftCtx = ctx.clone();
+        NodeContext leftCtx = new NodeContext(ctx);
         List<FinalNote> notes = new ArrayList<>(node.getLeft().accept(this, leftCtx));
 
-        NodeContext rightCtx = ctx.clone();
+        NodeContext rightCtx = new NodeContext(ctx);
         notes.addAll(node.getRight().accept(this, rightCtx));
 
         ctx.timing = leftCtx.timing;
         return notes;
     }
 
-    public List<FinalNote> visit (BpmDclNode node, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> visit (BpmDclNode node, NodeContext ctx)
     {
         // This visit should only change the ctx, and add no new notes.
         ctx.bpm.bpm = node.getBpm().accept(exprVisitor,symbolTable);
@@ -61,7 +61,7 @@ public class BuildNoteListVisitor{
         return new ArrayList<>();
     }
 
-    public List<FinalNote> visit (EveryNode node, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> visit (EveryNode node, NodeContext ctx)
     {
         symbolTable.openScope();
         
@@ -79,7 +79,7 @@ public class BuildNoteListVisitor{
         return notes;
     }
 
-    public List<FinalNote> visit (IdNode node, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> visit (IdNode node, NodeContext ctx)
     {
         // type check and check scope
         Symbol symbol = symbolTable.retrieveSymbol(node.getId());
@@ -98,7 +98,7 @@ public class BuildNoteListVisitor{
         
         StmtList part = (StmtList) symbol.value;
         
-        NodeContext newCtx = ctx.clone();
+        NodeContext newCtx = new NodeContext(ctx);
         symbolTable.openScope();
         List<FinalNote> toAdd = part.accept(this, newCtx);
         symbolTable.closeScope();
@@ -113,7 +113,7 @@ public class BuildNoteListVisitor{
         return new ArrayList<>();
     }
 
-    public List<FinalNote> visit (NoteNode node, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> visit (NoteNode node, NodeContext ctx)
     {
         List<FinalNote> notes = new ArrayList<>();
 
@@ -170,7 +170,7 @@ public class BuildNoteListVisitor{
         return new ArrayList<>();   // returns empty list
     }
 
-    public List<FinalNote> visit (RepeatNode node, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> visit (RepeatNode node, NodeContext ctx)
     {
         List<FinalNote> notes = new ArrayList<>();
 
@@ -190,11 +190,11 @@ public class BuildNoteListVisitor{
         return notes;
     }
 
-    public List<FinalNote> visit (StmtList node, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> visit (StmtList node, NodeContext ctx)
     {
         List<FinalNote> notes = new ArrayList<>();
 
-        NodeContext cloned = ctx.clone();
+        NodeContext cloned = new NodeContext(ctx);
 
         // Visits all the nodes in the stmtlist
         for (StmtNode stmt : node) {
@@ -205,7 +205,7 @@ public class BuildNoteListVisitor{
         return notes;
     }
 
-    public List<FinalNote> visit (TempoChangeNode node, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> visit (TempoChangeNode node, NodeContext ctx)
     {
         // This visit should only change the ctx, and add no new notes.
         ctx.tempo = new Fraction(
@@ -214,7 +214,7 @@ public class BuildNoteListVisitor{
         return new ArrayList<>();
     }
 
-    public List<FinalNote> visit (TransposeNode node, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> visit (TransposeNode node, NodeContext ctx)
     {
         List<FinalNote> toBeTransposed = node.getToBeTransposed().accept(this, ctx);
 
@@ -231,7 +231,7 @@ public class BuildNoteListVisitor{
         return new ArrayList<>();
     }
     
-    public List<FinalNote> visit (NumDeclNode node, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> visit (NumDeclNode node, NodeContext ctx)
     {
         symbolTable.enterSymbol(node.getId(),node.getValue().accept(exprVisitor,symbolTable));
         return new ArrayList<>();

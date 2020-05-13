@@ -9,7 +9,6 @@ import msharp.Compiler.IllegalCompilerAction;
 import msharp.NotePopulation.BuildNoteListVisitor;
 import msharp.NotePopulation.FinalNote;
 import msharp.NotePopulation.NodeContext;
-import msharp.Compiler.NumberExpressionVisitor;
 import msharp.Compiler.SymbolTable;
 
 import java.util.List;
@@ -19,7 +18,7 @@ import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
-public class IdNode implements StmtNode,OperandInterface{
+public class IdNode implements StmtNode, ArithmeticExpressionNodeInterface {
     private final String id;
     
     public String getId ()
@@ -50,13 +49,13 @@ public class IdNode implements StmtNode,OperandInterface{
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }
     
     @Override
-    public int accept (NumberExpressionVisitor visitor, SymbolTable symbolTable) throws IllegalCompilerAction
+    public int accept (ArithmeticExpressionVisitor visitor, SymbolTable symbolTable)
     {
         return visitor.visit(this, symbolTable);
     }

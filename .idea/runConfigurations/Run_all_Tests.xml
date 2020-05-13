@@ -3,7 +3,7 @@
     <useClassPathOnly />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="msharp.Compiler.*" />
+        <option name="PATTERN" value="msharp.ASTBuilder.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

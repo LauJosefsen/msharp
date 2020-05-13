@@ -1,11 +1,14 @@
-package msharp.Compiler;
+package msharp.ASTBuilder;
 
 import msharp.ASTBuilder.ExprNode;
 import msharp.ASTBuilder.IdNode;
 import msharp.ASTBuilder.NumberNode;
+import msharp.Compiler.IllegalCompilerAction;
+import msharp.Compiler.Symbol;
+import msharp.Compiler.SymbolTable;
 
-public class NumberExpressionVisitor {
-    public int visit(ExprNode exprNode, SymbolTable symbolTable) throws IllegalCompilerAction
+public class ArithmeticExpressionVisitor {
+    public int visit(ExprNode exprNode, SymbolTable symbolTable)
     {
         int left = exprNode.getLeft().accept(this,symbolTable);
         int right = exprNode.getRight().accept(this,symbolTable);
@@ -21,7 +24,7 @@ public class NumberExpressionVisitor {
     public int visit(NumberNode numberNode, SymbolTable symbolTable){
         return numberNode.getN();
     }
-    public int visit(IdNode idNode, SymbolTable symbolTable) throws IllegalCompilerAction
+    public int visit(IdNode idNode, SymbolTable symbolTable)
     {
         // type check and check scope
         Symbol symbol = symbolTable.retrieveSymbol(idNode.getId());

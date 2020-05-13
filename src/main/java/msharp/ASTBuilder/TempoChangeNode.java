@@ -19,21 +19,21 @@ import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
 public class TempoChangeNode implements StmtNode {
-    private final OperandInterface numerator;
-    private final OperandInterface denominator;
+    private final ArithmeticExpressionNodeInterface numerator;
+    private final ArithmeticExpressionNodeInterface denominator;
 
-    public TempoChangeNode (OperandInterface numerator, OperandInterface denominator)
+    public TempoChangeNode (ArithmeticExpressionNodeInterface numerator, ArithmeticExpressionNodeInterface denominator)
     {
         this.numerator = numerator;
         this.denominator = denominator;
     }
     
-    public OperandInterface getNumerator ()
+    public ArithmeticExpressionNodeInterface getNumerator ()
     {
         return numerator;
     }
     
-    public OperandInterface getDenominator ()
+    public ArithmeticExpressionNodeInterface getDenominator ()
     {
         return denominator;
     }
@@ -59,7 +59,7 @@ public class TempoChangeNode implements StmtNode {
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
     {
         return visitor.visit(this, ctx);
     }
