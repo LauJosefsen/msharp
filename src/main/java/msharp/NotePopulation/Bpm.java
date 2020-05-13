@@ -2,7 +2,7 @@ package msharp.NotePopulation;
 
 import java.util.Objects;
 
-public class Bpm {
+public class Bpm implements Cloneable {
     int bpm;
     Fraction tempo;
 
@@ -11,11 +11,13 @@ public class Bpm {
         this.bpm = bpm;
         this.tempo = tempo;
     }
-    
-    //copy constructor
-    public Bpm (Bpm toBeCopied){
-        this.bpm = toBeCopied.bpm;
-        this.tempo = new Fraction(toBeCopied.tempo);
+
+    @Override
+    protected Object clone () throws CloneNotSupportedException
+    {
+        Bpm bpm = (Bpm) super.clone();
+        bpm.tempo = (Fraction) tempo.clone();
+        return bpm;
     }
 
     @Override

@@ -1,7 +1,5 @@
 package msharp;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -51,29 +49,32 @@ public class AdvancedOptionsController {
         };
         TextFormatter<String> textFormatter = new TextFormatter<>(filter);
         turnAroundLength.setTextFormatter(textFormatter);
-    
-        // make sure length doesnt exceed 5 decimals.
-        turnAroundLength.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            if (turnAroundLength.getText().length() > 5) {
-                turnAroundLength.setText(turnAroundLength.getText().substring(0, 5));
-            }
-        });
     }
     
-    public static void showStage (Window window, CompilerBuilder compOptions) throws IOException
+    public static AdvancedOptionsController showStage (Window window, CompilerBuilder compOptions)
     {
-        FXMLLoader loader = new FXMLLoader(AdvancedOptionsController.class.getClassLoader().getResource("AdvancedOptions.fxml"));
-        Parent root = loader.load();
+        Parent root = null;
+        FXMLLoader loader = null;
+        try {
+            loader = new FXMLLoader(AdvancedOptionsController.class.getClassLoader().getResource("AdvancedOptions.fxml"));
+            root = loader.load();//FXMLLoader.load(getClass().getClassLoader().getResource("AdvancedOptions.fxml"));
+        } catch (IOException ioException) {
+            ioException.printStackTrace(); //todo fix this
+        }
         Stage dialog = new Stage();
         
         dialog.initModality(Modality.WINDOW_MODAL);
         dialog.setTitle("Advanced options");
+        assert root != null;
         dialog.setScene(new Scene(root));
         dialog.initOwner(window);
         
         ((AdvancedOptionsController) loader.getController()).setCompOptions(compOptions);
         
+        
         dialog.showAndWait();
+        
+        return loader.getController();
     }
     
     public void saveOptionsAction (ActionEvent e)

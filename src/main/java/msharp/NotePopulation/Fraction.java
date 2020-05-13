@@ -2,7 +2,7 @@ package msharp.NotePopulation;
 
 import java.util.Objects;
 
-public class Fraction implements Comparable<Fraction> {
+public class Fraction implements Comparable<Fraction>, Cloneable {
     public final long numerator;
     public final long denominator;
     
@@ -17,11 +17,6 @@ public class Fraction implements Comparable<Fraction> {
         // this is basically dividing by fraction.
         this.numerator = Math.multiplyExact(numerator.numerator, denominator.denominator);
         this.denominator = Math.multiplyExact(numerator.denominator, denominator.numerator);
-    }
-    // copy constructor
-    public Fraction(Fraction fraction){
-        this.numerator = fraction.getNumerator();
-        this.denominator = fraction.getDenominator();
     }
     
     public long getNumerator ()
@@ -102,6 +97,11 @@ public class Fraction implements Comparable<Fraction> {
         return Double.compare(this.toDouble(), fraction.toDouble());
     }
     
+    @Override
+    protected Object clone () throws CloneNotSupportedException
+    {
+        return super.clone();
+    }
     
     private static long gcd(long a, long b) {
         if (b == 0) {

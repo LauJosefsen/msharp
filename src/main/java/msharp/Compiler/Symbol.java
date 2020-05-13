@@ -1,9 +1,9 @@
 package msharp.Compiler;
 
-public class Symbol{
-    public Object value;
+public class Symbol<T>{
+    public T value;
     
-    Symbol(String id, Object value){
+    Symbol(String id, T value){
         this.value = value;
     }
 }

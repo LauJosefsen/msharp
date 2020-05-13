@@ -1,6 +1,6 @@
 package msharp.Compiler;
 
-public class IllegalCompilerAction extends RuntimeException {
+public class IllegalCompilerAction extends Exception {
     private final String error;
     
     public String getError ()

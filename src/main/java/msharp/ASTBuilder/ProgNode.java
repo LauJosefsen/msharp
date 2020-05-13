@@ -12,7 +12,7 @@ import static guru.nidi.graphviz.attribute.Rank.RankDir.TOP_TO_BOTTOM;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
-public class ProgNode implements NodeInterface {
+public class ProgNode implements Node {
     private final List<NumDeclNode> globalVariables;
     private final List<PartDclNode> parts;
     private final PlayNode main;

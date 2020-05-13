@@ -20,16 +20,16 @@ import static guru.nidi.graphviz.model.Link.to;
 
 public class BpmDclNode implements StmtNode {
     private final TempoChangeNode tempo;
-    private final ArithmeticExpressionNodeInterface bpm;
+    private final OperandInterface bpm;
     
     public TempoChangeNode getTempo ()
     {
         return tempo;
     }
     
-    public ArithmeticExpressionNodeInterface getBpm () { return bpm; }
+    public OperandInterface getBpm () { return bpm; }
     
-    public BpmDclNode (ArithmeticExpressionNodeInterface bpm, TempoChangeNode tempo)
+    public BpmDclNode (OperandInterface bpm, TempoChangeNode tempo)
     {
         this.tempo = tempo;
         this.bpm = bpm;
@@ -54,7 +54,7 @@ public class BpmDclNode implements StmtNode {
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
     {
         return visitor.visit(this, ctx);
     }

@@ -20,19 +20,19 @@ import static guru.nidi.graphviz.model.Link.to;
 
 public class NoteNode implements StmtNode {
     private final char letter;
-    private final ArithmeticExpressionNodeInterface octave;
+    private final OperandInterface octave;
     
     public char getLetter ()
     {
         return letter;
     }
     
-    public ArithmeticExpressionNodeInterface getOctave ()
+    public OperandInterface getOctave ()
     {
         return octave;
     }
     
-    public NoteNode (char letter, ArithmeticExpressionNodeInterface octave)
+    public NoteNode (char letter, OperandInterface octave)
     {
         this.letter = letter;
         this.octave = octave;
@@ -57,7 +57,7 @@ public class NoteNode implements StmtNode {
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
     {
         return visitor.visit(this, ctx);
     }

@@ -20,9 +20,9 @@ import static guru.nidi.graphviz.model.Link.to;
 
 public class NumDeclNode implements StmtNode {
     private final String id;
-    private final ArithmeticExpressionNodeInterface value;
+    private final OperandInterface value;
 
-    public NumDeclNode (String id, ArithmeticExpressionNodeInterface value)
+    public NumDeclNode (String id, OperandInterface value)
     {
         this.id = id;
         this.value = value;
@@ -33,13 +33,13 @@ public class NumDeclNode implements StmtNode {
         return id;
     }
     
-    public ArithmeticExpressionNodeInterface getValue ()
+    public OperandInterface getValue ()
     {
         return value;
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
     {
         return visitor.visit(this, ctx);
     }

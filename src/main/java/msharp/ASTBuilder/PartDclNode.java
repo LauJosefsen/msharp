@@ -13,7 +13,7 @@ import java.util.UUID;
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 
-public class PartDclNode implements NodeInterface {
+public class PartDclNode implements Node {
     private final String id;
     private final StmtList stmts;
     

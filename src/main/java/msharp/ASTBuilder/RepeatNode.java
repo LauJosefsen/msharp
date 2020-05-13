@@ -18,8 +18,8 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
-public class RepeatNode implements StmtNode, PartBodyOperatorInterface {
-    private final ArithmeticExpressionNodeInterface amount;
+public class RepeatNode implements StmtNode, PartBodyOperator {
+    private final OperandInterface amount;
 
     private final StmtNode stmts;
 
@@ -28,7 +28,7 @@ public class RepeatNode implements StmtNode, PartBodyOperatorInterface {
         return stmts;
     }
 
-    public RepeatNode (ArithmeticExpressionNodeInterface amount, StmtNode stmts)
+    public RepeatNode (OperandInterface amount, StmtNode stmts)
     {
         this.amount = amount;
         this.stmts = stmts;
@@ -50,17 +50,17 @@ public class RepeatNode implements StmtNode, PartBodyOperatorInterface {
     }
     
     @Override
-    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept (BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
     {
         return visitor.visit(this, ctx);
     }
 
-    public ArithmeticExpressionNodeInterface getAmount ()
+    public OperandInterface getAmount ()
     {
         return amount;
     }
     @Override
-    public PartBodyOperatorInterface setLeftOperand (StmtNode left)
+    public PartBodyOperator setLeftOperand (StmtNode left)
     {
         return new RepeatNode(amount,left);
     }

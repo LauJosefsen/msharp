@@ -1,7 +1,6 @@
 package msharp.Compiler;
 
 import msharp.ASTBuilder.NumDeclNode;
-import msharp.ASTBuilder.ArithmeticExpressionVisitor;
 import msharp.ASTBuilder.PartDclNode;
 import msharp.ASTBuilder.ProgNode;
 
@@ -9,7 +8,7 @@ import java.util.*;
 
 public class SymbolTable {
     
-    static class Scope{
+    class Scope{
         Map<String, Symbol> localSymbols = new HashMap<>();
     }
     
@@ -23,7 +22,7 @@ public class SymbolTable {
         scopes.pop();
     }
     
-    public <T> void  enterSymbol(String key, T value)
+    public <T> void  enterSymbol(String key, T value) throws IllegalCompilerAction
     {
         Symbol symbol = retrieveSymbol(key);
         if(symbol == null){
@@ -33,7 +32,7 @@ public class SymbolTable {
         else symbol.value = value;
     }
     
-    public Symbol retrieveSymbol(String key)
+    public Symbol retrieveSymbol(String key) throws IllegalCompilerAction
     {
         // take from top to stack to bottom of stack, search every scope if they have this variable.
         Symbol found = null;
@@ -50,7 +49,7 @@ public class SymbolTable {
     }
     
     
-    public SymbolTable (ProgNode ast)
+    public SymbolTable (ProgNode ast) throws IllegalCompilerAction
     {
         Scope scope = new Scope();
         
@@ -58,7 +57,7 @@ public class SymbolTable {
             if(scope.localSymbols.containsKey(numNode.getId()))
                 throw new IllegalCompilerAction("When adding "+numNode.getId()+" to symboltable. Multiple declared");
             else {
-                ArithmeticExpressionVisitor visitor = new ArithmeticExpressionVisitor();
+                NumberExpressionVisitor visitor = new NumberExpressionVisitor();
                 scope.localSymbols.put(numNode.getId(), new Symbol(numNode.getId(),numNode.getValue().accept(visitor,this)));
             }
         }
@@ -66,7 +65,7 @@ public class SymbolTable {
             if(scope.localSymbols.containsKey(partNode.getId()))
                 throw new IllegalCompilerAction("When adding "+partNode.getId()+" to symboltable. Multiple declared");
             else {
-                ArithmeticExpressionVisitor visitor = new ArithmeticExpressionVisitor();
+                NumberExpressionVisitor visitor = new NumberExpressionVisitor();
                 scope.localSymbols.put(partNode.getId(), new Symbol(partNode.getId(),partNode.getStmts()));
             }
         }

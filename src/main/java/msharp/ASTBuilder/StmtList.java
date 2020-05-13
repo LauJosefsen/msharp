@@ -62,7 +62,7 @@ public class StmtList extends ArrayList<StmtNode> implements StmtNode {
     }
     
     @Override
-    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx)
+    public List<FinalNote> accept(BuildNoteListVisitor visitor, NodeContext ctx) throws IllegalCompilerAction
     {
         return visitor.visit(this, ctx);
     }
