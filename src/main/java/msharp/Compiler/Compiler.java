@@ -57,6 +57,7 @@ public class Compiler {
     
     public void compile()  throws IllegalCompilerAction
     {
+        long startTime = System.nanoTime();
         String str;
         try {
             str = new String(Files.readAllBytes(Paths.get(inputPath)));
@@ -133,7 +134,7 @@ public class Compiler {
 
         minecraftNotes.GenerateSchematic().saveToFile(outputPath);
 
-        log.info("[SUCCESS] Generated output schematic file as " + outputPath);
+        log.info("[SUCCESS] Generated output schematic file as " + outputPath + ". Took "+ Math.round((1.0*System.nanoTime()-startTime)/1e7)/1e2+" seconds.");
         
     }
 }
