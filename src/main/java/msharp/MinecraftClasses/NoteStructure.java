@@ -187,38 +187,56 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
         }
     }
     
+    /**
+     * Generates the main track with empty locations for noteblocks.
+     * @param schem the schematic to add blocks to
+     * @param emptyLocations the reference to a list we can add empty locations to
+     */
     private void GenerateTrack (Schematic schem, Map<Integer, List<BlockLocation>> emptyLocations)
     {
-        // todo documentation and prettify this
         // ok, lets start by placing the stone track.
         // xxxxx
         // x
         // xxxxx
         //     x looping
         for (int lane = 0; lane < _lanes; lane++) {
+            // loop through all the lanes
+            
+            // used to keep track of what tick to add empty locations to.
             int currentTick = 0;
+            
             for (int turn = 0; turn < _turns; turn++) {
-                int goingSouth = (turn) % 2;
+                // in every lane we loop through all the turns and build one turn at a time.
+                
+                // we need to know what direction the redstone repeaters should be pointed, so we have this variable to determine the direction we are building
+                int goingSouth = turn % 2;
+                
                 // so we build each "strip" of the turn here. Height is depending on lane.
                 for (int i = 2; i < getLength(); i++) {
                     schem.setBlock(turn * 2 + 1, lane * heightPrLane + 2, i, fillerBlock);
+                    
+                    // on the ends of the turn we add redstonedust on the stone
                     if (i == 2 || i == getLength() - 1) {
                         // place redstone dust on layer above
                         schem.setBlock(turn * 2 + 1, lane * heightPrLane + 3, i, new Block("minecraft:redstone_wire"));
                     }
+                    
                     // if we are not at the end of a turn, then place switching between stone and repeater.
                     // Depending on the direction we are gonig.
                     else if ((i + goingSouth) % 2 == 0) {
                         schem.setBlock(turn * 2 + 1, lane * heightPrLane + 3, i, fillerBlock);
-                        // this is where we can place 2 notes, either +1 or -1 x. Lets remember these locations:
                         
+                        // this is where we can place 2 notes, either +1 or -1 x. Lets remember these locations:
                         emptyLocations.putIfAbsent(currentTick, new ArrayList<>());
                         List<BlockLocation> thisTickBlockLocations = emptyLocations.get(currentTick);
                         thisTickBlockLocations.add(new BlockLocation(turn * 2, lane * heightPrLane + 3, i));
                         thisTickBlockLocations.add(new BlockLocation(turn * 2 + 2, lane * heightPrLane + 3, i));
+                        
+                        // since we are always building towards positive z, we need to either increment or decrement negative z based on the direction.
                         if (goingSouth == 1) currentTick--;
                         else currentTick++;
                     } else {
+                        // place a repeater pointing the direction we are building.
                         Map<String, String> meta_data = new HashMap<>();
                         meta_data.put("facing", "north");
                         if (goingSouth == 1)
@@ -227,16 +245,18 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
                     }
                 }
                 
-                // at the end of a turn, add the little block to bridge to turns.
-                int posAtLength = 2;
+                // at the end of a turn, add the little block and redstone to bridge two turns.
+                int zForLastBlock = 2;
                 if (goingSouth == 0)
-                    posAtLength = getLength() - 1;
-                schem.setBlock(turn * 2 + 2, lane * heightPrLane + 2, posAtLength, fillerBlock);
-                schem.setBlock(turn * 2 + 2, lane * heightPrLane + 3, posAtLength, new Block("minecraft:redstone_wire"));
+                    zForLastBlock = getLength() - 1;
+                schem.setBlock(turn * 2 + 2, lane * heightPrLane + 2, zForLastBlock, fillerBlock);
+                schem.setBlock(turn * 2 + 2, lane * heightPrLane + 3, zForLastBlock, new Block("minecraft:redstone_wire"));
                 
                 
+                // As we always build towards positive z, we need to count backwards when are building the other direction.
+                // due to that we add this to correct the current tick.
                 if (goingSouth == 0) currentTick += turnAroundLength - 1;
-                if (goingSouth == 1) currentTick += turnAroundLength + 1;
+                else currentTick += turnAroundLength + 1;
             }
         }
     }
