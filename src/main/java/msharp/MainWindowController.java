@@ -119,7 +119,6 @@ public class MainWindowController {
     
     public void CompileButtonAction (ActionEvent e)
     {
-        //todo clear the log
         compOptions.setInputPath(chosenFilePath.getText());
         compOptions.setOutputPath(chosenOutputPath.getText());
         
