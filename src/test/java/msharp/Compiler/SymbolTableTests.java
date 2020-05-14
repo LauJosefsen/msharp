@@ -47,9 +47,56 @@ class SymbolTableTests {
     }
     
     @Test
-    void enterSymbol ()
+    void enterSymbol_trivialCase ()
     {
         symbolTable.enterSymbol("Test", new Object());
+        Symbol symbol =  symbolTable.retrieveSymbol("Test");
+        assertTrue(symbol != null);
+    }
+    
+    @Test
+    void enterSymbol_shouldBeFoundAfterOpeningAndClosingScope ()
+    {
+        symbolTable.enterSymbol("Test", new Object());
+        symbolTable.openScope();
+        symbolTable.closeScope();
+        Symbol symbol =  symbolTable.retrieveSymbol("Test");
+        assertTrue(symbol != null);
+    }
+    
+    @Test
+    void enterSymbol_shouldNotBeFoundAfterClosingScope ()
+    {
+        symbolTable.enterSymbol("Test", new Object());
+        symbolTable.closeScope();
+        Symbol symbol =  symbolTable.retrieveSymbol("Test");
+        assertTrue(symbol == null);
+    }
+    
+    @Test
+    void enterSymbol_shouldBeFoundAfterOpeningScope ()
+    {
+        symbolTable.openScope();
+        symbolTable.enterSymbol("Test", new Object());
+        Symbol symbol =  symbolTable.retrieveSymbol("Test");
+        assertTrue(symbol != null);
+    }
+    
+    @Test
+    void enterSymbol_shouldBeFoundEvenWhenANewScopeIsOpened()
+    {
+        symbolTable.enterSymbol("Test", new Object());
+        symbolTable.openScope();
+        Symbol symbol =  symbolTable.retrieveSymbol("Test");
+        assertTrue(symbol != null);
+    }
+    
+    @Test
+    void enterSymbol_shouldBeFoundEvenWhenANewScopeIsOpenedAndThenClosed()
+    {
+        symbolTable.enterSymbol("Test", new Object());
+        symbolTable.openScope();
+        symbolTable.closeScope();
         Symbol symbol =  symbolTable.retrieveSymbol("Test");
         assertTrue(symbol != null);
     }
