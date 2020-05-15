@@ -19,7 +19,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
         if (ctx.Digs() != null) {
             try {
                 octave = new NumberNode(Integer.parseInt(ctx.Digs().getText()));
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 throw new IllegalCompilerAction(e.toString());
             }
         }
@@ -149,7 +149,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     }
     
     @Override
-    public NodeInterface visitProg (MsharpParser.ProgContext ctx)
+    public ProgNode visitProg (MsharpParser.ProgContext ctx)
     {
         
         List<NumDeclNode> globalVariables = new ArrayList<>();
@@ -165,7 +165,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     }
     
     @Override
-    public NodeInterface visitPlayDcl (MsharpParser.PlayDclContext ctx)
+    public PlayNode visitPlayDcl (MsharpParser.PlayDclContext ctx)
     {
         StmtList stmts = new StmtList();
         
@@ -216,7 +216,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     }
     
     @Override
-    public NodeInterface visitOpsScale (MsharpParser.OpsScaleContext ctx)
+    public ScaleNode visitOpsScale (MsharpParser.OpsScaleContext ctx)
     {
         // If the Scale is empty, it will transpose down an empty list, which is okay
         List<ToneEnum> tones = new ArrayList<>();
@@ -236,7 +236,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     
     
     @Override
-    public NodeInterface visitExprOp (MsharpParser.ExprOpContext ctx)
+    public ExprNode visitExprOp (MsharpParser.ExprOpContext ctx)
     {
         if (ctx.Plus() != null) {
             // Plus node
@@ -254,7 +254,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     }
     
     @Override
-    public NodeInterface visitTermOp (MsharpParser.TermOpContext ctx)
+    public ExprNode visitTermOp (MsharpParser.TermOpContext ctx)
     {
         ExprOpEnum op = ExprOpEnum.MODULO;
         
@@ -287,12 +287,11 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     }
     
     @Override
-    public NodeInterface visitFactorDigs (MsharpParser.FactorDigsContext ctx)
+    public NumberNode visitFactorDigs (MsharpParser.FactorDigsContext ctx)
     {
         try {
             return new NumberNode(Integer.parseInt(ctx.Digs().getText()));
-        }
-        catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new IllegalCompilerAction(e.toString());
         }
     }
@@ -308,6 +307,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     {
         return new IdNode(ctx.Id().getText());
     }
+    
     @Override
     public NodeInterface visitPbodyOperators (MsharpParser.PbodyOperatorsContext ctx)
     {
@@ -331,30 +331,29 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     }
     
     @Override
-    public NodeInterface visitTransposeOperator (MsharpParser.TransposeOperatorContext ctx)
+    public TransposeNode visitTransposeOperator (MsharpParser.TransposeOperatorContext ctx)
     {
         
         if (ctx.numberExpr() == null) {
             int transposeAmount = -1;
-            if(ctx.TransposeDown() == null) transposeAmount = 1;
+            if (ctx.TransposeDown() == null) transposeAmount = 1;
             return new TransposeNode(new NumberNode(transposeAmount), null);
         }
-        
         
         
         return new TransposeNode((ArithmeticExpressionNodeInterface) visit(ctx.numberExpr()), null);
     }
     
     @Override
-    public NodeInterface visitPartDcl (MsharpParser.PartDclContext ctx)
+    public PartDclNode visitPartDcl (MsharpParser.PartDclContext ctx)
     {
         StmtList stmts = new StmtList();
-    
-    
+        
+        
         for (ParseTree pt : ctx.stmt()) {
             stmts.add((StmtNode) visit(pt));
         }
-    
+        
         return new PartDclNode(ctx.Id().getText(), stmts);
     }
 }

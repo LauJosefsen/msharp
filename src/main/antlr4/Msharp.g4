@@ -101,23 +101,6 @@ numberFactor
     | Digs                                  # FactorDigs
     ;
 
-
-
-    /*Id                                    # NumberExprId
-    | Digs                                  # NumberExprDigs
-    | numberExpr numberOp numberExpr        # NumberExprActualExpression
-    | Lparen numberExpr Rparen              # NumberExprParens
-    ;
-
-
-numberOp
-    : Plus
-    | Repeat
-    | Pause
-    | OctaveUp
-    | Percent
-    ;*/
-
 assignNumVariable
     : Id Assign numberExpr Nl
     ;

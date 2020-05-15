@@ -3,6 +3,7 @@ package msharp.ASTBuilder;
 import antlr4.MsharpLexer;
 import antlr4.MsharpParser;
 import msharp.Compiler.IllegalCompilerAction;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -314,14 +315,14 @@ class BuildAstVisitorTests {
         for (int i = 0; i < 3; i++) {
             list.add(pbodyIdContext);
         }
-    
+        
         MsharpParser.ElseStmtContext ctx = Mockito.mock(MsharpParser.ElseStmtContext.class, Mockito.RETURNS_DEEP_STUBS);
         Mockito.when(ctx.stmtOrEveryStmt()).thenReturn(list);
-    
-    
+        
+        
         //Act
         StmtList result = visitor.visitElseStmt(ctx);
-    
+        
         //Assert
         Assertions.assertEquals(3, result.size());
         Assertions.assertSame(result.get(0).getClass(), IdNode.class);
@@ -329,140 +330,393 @@ class BuildAstVisitorTests {
     }
     
     @Test
-    void visitMultStmtOrEveryStmtMultStmt ()
-    {
-        // very trivial, won't test
-    }
-    
-    @Test
-    void visitMultStmtOrEveryStmtEveryStmt ()
-    {
-        // very trivial, won't test
-    }
-    
-    @Test
     void visitProg ()
     {
-        //todo
+        // lets check that both part declarations, number declarations and play body are visited.
+        //Arrange
+        MsharpParser.AssignNumVariableContext numAssignMock = Mockito.mock(MsharpParser.AssignNumVariableContext.class);
+        Mockito.when(numAssignMock.accept(visitor)).thenReturn(null);
+        List<MsharpParser.AssignNumVariableContext> listNumVariable = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            listNumVariable.add(numAssignMock);
+        }
+    
+        MsharpParser.PartDclContext partDclMock = Mockito.mock(MsharpParser.PartDclContext.class);
+        Mockito.when(numAssignMock.accept(visitor)).thenReturn(null);
+        List<MsharpParser.PartDclContext> listParts = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            listParts.add(partDclMock);
+        }
+        
+    
+        MsharpParser.ProgContext ctx = Mockito.mock(MsharpParser.ProgContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.assignNumVariable()).thenReturn(listNumVariable);
+        Mockito.when(ctx.partDcl()).thenReturn(listParts);
+    
+    
+        //Act
+        ProgNode result = visitor.visitProg(ctx);
+    
+        //Assert
+        Assertions.assertEquals(3, result.getParts().size());
+        Assertions.assertSame(4,result.getGlobalVariables().size());
     }
     
     @Test
     void visitPlayDcl ()
     {
-        //todo
+        // basically test if all stmts get added.
+        //Arrange
+        MsharpParser.StmtContext pbodyIdContext = Mockito.mock(MsharpParser.StmtContext.class);
+        Mockito.when(pbodyIdContext.accept(visitor)).thenReturn(new IdNode("Awd"));
+        
+        MsharpParser.PlayDclContext ctx = Mockito.mock(MsharpParser.PlayDclContext.class, Mockito.RETURNS_DEEP_STUBS);
+        List<MsharpParser.StmtContext> list = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            list.add(pbodyIdContext);
+        }
+        Mockito.when(ctx.stmt()).thenReturn(list);
+        
+        
+        //Act
+        PlayNode result = visitor.visitPlayDcl(ctx);
+        
+        //Assert
+        Assertions.assertEquals(3, result.getStmts().size());
+        Assertions.assertSame(result.getStmts().get(0).getClass(), IdNode.class);
+        Assertions.assertEquals("Awd", ((IdNode) result.getStmts().get(0)).getId());
+    }
+    
+    
+    @Test
+    void visitDigsOrNumberExprInParenthesisShouldThrowIlegalCompilerActionWithHugeInt ()
+    {
+        //Arrange
+        MsharpParser.DigsOrNumberExprInParenthesisContext ctx = Mockito.mock(MsharpParser.DigsOrNumberExprInParenthesisContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Digs().getText()).thenReturn("12310230120359081313284813");
+        Mockito.when(ctx.numberExpr()).thenReturn(null);
+        
+        //Act / Assert
+        Assertions.assertThrows(IllegalCompilerAction.class, () -> visitor.visitDigsOrNumberExprInParenthesis(ctx));
     }
     
     @Test
-    void visitStmtPBody ()
+    void visitDigsOrNumberExprInParenthesisShouldReturnCorrectInt ()
     {
-        // very trivial, won't test
+        //Arrange
+        MsharpParser.DigsOrNumberExprInParenthesisContext ctx = Mockito.mock(MsharpParser.DigsOrNumberExprInParenthesisContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Digs().getText()).thenReturn("123");
+        Mockito.when(ctx.numberExpr()).thenReturn(null);
+        
+        //Act
+        NodeInterface result = visitor.visitDigsOrNumberExprInParenthesis(ctx);
+        
+        //Assert
+        Assertions.assertEquals(result.getClass(), NumberNode.class);
+        Assertions.assertEquals(123, ((NumberNode) result).getN());
     }
     
     @Test
-    void visitDigsOrNumberExprInParenthesis ()
+    void visitDigsOrNumberExprInParenthesisShouldReturnCorrectNumberExpr ()
     {
-        //todo
+        //Arrange
+        MsharpParser.DigsOrNumberExprInParenthesisContext ctx = Mockito.mock(MsharpParser.DigsOrNumberExprInParenthesisContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Digs()).thenReturn(null);
+        Mockito.when(ctx.numberExpr().accept(visitor)).thenReturn(new ExprNode(new NumberNode(123), new NumberNode(123), ExprOpEnum.SUBTRACT));
+        
+        //Act
+        NodeInterface result = visitor.visitDigsOrNumberExprInParenthesis(ctx);
+        
+        //Assert
+        Assertions.assertEquals(result.getClass(), ExprNode.class);
     }
     
     @Test
-    void visitStmtOps ()
+    void visitOpsScaleUp ()
     {
-        // very trivial, won't test
+        // lets test a scale up, scale down and an empty scale.
+        //Arrange
+        MsharpParser.OpsScaleContext ctx = Mockito.mock(MsharpParser.OpsScaleContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.TransposeUp()).thenReturn(Mockito.mock(TerminalNode.class)); // just need to be not-null
+        Mockito.when(ctx.TransposeDown()).thenReturn(null); // just need to be not-null
+        
+        TerminalNode pbodyIdContext = Mockito.mock(TerminalNode.class);
+        Mockito.when(pbodyIdContext.getText()).thenReturn("c");
+        
+        List<TerminalNode> list = new ArrayList<>();
+        list.add(pbodyIdContext);
+        Mockito.when(ctx.Tone()).thenReturn(list);
+        
+        //Act
+        ScaleNode result = visitor.visitOpsScale(ctx);
+        
+        //Assert
+        Assertions.assertEquals(result.getInScale().size(), 1);
+        Assertions.assertTrue(result.isUp());
     }
     
     @Test
-    void visitAssignNumVariable ()
+    void visitOpsScaleDown ()
     {
-        //todo
+        // lets test a scale up, scale down and an empty scale.
+        //Arrange
+        MsharpParser.OpsScaleContext ctx = Mockito.mock(MsharpParser.OpsScaleContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.TransposeUp()).thenReturn(null); // just need to be not-null
+        Mockito.when(ctx.TransposeDown()).thenReturn(Mockito.mock(TerminalNode.class)); // just need to be not-null
+    
+        TerminalNode pbodyIdContext = Mockito.mock(TerminalNode.class);
+        Mockito.when(pbodyIdContext.getText()).thenReturn("c");
+    
+        List<TerminalNode> list = new ArrayList<>();
+        list.add(pbodyIdContext);
+        Mockito.when(ctx.Tone()).thenReturn(list);
+    
+        //Act
+        ScaleNode result = visitor.visitOpsScale(ctx);
+    
+        //Assert
+        Assertions.assertEquals(result.getInScale().size(), 1);
+        Assertions.assertFalse(result.isUp());
     }
     
     @Test
-    void visitMultStmtAssignNum ()
+    void visitOpsScaleEmpty ()
     {
-        // very trivial, won't test
+        // lets test a scale up, scale down and an empty scale.
+        //Arrange
+        MsharpParser.OpsScaleContext ctx = Mockito.mock(MsharpParser.OpsScaleContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Tone()).thenReturn(new ArrayList<>());
+        Mockito.when(ctx.TransposeUp().accept(visitor)).thenReturn(new ExprNode(new NumberNode(123), new NumberNode(123), ExprOpEnum.SUBTRACT));
+        
+        //Act
+        ScaleNode result = visitor.visitOpsScale(ctx);
+        
+        //Assert
+        Assertions.assertEquals(result.getInScale().size(), 0);
+        // we dont care if its up or down if the list is empty.
     }
     
     @Test
-    void visitOpsScale ()
+    void visitExprOpPlus ()
     {
-        //todo
+        // plus
+        //Arrange
+        MsharpParser.ExprOpContext ctx = Mockito.mock(MsharpParser.ExprOpContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Plus()).thenReturn(Mockito.mock(TerminalNode.class));
+        Mockito.when(ctx.Pause()).thenReturn(null);
+        Mockito.when(ctx.numberExpr().accept(visitor)).thenReturn(null);
+        Mockito.when(ctx.numberTerm().accept(visitor)).thenReturn(null);
+        
+        //Act
+        ExprNode result = visitor.visitExprOp(ctx);
+    
+        //Assert
+        Assertions.assertEquals(result.getOperator(), ExprOpEnum.ADD);
+    }
+    @Test
+    void visitExprOpSubtract ()
+    {
+        // subtract.
+        //Arrange
+        MsharpParser.ExprOpContext ctx = Mockito.mock(MsharpParser.ExprOpContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Plus()).thenReturn(null);
+        Mockito.when(ctx.Pause()).thenReturn(Mockito.mock(TerminalNode.class));
+        Mockito.when(ctx.numberExpr().accept(visitor)).thenReturn(null);
+        Mockito.when(ctx.numberTerm().accept(visitor)).thenReturn(null);
+    
+        //Act
+        ExprNode result = visitor.visitExprOp(ctx);
+    
+        //Assert
+        Assertions.assertEquals(result.getOperator(), ExprOpEnum.SUBTRACT);
     }
     
     @Test
-    void visitMultStmtNL ()
+    void visitTermOpModulo ()
     {
-        // very trivial, won't test
+        // modulo
+        //Arrange
+        MsharpParser.TermOpContext ctx = Mockito.mock(MsharpParser.TermOpContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Repeat()).thenReturn(null);
+        Mockito.when(ctx.OctaveUp()).thenReturn(null);
+        Mockito.when(ctx.Percent()).thenReturn(Mockito.mock(TerminalNode.class));
+        Mockito.when(ctx.numberFactor().accept(visitor)).thenReturn(null);
+        Mockito.when(ctx.numberTerm().accept(visitor)).thenReturn(null);
+    
+        //Act
+        ExprNode result = visitor.visitTermOp(ctx);
+    
+        //Assert
+        Assertions.assertEquals(result.getOperator(), ExprOpEnum.MODULO);
+    }
+    @Test
+    void visitTermOpMultiply ()
+    {
+        // multiply
+        //Arrange
+        MsharpParser.TermOpContext ctx = Mockito.mock(MsharpParser.TermOpContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Repeat()).thenReturn(Mockito.mock(TerminalNode.class));
+        Mockito.when(ctx.OctaveUp()).thenReturn(null);
+        Mockito.when(ctx.Percent()).thenReturn(null);
+        Mockito.when(ctx.numberFactor().accept(visitor)).thenReturn(null);
+        Mockito.when(ctx.numberTerm().accept(visitor)).thenReturn(null);
+    
+        //Act
+        ExprNode result = visitor.visitTermOp(ctx);
+    
+        //Assert
+        Assertions.assertEquals(result.getOperator(), ExprOpEnum.MULTIPLY);
+    }
+    @Test
+    void visitTermOpDivide ()
+    {
+        // divide
+        //Arrange
+        MsharpParser.TermOpContext ctx = Mockito.mock(MsharpParser.TermOpContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Repeat()).thenReturn(null);
+        Mockito.when(ctx.OctaveUp()).thenReturn(Mockito.mock(TerminalNode.class));
+        Mockito.when(ctx.Percent()).thenReturn(null);
+        Mockito.when(ctx.numberFactor().accept(visitor)).thenReturn(null);
+        Mockito.when(ctx.numberTerm().accept(visitor)).thenReturn(null);
+    
+        //Act
+        ExprNode result = visitor.visitTermOp(ctx);
+    
+        //Assert
+        Assertions.assertEquals(result.getOperator(), ExprOpEnum.DIVIDE);
     }
     
     @Test
-    void visitExprOp ()
+    void visitFactorDigsNegative()
     {
-        //todo
+        // test both negative, 0, positive and extremely huge nubmers.
+        //Arrange
+        MsharpParser.FactorDigsContext ctx = Mockito.mock(MsharpParser.FactorDigsContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Digs().getText()).thenReturn("-123");
+    
+        //Act
+        NumberNode result = visitor.visitFactorDigs(ctx);
+    
+        //Assert
+        Assertions.assertEquals(result.getN(),-123);
     }
     
     @Test
-    void visitTermOp ()
+    void visitFactorDigsZero ()
     {
-        //todo
+        // test both negative, 0, positive and extremely huge nubmers.
+        //Arrange
+        MsharpParser.FactorDigsContext ctx = Mockito.mock(MsharpParser.FactorDigsContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Digs().getText()).thenReturn("0");
+    
+        //Act
+        NumberNode result = visitor.visitFactorDigs(ctx);
+    
+        //Assert
+        Assertions.assertEquals(result.getN(),0);
     }
     
     @Test
-    void visitFactorParens ()
+    void visitFactorDigsPositive ()
     {
-        // very trivial, won't test
+        // test both negative, 0, positive and extremely huge nubmers.
+        //Arrange
+        MsharpParser.FactorDigsContext ctx = Mockito.mock(MsharpParser.FactorDigsContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Digs().getText()).thenReturn("123");
+    
+        //Act
+        NumberNode result = visitor.visitFactorDigs(ctx);
+        
+        //Assert
+        Assertions.assertEquals(result.getN(),123);
     }
     
     @Test
-    void visitExprValue ()
+    void visitFactorDigsExtremeInt ()
     {
-        // very trivial, won't test
+        // test both negative, 0, positive and extremely huge nubmers.
+        //Arrange
+        MsharpParser.FactorDigsContext ctx = Mockito.mock(MsharpParser.FactorDigsContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.Digs().getText()).thenReturn("12310230120359081313284813");
+    
+        //Act / Assert
+        Assertions.assertThrows(IllegalCompilerAction.class, () -> visitor.visitFactorDigs(ctx));
     }
     
     @Test
-    void visitFactorDigs ()
+    void visitTransposeOperatorWithoutNumberExprDown ()
     {
-        //todo
-    }
+        // test without a numberexpr.
+        //Arrange
+        MsharpParser.TransposeOperatorContext ctx = Mockito.mock(MsharpParser.TransposeOperatorContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.numberExpr()).thenReturn(null);
+        Mockito.when(ctx.TransposeDown()).thenReturn(Mockito.mock(TerminalNode.class));
+        Mockito.when(ctx.TransposeUp()).thenReturn(null);
     
-    @Test
-    void visitTermValue ()
-    {
-        // very trivial, won't test
-    }
+        //Act
+        TransposeNode result = visitor.visitTransposeOperator(ctx);
     
-    @Test
-    void visitFactorId ()
-    {
-        // very trivial, won't test
+        //Assert
+        Assertions.assertEquals(result.getDeltaTonation().getClass(),NumberNode.class);
+        Assertions.assertEquals(((NumberNode)result.getDeltaTonation()).getN(),-1);
     }
-    
     @Test
-    void visitPbodyOperators ()
+    void visitTransposeOperatorWithoutNumberExprUp ()
     {
-        //todo
+        // test without a numberexpr.
+        //Arrange
+        MsharpParser.TransposeOperatorContext ctx = Mockito.mock(MsharpParser.TransposeOperatorContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.numberExpr()).thenReturn(null);
+        Mockito.when(ctx.TransposeUp()).thenReturn(Mockito.mock(TerminalNode.class));
+        Mockito.when(ctx.TransposeDown()).thenReturn(null);
+        
+        //Act
+        TransposeNode result = visitor.visitTransposeOperator(ctx);
+        
+        //Assert
+        Assertions.assertEquals(result.getDeltaTonation().getClass(),NumberNode.class);
+        Assertions.assertEquals(((NumberNode)result.getDeltaTonation()).getN(),1);
     }
-    
     @Test
-    void visitAndOperator ()
+    void visitTransposeOperatorWithNumberExpr ()
     {
-        // very trivial, won't test
-    }
+        // test without a numberexpr.
+        //Arrange
+        MsharpParser.TransposeOperatorContext ctx = Mockito.mock(MsharpParser.TransposeOperatorContext.class, Mockito.RETURNS_DEEP_STUBS);
+        
+        Mockito.when(ctx.numberExpr().accept(visitor)).thenReturn(new ExprNode(null,null,ExprOpEnum.ADD));
+        Mockito.when(ctx.TransposeUp()).thenReturn(null);
+        Mockito.when(ctx.TransposeDown()).thenReturn(null);
     
-    @Test
-    void visitRepeatOperator ()
-    {
-        // very trivial, won't test
-    }
+        //Act
+        TransposeNode result = visitor.visitTransposeOperator(ctx);
     
-    @Test
-    void visitTransposeOperator ()
-    {
-        //todo
+        //Assert
+        Assertions.assertEquals(result.getDeltaTonation().getClass(),ExprNode.class);
     }
     
     @Test
     void visitPartDcl ()
     {
-        //todo
+        // confirm that all are added and id is assigned.
+        //Arrange
+        MsharpParser.StmtContext pbodyIdContext = Mockito.mock(MsharpParser.StmtContext.class);
+        Mockito.when(pbodyIdContext.accept(visitor)).thenReturn(new IdNode("SomeIdNode"));
+        List<MsharpParser.StmtContext> list = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            list.add(pbodyIdContext);
+        }
+    
+        MsharpParser.PartDclContext ctx = Mockito.mock(MsharpParser.PartDclContext.class, Mockito.RETURNS_DEEP_STUBS);
+        Mockito.when(ctx.stmt()).thenReturn(list);
+        Mockito.when(ctx.Id().getText()).thenReturn("NameOfPart");
+    
+    
+        //Act
+        PartDclNode result = visitor.visitPartDcl(ctx);
+    
+        //Assert
+        Assertions.assertEquals("NameOfPart", result.getId());
+        Assertions.assertEquals(result.getStmts().size(), 3);
     }
 }
