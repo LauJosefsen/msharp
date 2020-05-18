@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.*;
 
-public class LogView extends ListView<String> {
+public class LogView extends ListView<LogRecord> {
     public static class LogViewLogHandler extends Handler {
         Queue<LogRecord> logList = new LinkedList<LogRecord>();
         
@@ -39,7 +39,7 @@ public class LogView extends ListView<String> {
         }
     }
     
-    private LogViewLogHandler logHandler;
+    private final LogViewLogHandler logHandler;
     
     
     public LogView(){
@@ -49,35 +49,38 @@ public class LogView extends ListView<String> {
         
         
         // setup styling
-        this.setCellFactory(param -> new ListCell<String>() {
+        this.setCellFactory(param -> new ListCell<LogRecord>() {
             @Override
-            protected void updateItem (String item, boolean empty)
+            protected void updateItem (LogRecord item, boolean empty)
             {
                 super.updateItem(item, empty);
             
                 if (empty || item == null) {
                     setText(null);
                     setStyle("-fx-background-color: white;-fx-text-fill:black;");
-                } else if (item.contains("[FATAL]")) {
+                    return;
+                }
                 
-                    setText(item);
+                String pattern = " HH:mm:ss";
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+                String date = simpleDateFormat.format(new Date(item.getMillis()));
+                String sb = date + ": ["+ item.getLevel() +"] " +item.getMessage();
+                
+                if (item.getLevel() == Level.SEVERE) {
                     setStyle("-fx-background-color: orange;-fx-text-fill:black;");
                 
-                } else if (item.contains("[SUCCESS]")) {
-                
-                    setText(item);
-                    setStyle("-fx-background-color: lightgreen;-fx-text-fill:black;");
-                
-                } else if (item.contains("[WARNING]")) {
-                
-                    setText(item);
-                    setStyle("-fx-background-color: lightgreen;-fx-text-fill:black;");
-                
-                } else {
-                
-                    setText(item);
+                } else if (item.getLevel() == Level.INFO) {
                     setStyle("-fx-background-color: white;-fx-text-fill:black;");
+                
+                } else if (item.getLevel() == Level.WARNING) {
+                    setStyle("-fx-background-color: yellow;-fx-text-fill:black;");
                 }
+                if(item.getMessage().contains("[SUCCESS]")){
+                    // since logger cant handle this..
+                    sb = date + ": " + item.getMessage();
+                    setStyle("-fx-background-color: lightgreen;-fx-text-fill:black;");
+                }
+                setText(sb);
             }
         });
         
@@ -87,30 +90,15 @@ public class LogView extends ListView<String> {
                 new KeyFrame(
                         Duration.millis(100),
                         event -> {
-                            update();
+                            while(logHandler.logList.size() > 0){
+                                this.getItems().add(logHandler.logList.remove());
+                                this.scrollTo(this.getItems().size() - 1);
+                            }
                         }
                 )
         );
         logTransfer.setCycleCount(Timeline.INDEFINITE);
         logTransfer.play();
-    }
-    
-    
-    
-    private void update(){
-        // basically add whatever new log there is.
-        
-        while(logHandler.logList.size() > 0){
-            LogRecord logRecord = logHandler.logList.remove();
-            String pattern = " HH:mm:ss";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-            String date = simpleDateFormat.format(new Date(logRecord.getMillis()));
-            String sb = date +
-                    ": " +
-                    logRecord.getMessage();
-            this.getItems().add(sb);
-        }
-        this.scrollTo(this.getItems().size() - 1);
     }
     
 }

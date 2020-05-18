@@ -50,7 +50,7 @@ public class Compiler {
             compile();
         }
         catch(IllegalCompilerAction e){
-            log.info("[HALT] " + e.getError());
+            log.severe(e.getError());
         }
     }
     
@@ -98,7 +98,7 @@ public class Compiler {
                 Graphviz.fromGraph(ast.toGraph()).totalMemory(1073741824).render(Format.SVG).toFile(new File(outputPath));
                 log.info("[SUCCESS] Saved AST to " + outputPath);
             } catch (IOException e) {
-                log.info("[NOTE] Following error occurred while generating AST:");
+                log.warning("Following error occurred while generating AST:");
                 log.info(e.toString());
             }
         }

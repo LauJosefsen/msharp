@@ -4,6 +4,8 @@ import msharp.MinecraftClasses.Instrument;
 import msharp.MinecraftClasses.MinecraftNote;
 
 import java.util.Objects;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class FinalNote implements Comparable<FinalNote> {
     Instrument instrument;
@@ -86,6 +88,12 @@ public class FinalNote implements Comparable<FinalNote> {
     
     public MinecraftNote convertToMinecraftNote ()
     {
-        return new MinecraftNote(this.getInstrument(), this.getInstrument().getPitch(this.getTone(), this.getOctave()));
+        int pitch  = this.getInstrument().getPitch(this.getTone(), this.getOctave());
+        if(pitch < 0 || pitch > 24){
+            Logger log = LogManager.getLogManager().getLogger("");
+            log.warning("Note with instrument: \""+this.getInstrument().toString()+"\" at octave \""+this.getOctave()+"\" is out of Minecraft bounds *WAS "+pitch+"* " +
+                    "(See https://minecraft.gamepedia.com/Note_Block for more info.)");
+        }
+        return new MinecraftNote(this.getInstrument(), pitch);
     }
 }
