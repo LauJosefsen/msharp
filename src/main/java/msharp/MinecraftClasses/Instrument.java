@@ -1,5 +1,6 @@
 package msharp.MinecraftClasses;
 
+import msharp.Compiler.IllegalCompilerAction;
 import msharp.NotePopulation.ToneEnum;
 
 public enum Instrument {
@@ -68,7 +69,7 @@ public enum Instrument {
                 // 3-5
                 return mapToPitch(3, octave, tone.getToneId());
         }
-        return 0; //should never happen
+        throw new IllegalCompilerAction("Unknown instrument when mapping to pitch: "+this.toString());
     }
 
     private int mapToPitch (int minimumOctave, int octave, int toneId)

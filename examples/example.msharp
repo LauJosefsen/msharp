@@ -9,7 +9,7 @@ bpm lort er en kommtnar
 
 
 part Mel1
-    PIANO: c4*8 1%38813
+    PIANO: c20*8 1%38813
 end part
 
 part Mel2
@@ -21,6 +21,7 @@ part Mel3
 end part
 
 part Mel4
+	SCALE(a,b,c,d,e,f,g,_)
     PIANO: c4*8 1%38813
 end part
 

@@ -10,38 +10,38 @@ prog
     ;
 
 partDcl:
-     'part' Id Nl stmt+ Nl 'end part' Nl
+     'part' Id Nl statement+ Nl 'end part' Nl
     ;
+
+assignNumVariable
+    : Id Assign numberExpr Nl
+    ;
+
 playDcl
-    : 'play' Nl stmt+  Nl 'end play'
+    : 'play' Nl statement+  Nl 'end play'
     ;
 
-stmt
-    : partBody              # StmtPBody
-    | ops                   # StmtOps
-    | Nl                    # MultStmtNL
-    | multilineRepeat       # MultStmtMultRepeat    // repeat x times ... end repeat
-    | assignNumVariable     # MultStmtAssignNum
+statement
+    : partExpr              # StatementPartExpr
+    | Nl                    # StatementNewLine
+    | multilineRepeat       # StatementMultilineRepeat    // repeat x times ... end repeat
+    | assignNumVariable     # StatementAssignNumber
+    | Instrument                                                            # StatementInstrument
+    | OctaveDown                                                            # StatementOctaveDown
+    | OctaveUp                                                              # StatementOctaveUp
+    | tempoOp                                                               # StatementChangeTempo
+    | Bpm Lparen numberExpr Comma tempoOp Rparen                            # StatementChangeBPM
+    | Scale Lparen ((Tone Comma)+ (TransposeDown | TransposeUp))? Rparen    # StatementChangeScale
     ;
 
-ops
-    : Instrument                                                            # OpsIntru
-    | OctaveDown                                                            # OpsOctDown
-    | OctaveUp                                                              # OpsOctUp
-    | tempoOp                                                               # OpsTempOp
-    | Bpm Lparen numberExpr Comma tempoOp Rparen                            # OpsBpmDcl
-    | Scale Lparen ((Tone Comma)+ (TransposeDown | TransposeUp))? Rparen    # OpsScale
-    ;
-
+// has its own rule because it is used 2 places.
 tempoOp
-    : digsOrNumberExprInParenthesis Percent digsOrNumberExprInParenthesis
+    : numberExpr Percent numberExpr
     ;
 
-digsOrNumberExprInParenthesis
-    : Digs
-    | Lparen numberExpr Rparen
-    ;
-
+/*
+ / repeat-body, every and else:
+ */
 multilineRepeat
     : 'repeat' numberExpr 'times' Nl stmtOrEveryStmt+ 'end repeat'
     ;
@@ -51,8 +51,8 @@ multilineRepeat
 //         the multStmt array and one being everyStmt array. Having two arrays, we cant determine the order of the
 //         different statements. By using this parser rule, we only get one, sorted array.
 stmtOrEveryStmt
-    : stmt              # MultStmtOrEveryStmtMultStmt
-    | everyStmt             # MultStmtOrEveryStmtEveryStmt
+    : statement                  # StatementOrEveryStatementStatement
+    | everyStmt             # StatementOrEveryStatementEveryStatement
     ;
 
 everyStmt
@@ -62,27 +62,39 @@ elseStmt
     : 'else' Nl stmtOrEveryStmt+ 'end else'
     ;
 
-partBody
-    : Tone Digs                                                                                                         # PbodyTone
-    | {_input.LA(1) == Tone && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? Tone Lparen numberExpr Rparen    # PbodyTone
-    | Tone                                                                                                              # PbodyTone
-    | Id                                                                                                                # PbodyId
-    | Pause                                                                                                             # PbodyPause
-    | Lparen stmt+ Rparen                                                                                               # PbodyParen
-    | partBody partAfter                                                                                                # PbodyOperators
+/*
+/  Parts:
+*/
+
+partExpr
+    : partExpr And partTerm #PartExprAndOperator
+    | partTerm #PartExprPartTerm;
+
+partTerm
+    : partTerm transpose                                                                                                # PartTermTranspose
+    | partTerm Repeat numberExpr                                                                                        # PartTermRepeatOperator
+    | partFactor                                                                                                        # PartTermPartFactor
     ;
-    //| partBody TransposeUp numberExpr?                                                                                  # PbodyTransUp
-    //| partBody TransposeDown numberExpr?                                                                                # PbodyTransDown
-  //  | partBody And partBody                                                                                             # PbodyAnd
-//    | partBody Repeat numberExpr                                                                                        # PbodySingleLRepeat
-partAfter
-    : {_input.LA(1) == TransposeUp && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeUp numberExpr           # TransposeOperator
-    | TransposeUp                                                                                                       # TransposeOperator
-    | {_input.LA(1) == TransposeDown && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeDown numberExpr         # TransposeOperator
-    | TransposeDown                                                                                                     # TransposeOperator
-    | And partBody                                                                                                      # AndOperator
-    | Repeat numberExpr                                                                                                 # RepeatOperator
+
+// this is to keep it mutually left recursive. (when using semantic predicates)
+transpose
+    : {_input.LA(1) == TransposeUp && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeUp numberExpr
+    | TransposeUp
+    | {_input.LA(1) == TransposeDown && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeDown numberExpr
+    | TransposeDown
     ;
+
+partFactor
+    : Tone Digs                                                                                                         # PartFactorTone
+    | {_input.LA(1) == Tone && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? Tone Lparen numberExpr Rparen    # PartFactorTone
+    | Tone                                                                                                              # PartFactorTone
+    | Id                                                                                                                # PartFactorId
+    | Pause                                                                                                             # PartFactorPause
+    | Lparen statement+ Rparen                                                                                          # PartFactorParenthesis;
+
+/*
+/ NumberExpressions:
+*/
 
 numberExpr
     : numberExpr Plus numberTerm            # ExprOp
@@ -101,11 +113,10 @@ numberFactor
     | Digs                                  # FactorDigs
     ;
 
-assignNumVariable
-    : Id Assign numberExpr Nl
-    ;
 
-// lexer rules
+/*
+/ Lexer rules:
+*/
 Nl: ('\n' | '\r')+;
 Bpm: 'BPM';
 Scale: 'SCALE';
