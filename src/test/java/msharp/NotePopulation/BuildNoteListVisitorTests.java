@@ -1,6 +1,7 @@
 package msharp.NotePopulation;
 
 import msharp.ASTBuilder.*;
+import msharp.Compiler.IllegalCompilerAction;
 import msharp.Compiler.Symbol;
 import msharp.Compiler.SymbolTable;
 import msharp.MinecraftClasses.Instrument;
@@ -54,7 +55,10 @@ class BuildNoteListVisitorTests {
         
         //Creating global variables: Parts.
         List<PartDclNode> partDclNodesList = new ArrayList<PartDclNode>();
-        PartDclNode partDclNode = new PartDclNode("part1", new StmtList());
+        StmtList stmtListForThePartNode = new StmtList();
+        stmtListForThePartNode.add(new NoteNode('c', new NumberNode(1)));
+        PartDclNode partDclNode = new PartDclNode("part1", stmtListForThePartNode);
+        partDclNodesList.add(partDclNode);
         
         
         //Creating playNode
@@ -88,6 +92,153 @@ class BuildNoteListVisitorTests {
         expectedNodeContext.timing = leftContext.timing;
         assertEquals(expectedNodeContext, initialCtx);
     }
+    
+    @Test
+    void testEvery_TrueCase ()
+    {
+        initialCtx.repeatIterationStack.push(new IntByReference(1));
+        StmtList stmtListA = new StmtList();
+        stmtListA.add(new NoteNode('c', new NumberNode(1)));
+        StmtList stmtListB = new StmtList();
+        EveryNode everyNode = new EveryNode(new NumberNode(1), stmtListA, stmtListB);
+        
+        List<FinalNote> expectedList = visitor.visit(stmtListA, initialCtx);
+        List<FinalNote> actualList = visitor.visit(everyNode, initialCtx);
+        assertEquals(expectedList.size(), actualList.size());
+    }
+    
+    @Test
+    void testEvery_FalseCase ()
+    {
+        initialCtx.repeatIterationStack.push(new IntByReference(5));
+        StmtList stmtListA = new StmtList();
+        stmtListA.add(new NoteNode('c', new NumberNode(1)));
+        StmtList stmtListB = new StmtList();
+        EveryNode everyNode = new EveryNode(new NumberNode(4), stmtListA, stmtListB);
+        
+        List<FinalNote> expectedList = visitor.visit(stmtListB, initialCtx);
+        List<FinalNote> actualList = visitor.visit(everyNode, initialCtx);
+        assertEquals(expectedList.size(), actualList.size());
+    }
+    
+    @Test
+    void testIdNode_ShouldThrowIllegalCompilerAction ()
+    {
+        IdNode idNode = new IdNode("DoesntExist");
+        assertThrows(new IllegalCompilerAction("Name \""+idNode.getId()+"\", was not declared in current scope.").getClass(),
+                () -> visitor.visit(idNode, initialCtx));
+    }
+    
+    @Test
+    void testIdNode_ShouldThrowIllegalCompilerAction2 ()
+    {
+        IdNode idNode = new IdNode("int1");
+        assertThrows(new IllegalCompilerAction("Name \""+idNode.getId()+"\", was declared in current scope, but is not a part.").getClass(),
+                () -> visitor.visit(idNode, initialCtx));
+    }
+    
+    @Test
+    void testIdNode_ShouldReturnFinalNotes ()
+    {
+        IdNode idNode = new IdNode("part1");
+        List<FinalNote> finalNoteList = visitor.visit(idNode, initialCtx);
+        assertNotNull(finalNoteList);
+    }
+    
+    @Test
+    void testNote_WithOctave()
+    {
+        NoteNode noteNode = new NoteNode('c', new NumberNode(1000));
+        visitor.visit(noteNode, initialCtx);
+        assertEquals(1000, initialCtx.octave);
+    }
+    
+    @Test
+    void testNote_WithoutOctave()
+    {
+        NoteNode noteNode = new NoteNode('c', null);
+        int initialOctave = initialCtx.octave;
+        visitor.visit(noteNode, initialCtx);
+        assertEquals(initialOctave, initialCtx.octave);
+    }
+    
+    @Test
+    void testNote_Pause()
+    {
+        NoteNode noteNode = new NoteNode('-', null);
+        NodeContext context = new NodeContext(initialCtx);
+        visitor.visit(noteNode, initialCtx);
+        assertNotEquals(context.timing, initialCtx.timing);
+        assertEquals(context.octave, initialCtx.octave);
+    }
+    
+    @Test
+    void testNote_Note()
+    {
+        NoteNode noteNode = new NoteNode('c', null);
+        NodeContext context = new NodeContext(initialCtx);
+        visitor.visit(noteNode, initialCtx);
+        assertNotEquals(context.timing, initialCtx.timing);
+    }
+    
+    @Test
+    void testRepeat_positiveAmount()
+    {
+        StmtList stmtList = new StmtList();
+        stmtList.add(new NoteNode('c', null));
+        RepeatNode repeatNode = new RepeatNode(new NumberNode(5), stmtList);
+        
+        List<FinalNote> actualFinalNotes = visitor.visit(repeatNode, initialCtx);
+        assertEquals(5, actualFinalNotes.size());
+    }
+    
+    @Test
+    void testRepeat_negativeAmount()
+    {
+        StmtList stmtList = new StmtList();
+        stmtList.add(new NoteNode('c', null));
+        RepeatNode repeatNode = new RepeatNode(new NumberNode(-5), stmtList);
+        
+        List<FinalNote> actualFinalNotes = visitor.visit(repeatNode, initialCtx);
+        assertEquals(0, actualFinalNotes.size());
+    }
+    
+    @Test
+    void testRepeat_0Repititions()
+    {
+        StmtList stmtList = new StmtList();
+        stmtList.add(new NoteNode('c', null));
+        RepeatNode repeatNode = new RepeatNode(new NumberNode(0), stmtList);
+        
+        List<FinalNote> actualFinalNotes = visitor.visit(repeatNode, initialCtx);
+        assertEquals(0, actualFinalNotes.size());
+    }
+    
+    @Test
+    void testStmtList()
+    {
+        NodeContext expectedNodeContext = new NodeContext(initialCtx);
+        StmtList stmtList = new StmtList();
+        NoteNode notenode = new NoteNode('c', null);
+        TempoChangeNode tempoChangeNode = new TempoChangeNode(new NumberNode(1), new NumberNode(57));
+        InstruNode instruNode = new InstruNode("GUITAR");
+        stmtList.add(notenode);
+        stmtList.add(tempoChangeNode);
+        stmtList.add(instruNode);
+        
+        visitor.visit(stmtList, initialCtx);
+        
+        assertEquals(expectedNodeContext.tempo, initialCtx.tempo);
+        assertEquals(expectedNodeContext.instrument, initialCtx.instrument);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     //
     //    @Test
     //    void testVisit1AndNode ()
