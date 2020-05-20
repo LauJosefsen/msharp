@@ -66,7 +66,6 @@ public class SymbolTable {
             if(scope.localSymbols.containsKey(partNode.getId()))
                 throw new IllegalCompilerAction("When adding "+partNode.getId()+" to symboltable. Multiple declared");
             else {
-                ArithmeticExpressionVisitor visitor = new ArithmeticExpressionVisitor();
                 scope.localSymbols.put(partNode.getId(), new Symbol(partNode.getId(),partNode.getStmts()));
             }
         }
