@@ -92,7 +92,7 @@ public class NoteStructure extends ArrayList<ArrayList<MinecraftNote>> {
         for (int lane = 0; lane < lanes; lane++)
             toBeConnected.add(new BlockLocation(1, lane * heightPrLane + 3, 0));
         
-        while (toBeConnected.size() >= 3) {
+        while (toBeConnected.size() >= 2) {
             
             // everytime this is run, at least 2 locations are in the queue.
             BlockLocation p1 = toBeConnected.remove();
