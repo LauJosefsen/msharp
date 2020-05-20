@@ -51,7 +51,7 @@ class SymbolTableTests {
     {
         symbolTable.enterSymbol("Test", new Object());
         Symbol symbol =  symbolTable.retrieveSymbol("Test");
-        assertTrue(symbol != null);
+        assertNotNull(symbol);
     }
     
     @Test
@@ -61,7 +61,7 @@ class SymbolTableTests {
         symbolTable.openScope();
         symbolTable.closeScope();
         Symbol symbol =  symbolTable.retrieveSymbol("Test");
-        assertTrue(symbol != null);
+        assertNotNull(symbol);
     }
     
     @Test
@@ -70,7 +70,7 @@ class SymbolTableTests {
         symbolTable.enterSymbol("Test", new Object());
         symbolTable.closeScope();
         Symbol symbol =  symbolTable.retrieveSymbol("Test");
-        assertTrue(symbol == null);
+        assertNull(symbol);
     }
     
     @Test
@@ -79,7 +79,7 @@ class SymbolTableTests {
         symbolTable.openScope();
         symbolTable.enterSymbol("Test", new Object());
         Symbol symbol =  symbolTable.retrieveSymbol("Test");
-        assertTrue(symbol != null);
+        assertNotNull(symbol);
     }
     
     @Test
@@ -88,7 +88,7 @@ class SymbolTableTests {
         symbolTable.enterSymbol("Test", new Object());
         symbolTable.openScope();
         Symbol symbol =  symbolTable.retrieveSymbol("Test");
-        assertTrue(symbol != null);
+        assertNotNull(symbol);
     }
     
     @Test
@@ -98,30 +98,30 @@ class SymbolTableTests {
         symbolTable.openScope();
         symbolTable.closeScope();
         Symbol symbol =  symbolTable.retrieveSymbol("Test");
-        assertTrue(symbol != null);
+        assertNotNull(symbol);
     }
     
     @Test
     void retrieveSymbol_CanRetriveGlobalSymbolPart ()
     {
         Symbol returnedValue = symbolTable.retrieveSymbol("part1");
-        
-        assertTrue(returnedValue != null);
+    
+        assertNotNull(returnedValue);
     }
     
     @Test
     void retrieveSymbol_CanRetriveGlobalSymbolInt ()
     {
         Symbol returnedValue = symbolTable.retrieveSymbol("int1");
-        
-        assertTrue(returnedValue != null);
+    
+        assertNotNull(returnedValue);
     }
     
     @Test
     void retrieveSymbol_OnlyReturnsIfItemExist ()
     {
         Symbol returnedValue = symbolTable.retrieveSymbol("ThisKeyIsNotInTheSymbolTable");
-        assertTrue(returnedValue == null);
+        assertNull(returnedValue);
     }
 
 }
