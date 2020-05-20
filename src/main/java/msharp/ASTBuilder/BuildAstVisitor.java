@@ -149,7 +149,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     public NodeInterface visitPartTermTranspose (MsharpParser.PartTermTransposeContext ctx)
     {
         TransposeNode node = (TransposeNode) visit(ctx.transpose());
-        node.setLeftOperand((StmtNode) visit(ctx.partTerm()));
+        node = node.setLeftOperand((StmtNode) visit(ctx.partTerm()));
         return node;
     }
     

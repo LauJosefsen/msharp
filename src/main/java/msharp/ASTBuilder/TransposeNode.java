@@ -18,7 +18,7 @@ import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
 import static guru.nidi.graphviz.model.Link.to;
 
-public class TransposeNode implements StmtNode, PartBodyOperatorInterface {
+public class TransposeNode implements StmtNode {
     private final ArithmeticExpressionNodeInterface deltaTonation;
     private final StmtNode toBeTransposed;
     
@@ -65,9 +65,8 @@ public class TransposeNode implements StmtNode, PartBodyOperatorInterface {
     {
         return visitor.visit(this, ctx);
     }
-    
-    @Override
-    public PartBodyOperatorInterface setLeftOperand (StmtNode left)
+
+    public TransposeNode setLeftOperand (StmtNode left)
     {
         return new TransposeNode(this.deltaTonation,left);
     }
