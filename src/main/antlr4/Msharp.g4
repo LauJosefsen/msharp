@@ -34,9 +34,12 @@ statement
     | Scale Lparen ((Tone Comma)+ (TransposeDown | TransposeUp))? Rparen    # StatementChangeScale
     ;
 
+digsOrExpressionInParenthesis
+    : Digs | Lparen numberExpr Rparen;
+
 // has its own rule because it is used 2 places.
 tempoOp
-    : numberExpr Percent numberExpr
+    : digsOrExpressionInParenthesis Percent digsOrExpressionInParenthesis
     ;
 
 /*
@@ -78,9 +81,9 @@ partTerm
 
 // this is to keep it mutually left recursive. (when using semantic predicates)
 transpose
-    : {_input.LA(1) == TransposeUp && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeUp numberExpr
+    : {_input.LA(1) == TransposeUp && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeUp digsOrExpressionInParenthesis
     | TransposeUp
-    | {_input.LA(1) == TransposeDown && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeDown numberExpr
+    | {_input.LA(1) == TransposeDown && _input.size() > _input.index()+1 && _input.get(_input.index() + 1).getChannel() != HIDDEN}? TransposeDown digsOrExpressionInParenthesis
     | TransposeDown
     ;
 

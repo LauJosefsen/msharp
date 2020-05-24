@@ -52,6 +52,9 @@ public class Compiler {
         catch(IllegalCompilerAction e){
             log.severe(e.getError());
         }
+        catch(Exception e){
+            log.severe(e.toString());
+        }
     }
     
     public void compile()

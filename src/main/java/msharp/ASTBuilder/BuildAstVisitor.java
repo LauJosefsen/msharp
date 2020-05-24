@@ -156,12 +156,12 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     @Override
     public NodeInterface visitTranspose (MsharpParser.TransposeContext ctx)
     {
-        if (ctx.numberExpr() == null) {
+        if (ctx.digsOrExpressionInParenthesis() == null) {
             int transposeAmount = -1;
             if (ctx.TransposeDown() == null) transposeAmount = 1;
             return new TransposeNode(new NumberNode(transposeAmount), null);
         }
-        return new TransposeNode((ArithmeticExpressionNodeInterface) visit(ctx.numberExpr()), null);
+        return new TransposeNode((ArithmeticExpressionNodeInterface) visit(ctx.digsOrExpressionInParenthesis()), null);
     }
     
     
@@ -173,11 +173,24 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     
     
     @Override
+    public NodeInterface visitDigsOrExpressionInParenthesis (MsharpParser.DigsOrExpressionInParenthesisContext ctx)
+    {
+        if(ctx.Digs() != null) {
+            try {
+                return new NumberNode(Integer.parseInt(ctx.Digs().getText()));
+            } catch (NumberFormatException e) {
+                throw new IllegalCompilerAction(e.toString());
+            }
+        };
+        return visit(ctx.numberExpr());
+    }
+    
+    @Override
     public TempoChangeNode visitTempoOp (MsharpParser.TempoOpContext ctx)
     {
         return new TempoChangeNode(
-                (ArithmeticExpressionNodeInterface) visit(ctx.numberExpr(0)),
-                (ArithmeticExpressionNodeInterface) visit(ctx.numberExpr(1)));
+                (ArithmeticExpressionNodeInterface) visit(ctx.digsOrExpressionInParenthesis(0)),
+                (ArithmeticExpressionNodeInterface) visit(ctx.digsOrExpressionInParenthesis(1)));
     }
     
     @Override
