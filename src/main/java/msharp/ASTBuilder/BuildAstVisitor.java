@@ -181,7 +181,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
             } catch (NumberFormatException e) {
                 throw new IllegalCompilerAction(e.toString());
             }
-        };
+        }
         return visit(ctx.numberExpr());
     }
     
