@@ -1,9 +1,6 @@
 package msharp.Compiler;
 
-import msharp.ASTBuilder.NumDeclNode;
-import msharp.ASTBuilder.ArithmeticExpressionVisitor;
-import msharp.ASTBuilder.PartDclNode;
-import msharp.ASTBuilder.ProgNode;
+import msharp.ASTBuilder.*;
 
 import java.util.*;
 
@@ -52,24 +49,15 @@ public class SymbolTable {
     
     public SymbolTable (ProgNode ast)
     {
-        Scope scope = new Scope();
-        
+        this.openScope();
+    
+        ArithmeticExpressionVisitor visitor = new ArithmeticExpressionVisitor();
         for(NumDeclNode numNode : ast.getGlobalVariables()){
-            if(scope.localSymbols.containsKey(numNode.getId()))
-                throw new IllegalCompilerAction("When adding "+numNode.getId()+" to symboltable. Multiple declared");
-            else {
-                ArithmeticExpressionVisitor visitor = new ArithmeticExpressionVisitor();
-                scope.localSymbols.put(numNode.getId(), new Symbol(numNode.getId(),numNode.getValue().accept(visitor,this)));
-            }
+            this.enterSymbol(numNode.getId(), numNode.getValue().accept(visitor,this));
         }
         for(PartDclNode partNode : ast.getParts()){
-            if(scope.localSymbols.containsKey(partNode.getId()))
-                throw new IllegalCompilerAction("When adding "+partNode.getId()+" to symboltable. Multiple declared");
-            else {
-                scope.localSymbols.put(partNode.getId(), new Symbol(partNode.getId(),partNode.getStmts()));
-            }
+            this.enterSymbol(partNode.getId(), partNode.getStmts());
         }
         
-        scopes.push(scope);
     }
 }
