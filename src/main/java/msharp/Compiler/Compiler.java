@@ -106,7 +106,7 @@ public class Compiler {
             }
         }
         
-        // Make first parse of AST to build global scope.
+        // Make first pass of AST to build global scope.
         SymbolTable symbolTable = new SymbolTable((ProgNode) ast);
         log.info("Made initial symbol table");
         
