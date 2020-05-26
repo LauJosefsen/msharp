@@ -23,7 +23,7 @@ public class SymbolTable {
         scopes.pop();
     }
     
-    public <T> void  enterSymbol(String key, T value)
+    public void  enterSymbol(String key, Object value)
     {
         Symbol symbol = retrieveSymbol(key);
         if(symbol == null){
