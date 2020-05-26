@@ -10,7 +10,7 @@ prog
     ;
 
 partDcl:
-     'part' Id Nl statement+ Nl 'end part' Nl
+     'part' Id Nl statement+ 'end part' Nl
     ;
 
 assignNumVariable
