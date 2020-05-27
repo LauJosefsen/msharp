@@ -29,8 +29,8 @@ statement
     | Instrument                                                            # StatementInstrument
     | OctaveDown                                                            # StatementOctaveDown
     | OctaveUp                                                              # StatementOctaveUp
-    | tempoOp                                                               # StatementChangeTempo
-    | Bpm Lparen numberExpr Comma tempoOp Rparen                            # StatementChangeBPM
+    | tempotStmt                                                               # StatementChangeTempo
+    | Bpm Lparen numberExpr Comma tempotStmt Rparen                            # StatementChangeBPM
     | Scale Lparen ((Tone Comma)+ (TransposeDown | TransposeUp))? Rparen    # StatementChangeScale
     ;
 
@@ -38,7 +38,7 @@ digsOrExpressionInParenthesis
     : Digs | Lparen numberExpr Rparen;
 
 // has its own rule because it is used 2 places.
-tempoOp
+tempotStmt
     : digsOrExpressionInParenthesis Percent digsOrExpressionInParenthesis
     ;
 

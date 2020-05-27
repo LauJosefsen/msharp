@@ -86,7 +86,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     public NodeInterface visitStatementChangeBPM (MsharpParser.StatementChangeBPMContext ctx)
     {
         return new BpmDclNode((ArithmeticExpressionNodeInterface) visit(ctx.numberExpr()),
-                (TempoChangeNode) visit(ctx.tempoOp()));
+                (TempoChangeNode) visit(ctx.tempotStmt()));
     }
     
     
@@ -99,7 +99,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     @Override
     public NodeInterface visitStatementChangeTempo (MsharpParser.StatementChangeTempoContext ctx)
     {
-        return visit(ctx.tempoOp());
+        return visit(ctx.tempotStmt());
     }
     
     @Override
@@ -186,7 +186,7 @@ public class BuildAstVisitor extends MsharpBaseVisitor<NodeInterface> {
     }
     
     @Override
-    public TempoChangeNode visitTempoOp (MsharpParser.TempoOpContext ctx)
+    public TempoChangeNode visitTempotStmt (MsharpParser.TempotStmtContext ctx)
     {
         return new TempoChangeNode(
                 (ArithmeticExpressionNodeInterface) visit(ctx.digsOrExpressionInParenthesis(0)),
