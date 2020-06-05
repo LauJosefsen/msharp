@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BuildNoteListVisitor{
-    private SymbolTable symbolTable;
+    private final SymbolTable symbolTable;
     private final ArithmeticExpressionVisitor exprVisitor = new ArithmeticExpressionVisitor();
 
     public BuildNoteListVisitor (SymbolTable symbolTable)
@@ -99,9 +99,12 @@ public class BuildNoteListVisitor{
         StmtList part = (StmtList) symbol.value;
         
         NodeContext newCtx = new NodeContext(ctx);
-        symbolTable.openScope();
-        List<FinalNote> toAdd = part.accept(this, newCtx);
-        symbolTable.closeScope();
+        
+        SymbolTable idNodeSymbolTableOnlyGlobal = symbolTable.getAsOnlyGlobalScope();
+        idNodeSymbolTableOnlyGlobal.openScope();
+        BuildNoteListVisitor idNodeVisitor =  new BuildNoteListVisitor(idNodeSymbolTableOnlyGlobal);
+        List<FinalNote> toAdd = part.accept(idNodeVisitor, newCtx);
+        
         ctx.timing = newCtx.timing;
         return toAdd;
     }
@@ -149,6 +152,7 @@ public class BuildNoteListVisitor{
         //        float beatsPrNode = (float) ((1.0*ctx.bpm.tempo.toFraction()) / ctx.tempo.toFraction());
         FractionPrecise secondPrBeat = new FractionPrecise(60, ctx.bpm.bpm);
         FractionPrecise beatsPrNode = new FractionPrecise(ctx.bpm.tempo, ctx.tempo);
+
 
 
         // Bpm 120, 1/4

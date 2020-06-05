@@ -5,6 +5,16 @@ import msharp.ASTBuilder.*;
 import java.util.*;
 
 public class SymbolTable {
+    public SymbolTable getAsOnlyGlobalScope(){
+        Stack<Scope> scopeStack = new Stack<>();
+        scopeStack.push(this.scopes.get(0));
+        return new SymbolTable(scopeStack);
+    }
+    
+    public SymbolTable (Stack<Scope> scopes)
+    {
+        this.scopes = scopes;
+    }
     
     static class Scope{
         Map<String, Symbol> localSymbols = new HashMap<>();
